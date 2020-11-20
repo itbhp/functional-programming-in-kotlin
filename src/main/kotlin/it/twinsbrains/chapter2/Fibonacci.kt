@@ -2,7 +2,7 @@ package it.twinsbrains.chapter2
 
 object Fibonacci {
     fun fibonacci(n: Int): Int {
-        fun loop(i: Int, acc: Int): Int =
+        tailrec fun loop(i: Int, acc: Int): Int =
             if (i == 0) {
                 acc
             } else {
