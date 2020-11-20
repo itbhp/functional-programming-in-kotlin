@@ -2,12 +2,12 @@ package it.twinsbrains.chapter2
 
 object Fibonacci {
     fun fibonacci(n: Int): Int {
-        tailrec fun loop(i: Int, acc: Int): Int =
+        tailrec fun loop(i: Int, prev: Int, last: Int): Int =
             if (i == 0) {
-                acc
+                prev
             } else {
-                loop(i - 1, acc * i)
+                loop(i - 1, last, last + prev)
             }
-        return loop(n, 1)
+        return loop(n, 0, 1)
     }
 }

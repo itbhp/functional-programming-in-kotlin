@@ -6,13 +6,24 @@ import assertk.assertions.*
 import it.twinsbrains.chapter2.Fibonacci.fibonacci
 
 class FibonacciTest{
+
     @Test
-    fun `for 3`() {
-        assertThat(fibonacci(3)).isEqualTo(6)
+    fun first() {
+        assertThat(fibonacci(1)).isEqualTo(1)
     }
 
     @Test
-    fun `for 6`() {
-        assertThat(fibonacci(6)).isEqualTo(720)
+    fun second() {
+        assertThat(fibonacci(2)).isEqualTo(1)
+    }
+
+    @Test
+    fun third() {
+        assertThat(fibonacci(3)).isEqualTo(2)
+    }
+
+    @Test
+    fun sixth() {
+        assertThat(fibonacci(6)).isEqualTo(8)
     }
 }
