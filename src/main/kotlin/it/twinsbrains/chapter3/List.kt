@@ -55,10 +55,11 @@ sealed class List<out A> {
     }
 
     fun <A, B> foldRight(xs: List<A>, z: B, f: (A, B) -> B): B =
-      when (xs) {
-        is Nil -> z
-        is Cons -> f(xs.head, foldRight(xs.tail, z, f))
-      }
+//      when (xs) {
+//        is Nil -> z
+//        is Cons -> f(xs.head, foldRight(xs.tail, z, f))
+//      }
+      foldLeft(xs, { it }, { acc: (B) -> B, e: A -> { b -> acc(f(e, b)) } })(z)
 
     fun <A> length(xs: List<A>): Int = foldRight(xs, 0, { _, acc -> acc + 1 })
 
