@@ -29,4 +29,19 @@ class ListTest {
   fun product() {
     assertThat(List.product(List.of(1.0, 2.0, 3.0, 4.0))).isEqualTo(24.0)
   }
+
+  @Test
+  fun dropOnEmptyList() {
+    assertThat(List.drop(Nil, 1)).isEqualTo(Nil)
+  }
+
+  @Test
+  fun dropRemainingNonEmpty() {
+    assertThat(List.drop(List.of(1, 2), 1)).isEqualTo(List.of(2))
+  }
+
+  @Test
+  fun dropRemainingEmpty() {
+    assertThat(List.drop(List.of(1, 2), 2)).isEqualTo(Nil)
+  }
 }
