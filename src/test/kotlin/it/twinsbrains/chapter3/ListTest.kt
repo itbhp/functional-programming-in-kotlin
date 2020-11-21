@@ -50,4 +50,24 @@ class ListTest {
     assertThat(List.dropWhile(List.of(2, 4, 2, 3, 4, 5)) { n -> n % 2 == 0 })
       .isEqualTo(List.of(3, 4, 5))
   }
+
+  @Test
+  fun append() {
+    assertThat(List.append(List.of(1, 2), List.of(3, 4))).isEqualTo(List.of(1, 2, 3, 4))
+  }
+
+  @Test
+  fun initOnEmpty() {
+    assertThat(List.init(Nil)).isEqualTo(Nil)
+  }
+
+  @Test
+  fun initResultingEmpty() {
+    assertThat(List.init(List.of(1))).isEqualTo(Nil)
+  }
+
+  @Test
+  fun initResultingNonEmpty() {
+    assertThat(List.init(List.of(1, 2, 3))).isEqualTo(List.of(1, 2))
+  }
 }

@@ -43,6 +43,27 @@ sealed class List<out A> {
           else -> l
         }
       }
+
+    fun <A> append(a1: List<A>, a2: List<A>): List<A> =
+      when (a1) {
+        is Nil -> a2
+        is Cons -> Cons(a1.head, append(a1.tail, a2))
+      }
+
+
+    /*
+      () -> ()
+      (1) -> ()
+      (1,2) -> (1)
+     */
+    fun <A> init(l: List<A>): List<A> = when (l) {
+      is Nil -> Nil
+      is Cons -> when (l.tail) {
+        is Nil -> Nil
+        is Cons -> Cons(l.head, init(l.tail))
+      }
+    }
+
   }
 }
 
