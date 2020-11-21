@@ -71,4 +71,14 @@ class ListTest {
   fun initResultingNonEmpty() {
     assertThat(List.init(List.of(1, 2, 3))).isEqualTo(List.of(1, 2))
   }
+
+  @Test
+  fun lengthOnEmpty() {
+    assertThat(List.length(List.empty<Int>())).isEqualTo(0)
+  }
+
+  @Test
+  fun lengthOnNonEmpty() {
+    assertThat(List.length(List.of(1, 2, 3, 4))).isEqualTo(4)
+  }
 }

@@ -2,6 +2,9 @@ package it.twinsbrains.chapter3
 
 sealed class List<out A> {
   companion object {
+
+    fun <A> empty(): List<A> = Nil
+
     fun <A> of(vararg aa: A): List<A> {
       val tail = aa.sliceArray(1 until aa.size)
       return if (aa.isEmpty()) Nil else Cons(aa[0], of(*tail))
@@ -55,6 +58,8 @@ sealed class List<out A> {
       is Nil -> z
       is Cons -> f(xs.head, foldRight(xs.tail, z, f))
     }
+
+    fun <A> length(xs: List<A>): Int = foldRight(xs, 0, { _, acc -> acc + 1 })
   }
 }
 
