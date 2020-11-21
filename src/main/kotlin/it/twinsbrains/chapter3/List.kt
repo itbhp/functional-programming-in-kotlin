@@ -34,6 +34,15 @@ sealed class List<out A> {
           else -> l
         }
       }
+
+    fun <A> dropWhile(l: List<A>, f: (a: A) -> Boolean): List<A> =
+      when (l) {
+        is Nil -> Nil
+        is Cons -> when {
+          f(l.head) -> dropWhile(l.tail, f)
+          else -> l
+        }
+      }
   }
 }
 

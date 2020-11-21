@@ -44,4 +44,10 @@ class ListTest {
   fun dropRemainingEmpty() {
     assertThat(List.drop(List.of(1, 2), 2)).isEqualTo(Nil)
   }
+
+  @Test
+  fun dropWhile() {
+    assertThat(List.dropWhile(List.of(2, 4, 2, 3, 4, 5)) { n -> n % 2 == 0 })
+      .isEqualTo(List.of(3, 4, 5))
+  }
 }
