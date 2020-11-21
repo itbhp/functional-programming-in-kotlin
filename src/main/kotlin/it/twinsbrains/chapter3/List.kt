@@ -8,17 +8,10 @@ sealed class List<out A> {
     }
 
     fun sum(ints: List<Int>): Int =
-      when (ints) {
-        is Nil -> 0
-        is Cons -> ints.head + sum(ints.tail)
-      }
+      foldRight(ints, 0, { a, b -> a + b })
 
     fun product(doubles: List<Double>): Double =
-      when (doubles) {
-        is Nil -> 1.0
-        is Cons -> if (doubles.head == 0.0) 0.0
-        else doubles.head * product(doubles.tail)
-      }
+      foldRight(doubles, 1.0, { a, b -> a * b })
 
     fun <A> tail(xs: List<A>): List<A> =
       when (xs) {
@@ -58,6 +51,10 @@ sealed class List<out A> {
       }
     }
 
+    fun <A, B> foldRight(xs: List<A>, z: B, f: (A, B) -> B): B = when (xs) {
+      is Nil -> z
+      is Cons -> f(xs.head, foldRight(xs.tail, z, f))
+    }
   }
 }
 
