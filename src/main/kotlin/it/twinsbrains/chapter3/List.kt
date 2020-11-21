@@ -50,14 +50,8 @@ sealed class List<out A> {
         is Cons -> Cons(a1.head, append(a1.tail, a2))
       }
 
-
-    /*
-      () -> ()
-      (1) -> ()
-      (1,2) -> (1)
-     */
     fun <A> init(l: List<A>): List<A> = when (l) {
-      is Nil -> Nil
+      is Nil -> throw IllegalArgumentException("init called on empty list")
       is Cons -> when (l.tail) {
         is Nil -> Nil
         is Cons -> Cons(l.head, init(l.tail))

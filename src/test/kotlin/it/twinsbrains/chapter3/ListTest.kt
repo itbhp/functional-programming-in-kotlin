@@ -3,6 +3,7 @@ package it.twinsbrains.chapter3
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import org.junit.Test
+import org.junit.jupiter.api.assertThrows
 
 class ListTest {
 
@@ -58,7 +59,7 @@ class ListTest {
 
   @Test
   fun initOnEmpty() {
-    assertThat(List.init(Nil)).isEqualTo(Nil)
+    assertThrows<IllegalArgumentException> { List.init(Nil) }
   }
 
   @Test
