@@ -54,6 +54,13 @@ sealed class List<out A> {
       }
     }
 
+    fun <A> reverse(l: List<A>): List<A> =
+      foldLeft(
+        l,
+        empty(),
+        { acc: List<A>, e: A -> Cons(e, acc) }
+      )
+
     fun <A, B> foldRight(xs: List<A>, z: B, f: (A, B) -> B): B =
 //      when (xs) {
 //        is Nil -> z

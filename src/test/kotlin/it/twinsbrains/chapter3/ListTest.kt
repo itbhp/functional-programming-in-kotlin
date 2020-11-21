@@ -85,11 +85,10 @@ class ListTest {
   @Test
   fun reverse() {
     assertThat(
-      List.foldLeft(
-        List.of(1, 2, 3),
-        List.empty(),
-        { acc: List<String>, e: Int -> Cons(e.toString(), acc) })
-    ).isEqualTo(List.of("3", "2", "1"))
+      List.reverse(
+        List.of(1, 2, 3)
+      )
+    ).isEqualTo(List.of(3, 2, 1))
   }
 
   @Test
