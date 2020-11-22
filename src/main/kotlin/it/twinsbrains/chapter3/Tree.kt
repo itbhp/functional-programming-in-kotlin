@@ -21,6 +21,12 @@ sealed class Tree<out A> {
         is Leaf -> tree.value
         is Branch -> max(maximum(tree.left), maximum(tree.right))
       }
+
+    fun <A, B> map(t: Tree<A>, f: (A) -> B): Tree<B> =
+      when (t) {
+        is Leaf -> Leaf(f(t.value))
+        is Branch -> Branch(map(t.left, f), map(t.right, f))
+      }
   }
 }
 
