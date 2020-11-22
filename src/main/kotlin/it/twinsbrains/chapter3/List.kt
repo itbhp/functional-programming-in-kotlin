@@ -76,6 +76,8 @@ sealed class List<out A> {
         is Nil -> z
         is Cons -> foldLeft(xs.tail, f(z, xs.head), f)
       }
+
+    fun <A> concatenate(ls: List<List<A>>): List<A> = foldRight(ls, empty(), {l, acc -> append(l, acc)})
   }
 }
 
