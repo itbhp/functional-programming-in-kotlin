@@ -131,4 +131,11 @@ class ListTest {
             ) { x -> Cons(x, Nil) }
         ).isEqualTo(List.of(1, 2, 3, 4))
     }
+
+    @Test
+    fun zipWith() {
+        assertThat(
+            List.zipWith(List.of(1, 2, 3), List.of(2.0, 3.0, 4.0)) { i, d -> i * d }
+        ).isEqualTo(List.of(2.0, 6.0, 12.0))
+    }
 }

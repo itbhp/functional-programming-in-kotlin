@@ -92,6 +92,16 @@ sealed class List<out A> {
 
         fun <A, B> flatMap(xa: List<A>, f: (A) -> List<B>): List<B> =
             concatenate(map(xa, f))
+
+        fun <A, B, C> zipWith(xs: List<A>, ys: List<B>, f: (A, B) -> C): List<C> =
+            when (xs) {
+                is Nil -> Nil
+                is Cons ->
+                    when (ys) {
+                        is Nil -> Nil
+                        is Cons -> Cons(f(xs.head, ys.head), zipWith(xs.tail, ys.tail, f))
+                    }
+            }
     }
 }
 
