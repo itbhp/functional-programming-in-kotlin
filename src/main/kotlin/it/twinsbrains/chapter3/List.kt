@@ -41,10 +41,11 @@ sealed class List<out A> {
       }
 
     fun <A> append(a1: List<A>, a2: List<A>): List<A> =
-      when (a1) {
-        is Nil -> a2
-        is Cons -> Cons(a1.head, append(a1.tail, a2))
-      }
+//      when (a1) {
+//        is Nil -> a2
+//        is Cons -> Cons(a1.head, append(a1.tail, a2))
+//      }
+      foldRight(a1, a2, {e, l -> Cons(e, l)})
 
     fun <A> init(l: List<A>): List<A> = when (l) {
       is Nil -> throw IllegalArgumentException("init called on empty list")
