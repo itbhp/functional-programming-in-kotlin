@@ -86,6 +86,9 @@ sealed class List<out A> {
 
         fun <A, B> map(xs: List<A>, f: (A) -> B): List<B> =
             foldRight(xs, empty(), { e, l -> Cons(f(e), l) })
+
+        fun <A> filter(xs: List<A>, f: (A) -> Boolean): List<A> =
+            foldRight(xs, empty(), { e, l -> if (f(e)) Cons(e, l) else l })
     }
 }
 

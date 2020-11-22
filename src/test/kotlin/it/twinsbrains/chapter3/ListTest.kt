@@ -115,4 +115,11 @@ class ListTest {
             List.addOne(List.of(1, 2, 3, 4))
         ).isEqualTo(List.of(2, 3, 4, 5))
     }
+
+    @Test
+    fun filter() {
+        assertThat(
+            List.filter(List.of(1, 2, 3)) { x -> x % 2 != 0 }
+        ).isEqualTo(List.of(1, 3))
+    }
 }
