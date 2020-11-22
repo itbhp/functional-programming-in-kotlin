@@ -108,4 +108,11 @@ class ListTest {
             )
         ).isEqualTo(List.of(1, 2, 3, 4, 5, 6))
     }
+
+    @Test
+    fun `add one to each element of a list`() {
+        assertThat(
+            List.addOne(List.of(1, 2, 3, 4))
+        ).isEqualTo(List.of(2, 3, 4, 5))
+    }
 }
