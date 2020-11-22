@@ -83,12 +83,12 @@ sealed class List<out A> {
         fun addOne(xs: List<Int>): List<Int> =
             map(xs) { e -> e + 1 }
 
-
         fun <A, B> map(xs: List<A>, f: (A) -> B): List<B> =
             foldRight(xs, empty(), { e, l -> Cons(f(e), l) })
 
         fun <A> filter(xs: List<A>, f: (A) -> Boolean): List<A> =
-            foldRight(xs, empty(), { e, l -> if (f(e)) Cons(e, l) else l })
+//            foldRight(xs, empty(), { e, l -> if (f(e)) Cons(e, l) else l })
+            flatMap(xs) { e -> if (f(e)) of(e) else empty() }
 
         fun <A, B> flatMap(xa: List<A>, f: (A) -> List<B>): List<B> =
             concatenate(map(xa, f))
