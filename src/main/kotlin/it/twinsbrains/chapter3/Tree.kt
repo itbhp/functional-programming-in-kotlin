@@ -10,6 +10,12 @@ sealed class Tree<out A> {
         is Branch -> 1 + size(tree.left) + size(tree.right)
       }
 
+    fun <A> depth(tree: Tree<A>): Int =
+      when (tree) {
+        is Leaf -> 1
+        is Branch -> 1 + max(depth(tree.left), depth(tree.right))
+      }
+
     fun maximum(tree: Tree<Int>): Int =
       when (tree) {
         is Leaf -> tree.value
