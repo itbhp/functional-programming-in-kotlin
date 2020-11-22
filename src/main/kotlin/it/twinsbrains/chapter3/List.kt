@@ -102,6 +102,20 @@ sealed class List<out A> {
                         is Cons -> Cons(f(xs.head, ys.head), zipWith(xs.tail, ys.tail, f))
                     }
             }
+
+        tailrec fun <A> hasSubsequence(xs: List<A>, sub: List<A>): Boolean =
+            when (xs) {
+                is Nil -> Nil == sub
+                is Cons ->
+                    when (sub) {
+                        is Nil -> true
+                        is Cons -> if (xs.head == sub.head) {
+                            hasSubsequence(xs.tail, sub.tail)
+                        } else {
+                            hasSubsequence(xs.tail, sub)
+                        }
+                    }
+            }
     }
 }
 

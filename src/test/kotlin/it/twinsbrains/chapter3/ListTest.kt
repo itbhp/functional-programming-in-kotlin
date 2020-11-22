@@ -138,4 +138,44 @@ class ListTest {
             List.zipWith(List.of(1, 2, 3), List.of(2.0, 3.0, 4.0)) { i, d -> i * d }
         ).isEqualTo(List.of(2.0, 6.0, 12.0))
     }
+
+    @Test
+    fun hasSubsequenceOnEmpty() {
+        assertThat(
+            List.hasSubsequence(
+                List.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                List.empty()
+            )
+        ).isEqualTo(true)
+    }
+
+    @Test
+    fun hasSubsequenceOnBothEmpty() {
+        assertThat(
+            List.hasSubsequence(
+                List.empty<String>(),
+                List.empty()
+            )
+        ).isEqualTo(true)
+    }
+
+    @Test
+    fun hasSubsequenceFromEmpty() {
+        assertThat(
+            List.hasSubsequence(
+                List.empty(),
+                List.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
+            )
+        ).isEqualTo(false)
+    }
+
+    @Test
+    fun hasSubsequence() {
+        assertThat(
+            List.hasSubsequence(
+                List.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                List.of(4, 5, 6, 7)
+            )
+        ).isEqualTo(true)
+    }
 }
