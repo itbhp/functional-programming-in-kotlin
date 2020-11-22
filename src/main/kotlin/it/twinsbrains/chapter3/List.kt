@@ -81,7 +81,11 @@ sealed class List<out A> {
             foldRight(ls, empty(), { l, acc -> append(l, acc) })
 
         fun addOne(xs: List<Int>): List<Int> =
-            foldRight(xs, empty(), { e, l -> Cons(e + 1, l) })
+            map(xs) { e -> e + 1 }
+
+
+        fun <A, B> map(xs: List<A>, f: (A) -> B): List<B> =
+            foldRight(xs, empty(), { e, l -> Cons(f(e), l) })
     }
 }
 
