@@ -122,4 +122,13 @@ class ListTest {
             List.filter(List.of(1, 2, 3)) { x -> x % 2 != 0 }
         ).isEqualTo(List.of(1, 3))
     }
+
+    @Test
+    fun flatMap() {
+        assertThat(
+            List.flatMap(
+                List.of(1, 2, 3, 4)
+            ) { x -> Cons(x, Nil) }
+        ).isEqualTo(List.of(1, 2, 3, 4))
+    }
 }
