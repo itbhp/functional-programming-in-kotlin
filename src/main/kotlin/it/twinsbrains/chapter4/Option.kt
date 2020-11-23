@@ -25,5 +25,5 @@ fun <A> Option<A>.getOrElse(default: () -> A): A =
     is Some -> this.get
   }
 
-fun <A> Option<A>.orElse(ob: () -> Option<A>): Option<A> = TODO()
+fun <A> Option<A>.orElse(ob: () -> Option<A>): Option<A> = this.map { Some(it) }.getOrElse { ob() }
 fun <A> Option<A>.filter(f: (A) -> Boolean): Option<A> = TODO()

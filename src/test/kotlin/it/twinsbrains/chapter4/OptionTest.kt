@@ -39,4 +39,15 @@ class OptionTest {
       none<Int>().getOrElse { 4 }
     ).isEqualTo(4)
   }
+
+  @Test
+  fun `orElse should work`() {
+    assertThat(
+      some(2).orElse { Some(4) }
+    ).isEqualTo(Some(2))
+
+    assertThat(
+      none<Int>().orElse { Some(4) }
+    ).isEqualTo(Some(4))
+  }
 }
