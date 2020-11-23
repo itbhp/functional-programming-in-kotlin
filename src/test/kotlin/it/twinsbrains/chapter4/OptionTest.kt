@@ -28,4 +28,15 @@ class OptionTest {
       none<Int>().flatMap { Some(it * 2) }
     ).isEqualTo(None)
   }
+
+  @Test
+  fun `getOrElse should work`() {
+    assertThat(
+      some(2).getOrElse { 4 }
+    ).isEqualTo(2)
+
+    assertThat(
+      none<Int>().getOrElse { 4 }
+    ).isEqualTo(4)
+  }
 }
