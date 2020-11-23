@@ -4,6 +4,8 @@ sealed class Option<out A> {
   companion object {
     fun <A> none(): Option<A> = None
     fun <A> some(a: A): Option<A> = Some(a)
+
+    fun <A, B> lift(f: (A) -> B): (Option<A>) -> Option<B> = { oa -> oa.map(f) }
   }
 }
 

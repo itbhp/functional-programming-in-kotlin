@@ -65,4 +65,12 @@ class OptionTest {
       none<Int>().filter { it % 2 == 0 }
     ).isEqualTo(None)
   }
+
+  @Test
+  fun `lift should work`() {
+    val convertToString = { a: Int -> a.toString() }
+    val someA = some(4)
+
+    assertThat(Option.lift(convertToString)(someA)).isEqualTo(some("4"))
+  }
 }
