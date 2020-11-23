@@ -50,4 +50,19 @@ class OptionTest {
       none<Int>().orElse { Some(4) }
     ).isEqualTo(Some(4))
   }
+
+  @Test
+  fun `filter should work`() {
+    assertThat(
+      some(2).filter { it % 2 != 0 }
+    ).isEqualTo(None)
+
+    assertThat(
+      some(2).filter { it % 2 == 0 }
+    ).isEqualTo(Some(2))
+
+    assertThat(
+      none<Int>().filter { it % 2 == 0 }
+    ).isEqualTo(None)
+  }
 }
