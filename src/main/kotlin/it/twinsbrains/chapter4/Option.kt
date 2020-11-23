@@ -16,7 +16,12 @@ fun <A, B> Option<A>.map(f: (A) -> B): Option<B> =
     is Some -> Some(f(this.get))
   }
 
-fun <A, B> Option<A>.flatMap(f: (A) -> Option<B>): Option<B> = TODO()
+fun <A, B> Option<A>.flatMap(f: (A) -> Option<B>): Option<B> =
+  when (this) {
+    is None -> None
+    is Some -> f(this.get)
+  }
+
 fun <A> Option<A>.getOrElse(default: () -> A): A = TODO()
 fun <A> Option<A>.orElse(ob: () -> Option<A>): Option<A> = TODO()
 fun <A> Option<A>.filter(f: (A) -> Boolean): Option<A> = TODO()

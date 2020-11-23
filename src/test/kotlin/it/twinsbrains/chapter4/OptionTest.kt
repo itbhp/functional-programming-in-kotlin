@@ -17,4 +17,15 @@ class OptionTest {
       none<Int>().map { it * 2 }
     ).isEqualTo(None)
   }
+
+  @Test
+  fun `flatMap should work`() {
+    assertThat(
+      some(2).flatMap { Some(it * 2) }
+    ).isEqualTo(Some(4))
+
+    assertThat(
+      none<Int>().flatMap { Some(it * 2) }
+    ).isEqualTo(None)
+  }
 }
