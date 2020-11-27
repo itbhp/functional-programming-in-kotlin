@@ -2,6 +2,9 @@ package it.twinsbrains.chapter4
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import it.twinsbrains.chapter3.List
+import it.twinsbrains.chapter4.Either.Companion.left
+import it.twinsbrains.chapter4.Either.Companion.right
 import org.junit.Test
 
 class EitherTest {
@@ -19,5 +22,17 @@ class EitherTest {
   @Test
   fun orElse() {
     assertThat(Left("Error").orElse { Right(42) }).isEqualTo(Right(42))
+  }
+
+  @Test
+  fun sequenceOnLeft() {
+    assertThat(Either.sequence(List.of(right(42), left("Error"))))
+      .isEqualTo(left<String, Int>("Error"))
+  }
+
+  @Test
+  fun sequenceOnRight() {
+    assertThat(Either.sequence(List.of(right<String, Int>(42), right(43))))
+      .isEqualTo(right(List.of(42, 43)))
   }
 }
