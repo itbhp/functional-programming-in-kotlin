@@ -38,7 +38,11 @@ sealed class Option<out A> {
       xa: List<A>,
       f: (A) -> Option<B>
     ): Option<List<B>> =
-      List.foldRight(xa, some(List.empty()), { a, optListB -> map2(f(a), optListB) { b, l -> Cons(b, l) } })
+      List.foldRight(
+        xa,
+        some(List.empty())
+      )
+      { a, optListB -> map2(f(a), optListB) { b, l -> Cons(b, l) } }
 
   }
 }
