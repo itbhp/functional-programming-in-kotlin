@@ -2,6 +2,7 @@ package it.twinsbrains.chapter4
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import it.twinsbrains.chapter3.List
 import it.twinsbrains.chapter4.Option.Companion.none
 import it.twinsbrains.chapter4.Option.Companion.some
 import org.junit.Test
@@ -77,5 +78,20 @@ class OptionTest {
   @Test
   fun `map2 test`() {
     assertThat(Option.map2(some(2), some(4)) { a, b -> a + b }).isEqualTo(some(6))
+  }
+
+  @Test
+  fun `sequence on empty list`() {
+    assertThat(Option.sequence(List.empty<Option<Int>>())).isEqualTo(some(List.empty()))
+  }
+
+  @Test
+  fun `sequence on list of some`() {
+    assertThat(Option.sequence(List.of(some(1), some(2)))).isEqualTo(some(List.of(1, 2)))
+  }
+
+  @Test
+  fun `sequence on list of some and none`() {
+    assertThat(Option.sequence(List.of(some(1), none()))).isEqualTo(none())
   }
 }
