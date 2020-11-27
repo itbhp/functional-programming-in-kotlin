@@ -73,4 +73,9 @@ class OptionTest {
 
     assertThat(Option.lift(convertToString)(someA)).isEqualTo(some("4"))
   }
+
+  @Test
+  fun `map2 test`() {
+    assertThat(Option.map2(some(2), some(4)) { a, b -> a + b }).isEqualTo(some(6))
+  }
 }

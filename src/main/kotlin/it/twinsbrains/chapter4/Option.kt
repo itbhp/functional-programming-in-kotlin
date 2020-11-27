@@ -6,6 +6,22 @@ sealed class Option<out A> {
     fun <A> some(a: A): Option<A> = Some(a)
 
     fun <A, B> lift(f: (A) -> B): (Option<A>) -> Option<B> = { oa -> oa.map(f) }
+    fun <A, B, C> lift2(f: (A, B) -> C): (Option<A>, Option<B>) -> Option<C> =
+      { optA, optB ->
+        optA.flatMap { a ->
+          optB.map { b ->
+            f(a, b)
+          }
+        }
+      }
+
+    fun <A> catches(a: () -> A): Option<A> = try {
+      Some(a())
+    } catch (e: Throwable) {
+      None
+    }
+
+    fun <A, B, C> map2(a: Option<A>, b: Option<B>, f: (A, B) -> C): Option<C> = lift2(f)(a, b)
   }
 }
 
