@@ -26,7 +26,6 @@ sealed class Option<out A> {
 
     fun <A, B, C> map2(a: Option<A>, b: Option<B>, f: (A, B) -> C): Option<C> = lift2(f)(a, b)
 
-
     fun <A> sequence(xs: List<Option<A>>): Option<List<A>> =
       List.foldRight(
         xs,
