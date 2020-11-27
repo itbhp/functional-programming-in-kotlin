@@ -27,11 +27,19 @@ sealed class Option<out A> {
     fun <A, B, C> map2(a: Option<A>, b: Option<B>, f: (A, B) -> C): Option<C> = lift2(f)(a, b)
 
     fun <A> sequence(xs: List<Option<A>>): Option<List<A>> =
-      List.foldRight(
-        xs,
-        some(List.empty()),
-//        { optA, acc -> optA.flatMap { a -> acc.map { l -> Cons(a, l) } } })
-        { optA, acc -> map2(optA, acc) { a, l -> Cons(a, l) } })
+//      List.foldRight(
+//        xs,
+//        some(List.empty()),
+////        { optA, acc -> optA.flatMap { a -> acc.map { l -> Cons(a, l) } } })
+//        { optA, acc -> map2(optA, acc) { a, l -> Cons(a, l) } })
+      traverse(xs) { it }
+
+    fun <A, B> traverse(
+      xa: List<A>,
+      f: (A) -> Option<B>
+    ): Option<List<B>> =
+      List.foldRight(xa, some(List.empty()), { a, optListB -> map2(f(a), optListB) { b, l -> Cons(b, l) } })
+
   }
 }
 

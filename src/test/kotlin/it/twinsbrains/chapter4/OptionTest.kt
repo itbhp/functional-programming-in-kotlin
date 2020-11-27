@@ -101,4 +101,22 @@ class OptionTest {
     assertThat(catches { throw Exception() }).isEqualTo(none())
     assertThat(catches { 1 }).isEqualTo(some(1))
   }
+
+  @Test
+  fun `traverse on map empty list`() {
+    assertThat(Option.traverse(List.empty<Int>()) { a -> if (a % 2 == 0) some(a) else none() })
+      .isEqualTo(some(List.empty()))
+  }
+
+  @Test
+  fun `traverse on map function producing none`() {
+    assertThat(Option.traverse(List.of(1, 2, 3, 4, 5)) { a -> if (a % 2 == 0) some(a) else none() })
+      .isEqualTo(none())
+  }
+
+  @Test
+  fun `traverse on map function producing only some`() {
+    assertThat(Option.traverse(List.of(1, 2, 3, 4, 5)) { a -> some(a.toString()) })
+      .isEqualTo(some(List.of("1", "2", "3", "4", "5")))
+  }
 }
