@@ -1,14 +1,13 @@
 package it.twinsbrains.chapter5
 
 import it.twinsbrains.chapter3.List
-import it.twinsbrains.chapter4.None
 import it.twinsbrains.chapter4.Option
-import it.twinsbrains.chapter4.Some
+import it.twinsbrains.chapter4.Option.Companion.none
+import it.twinsbrains.chapter4.Option.Companion.some
 import it.twinsbrains.chapter3.Cons as consL
 
 sealed class Stream<out A> {
   companion object {
-
 
     fun <A> Stream<A>.forAll(p: (A) -> Boolean): Boolean =
       foldRight({ false }, { a, b -> p(a) && b() })
@@ -56,10 +55,8 @@ sealed class Stream<out A> {
       return List.reverse(loop(this, List.empty()))
     }
 
-    fun <A> Stream<A>.headOption(): Option<A> = when (this) {
-      is Empty -> None
-      is Cons -> Some(head())
-    }
+    fun <A> Stream<A>.headOption(): Option<A> =
+      foldRight({ none() }, { a, _ -> some(a) })
 
     fun <A> cons(hd: () -> A, tl: () -> Stream<A>): Stream<A> {
       val head: A by lazy(hd)
