@@ -6,6 +6,7 @@ import it.twinsbrains.chapter4.Option.Companion.some
 import it.twinsbrains.chapter5.Stream.Companion.cons
 import it.twinsbrains.chapter5.Stream.Companion.empty
 import it.twinsbrains.chapter5.Stream.Companion.headOption
+import it.twinsbrains.chapter5.Stream.Companion.toList
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -60,5 +61,12 @@ class StreamTest {
     val stream = Stream.of(1, 2, 3)
 
     assertThat(stream.headOption()).isEqualTo(some(1))
+  }
+
+  @Test
+  fun `toList should work`() {
+    val stream = Stream.of(1, 2, 3)
+
+    assertThat(stream.toList()).isEqualTo(listOf(1, 2, 3))
   }
 }

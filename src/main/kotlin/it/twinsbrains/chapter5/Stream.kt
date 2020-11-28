@@ -6,6 +6,12 @@ import it.twinsbrains.chapter4.Some
 
 sealed class Stream<out A> {
   companion object {
+    fun <A> Stream<A>.toList(): List<A> =
+      when (this) {
+        is Empty -> listOf()
+        is Cons -> listOf(this.head()) + this.tail().toList()
+      }
+
     fun <A> Stream<A>.headOption(): Option<A> = when (this) {
       is Empty -> None
       is Cons -> Some(head())
