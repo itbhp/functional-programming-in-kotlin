@@ -53,6 +53,12 @@ class StreamTest {
 
     assertThat(capturedOut.size).isEqualTo(1)
     assertThat(capturedOut[0]).isEqualTo("an Int being created")
+  }
 
+  @Test
+  fun `stream of should work`() {
+    val stream = Stream.of(1, 2, 3)
+
+    assertThat(stream.headOption()).isEqualTo(some(1))
   }
 }

@@ -18,6 +18,11 @@ sealed class Stream<out A> {
     }
 
     fun <A> empty(): Stream<A> = Empty
+
+    fun <A> of(vararg xs: A): Stream<A> =
+      if (xs.isEmpty()) empty()
+      else cons({ xs[0] },
+        { of(*xs.sliceArray(1 until xs.size)) })
   }
 }
 
