@@ -9,6 +9,9 @@ import it.twinsbrains.chapter3.Cons as consL
 sealed class Stream<out A> {
   companion object {
 
+    fun <A> Stream<A>.find(p: (A) -> Boolean): Option<A> =
+      filter(p).headOption()
+
     fun <A> Stream<A>.append(another: Stream<A>): Stream<A> =
       foldRight({ another }) { a, acc -> cons({ a }, acc) }
 
