@@ -9,6 +9,10 @@ import it.twinsbrains.chapter3.Cons as consL
 sealed class Stream<out A> {
   companion object {
 
+
+    fun <A> Stream<A>.forAll(p: (A) -> Boolean): Boolean =
+      foldRight({ false }, { a, b -> p(a) && b() })
+
     fun <A, B> Stream<A>.foldRight(
       z: () -> B,
       f: (A, () -> B) -> B
