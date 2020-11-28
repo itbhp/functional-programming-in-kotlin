@@ -8,6 +8,7 @@ import it.twinsbrains.chapter5.Stream.Companion.empty
 import it.twinsbrains.chapter5.Stream.Companion.exists
 import it.twinsbrains.chapter5.Stream.Companion.forAll
 import it.twinsbrains.chapter5.Stream.Companion.headOption
+import it.twinsbrains.chapter5.Stream.Companion.map
 import it.twinsbrains.chapter5.Stream.Companion.take
 import it.twinsbrains.chapter5.Stream.Companion.takeWhile
 import it.twinsbrains.chapter5.Stream.Companion.toList
@@ -101,5 +102,11 @@ class StreamTest {
   @Test
   fun `forAll test`() {
     expectThat(Stream.of(2, 3, 4, 5).forAll { it % 2 == 0 }).isFalse()
+  }
+
+  @Test
+  fun `map should work`() {
+    expectThat(Stream.of(1, 2, 4).map { it.toString() }.toList())
+      .isEqualTo(List.of("1", "2", "4"))
   }
 }
