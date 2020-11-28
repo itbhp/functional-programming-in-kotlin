@@ -5,6 +5,7 @@ import it.twinsbrains.chapter4.Option.Companion.some
 import it.twinsbrains.chapter5.Stream.Companion.cons
 import it.twinsbrains.chapter5.Stream.Companion.drop
 import it.twinsbrains.chapter5.Stream.Companion.empty
+import it.twinsbrains.chapter5.Stream.Companion.exists
 import it.twinsbrains.chapter5.Stream.Companion.headOption
 import it.twinsbrains.chapter5.Stream.Companion.take
 import it.twinsbrains.chapter5.Stream.Companion.takeWhile
@@ -14,6 +15,7 @@ import org.junit.Before
 import org.junit.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
+import strikt.assertions.isTrue
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
@@ -87,5 +89,10 @@ class StreamTest {
   @Test
   fun `takeWhile n`() {
     expectThat(Stream.of(1, 2, 3, 4, 5, 6, 7).takeWhile { it < 4 }.toList()).isEqualTo(List.of(1, 2, 3))
+  }
+
+  @Test
+  fun `exists should work`() {
+    expectThat(Stream.of(2, 3, 4, 5).exists { it % 2 == 0 }).isTrue()
   }
 }
