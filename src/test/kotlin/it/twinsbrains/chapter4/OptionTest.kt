@@ -1,69 +1,69 @@
 package it.twinsbrains.chapter4
 
-import assertk.assertThat
-import assertk.assertions.isEqualTo
 import it.twinsbrains.chapter3.List
 import it.twinsbrains.chapter4.Option.Companion.catches
 import it.twinsbrains.chapter4.Option.Companion.none
 import it.twinsbrains.chapter4.Option.Companion.some
 import org.junit.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 
 class OptionTest {
   @Test
   fun `map should work`() {
-    assertThat(
+    expectThat(
       some(2).map { it * 2 }
     ).isEqualTo(Some(4))
 
-    assertThat(
+    expectThat(
       none<Int>().map { it * 2 }
     ).isEqualTo(None)
   }
 
   @Test
   fun `flatMap should work`() {
-    assertThat(
+    expectThat(
       some(2).flatMap { Some(it * 2) }
     ).isEqualTo(Some(4))
 
-    assertThat(
+    expectThat(
       none<Int>().flatMap { Some(it * 2) }
     ).isEqualTo(None)
   }
 
   @Test
   fun `getOrElse should work`() {
-    assertThat(
+    expectThat(
       some(2).getOrElse { 4 }
     ).isEqualTo(2)
 
-    assertThat(
+    expectThat(
       none<Int>().getOrElse { 4 }
     ).isEqualTo(4)
   }
 
   @Test
   fun `orElse should work`() {
-    assertThat(
+    expectThat(
       some(2).orElse { Some(4) }
     ).isEqualTo(Some(2))
 
-    assertThat(
+    expectThat(
       none<Int>().orElse { Some(4) }
     ).isEqualTo(Some(4))
   }
 
   @Test
   fun `filter should work`() {
-    assertThat(
+    expectThat(
       some(2).filter { it % 2 != 0 }
     ).isEqualTo(None)
 
-    assertThat(
+    expectThat(
       some(2).filter { it % 2 == 0 }
     ).isEqualTo(Some(2))
 
-    assertThat(
+    expectThat(
       none<Int>().filter { it % 2 == 0 }
     ).isEqualTo(None)
   }
@@ -73,50 +73,50 @@ class OptionTest {
     val convertToString = { a: Int -> a.toString() }
     val someA = some(4)
 
-    assertThat(Option.lift(convertToString)(someA)).isEqualTo(some("4"))
+    expectThat(Option.lift(convertToString)(someA)).isEqualTo(some("4"))
   }
 
   @Test
   fun `map2 test`() {
-    assertThat(Option.map2(some(2), some(4)) { a, b -> a + b }).isEqualTo(some(6))
+    expectThat(Option.map2(some(2), some(4)) { a, b -> a + b }).isEqualTo(some(6))
   }
 
   @Test
   fun `sequence on empty list`() {
-    assertThat(Option.sequence(List.empty<Option<Int>>())).isEqualTo(some(List.empty()))
+    expectThat(Option.sequence(List.empty<Option<Int>>())).isEqualTo(some(List.empty()))
   }
 
   @Test
   fun `sequence on list of some`() {
-    assertThat(Option.sequence(List.of(some(1), some(2)))).isEqualTo(some(List.of(1, 2)))
+    expectThat(Option.sequence(List.of(some(1), some(2)))).isEqualTo(some(List.of(1, 2)))
   }
 
   @Test
   fun `sequence on list of some and none`() {
-    assertThat(Option.sequence(List.of(some(1), none()))).isEqualTo(none())
+    expectThat(Option.sequence(List.of(some(1), none()))).isEqualTo(none())
   }
 
   @Test
   fun `catches test`() {
-    assertThat(catches { throw Exception() }).isEqualTo(none())
-    assertThat(catches { 1 }).isEqualTo(some(1))
+    expectThat(catches { throw Exception() }).isEqualTo(none())
+    expectThat(catches { 1 }).isEqualTo(some(1))
   }
 
   @Test
   fun `traverse on map empty list`() {
-    assertThat(Option.traverse(List.empty<Int>()) { a -> if (a % 2 == 0) some(a) else none() })
+    expectThat(Option.traverse(List.empty<Int>()) { a -> if (a % 2 == 0) some(a) else none() })
       .isEqualTo(some(List.empty()))
   }
 
   @Test
   fun `traverse on map function producing none`() {
-    assertThat(Option.traverse(List.of(1, 2, 3, 4, 5)) { a -> if (a % 2 == 0) some(a) else none() })
+    expectThat(Option.traverse(List.of(1, 2, 3, 4, 5)) { a -> if (a % 2 == 0) some(a) else none() })
       .isEqualTo(none())
   }
 
   @Test
   fun `traverse on map function producing only some`() {
-    assertThat(Option.traverse(List.of(1, 2, 3, 4, 5)) { a -> some(a.toString()) })
+    expectThat(Option.traverse(List.of(1, 2, 3, 4, 5)) { a -> some(a.toString()) })
       .isEqualTo(some(List.of("1", "2", "3", "4", "5")))
   }
 }

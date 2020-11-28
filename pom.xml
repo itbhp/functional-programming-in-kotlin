@@ -15,10 +15,7 @@
         <kotlin.version>1.4.20-M1</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
         <junit-jupiter-api.version>5.6.2</junit-jupiter-api.version>
-        <assertk-jvm.version>0.22</assertk-jvm.version>
         <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
-        <mockk.version>1.10.2</mockk.version>
-        <kotlintest.version>2.0.7</kotlintest.version>
     </properties>
 
     <dependencies>
@@ -39,26 +36,36 @@
             <version>${junit-jupiter-api.version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>com.willowtreeapps.assertk</groupId>
-            <artifactId>assertk-jvm</artifactId>
-            <version>${assertk-jvm.version}</version>
+            <groupId>io.strikt</groupId>
+            <artifactId>strikt-core</artifactId>
+            <version>0.22.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>io.mockk</groupId>
-            <artifactId>mockk</artifactId>
-            <version>${mockk.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.kotlintest</groupId>
-            <artifactId>kotlintest</artifactId>
-            <version>${kotlintest.version}</version>
-            <scope>test</scope>
-        </dependency>
+
     </dependencies>
 
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>bintray</name>
+            <url>https://jcenter.bintray.com</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>bintray-plugins</name>
+            <url>https://jcenter.bintray.com</url>
+        </pluginRepository>
+    </pluginRepositories>
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
         <testSourceDirectory>src/test/kotlin</testSourceDirectory>
