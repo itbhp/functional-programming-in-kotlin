@@ -1,16 +1,22 @@
 package it.twinsbrains.chapter5
 
+import it.twinsbrains.chapter3.List
 import it.twinsbrains.chapter4.None
 import it.twinsbrains.chapter4.Option
 import it.twinsbrains.chapter4.Some
+import it.twinsbrains.chapter3.Cons as consL
 
 sealed class Stream<out A> {
   companion object {
-    fun <A> Stream<A>.toList(): List<A> =
-      when (this) {
-        is Empty -> listOf()
-        is Cons -> listOf(this.head()) + this.tail().toList()
+    fun <A> Stream<A>.toList(): List<A> {
+      tailrec fun loop(stream: Stream<A>, acc: List<A>): List<A> {
+        return when (stream) {
+          is Empty -> acc
+          is Cons -> loop(stream.tail(), consL(stream.head(), acc))
+        }
       }
+      return List.reverse(loop(this, List.empty()))
+    }
 
     fun <A> Stream<A>.headOption(): Option<A> = when (this) {
       is Empty -> None

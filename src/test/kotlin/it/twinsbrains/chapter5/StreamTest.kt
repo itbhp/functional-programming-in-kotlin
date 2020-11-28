@@ -2,6 +2,7 @@ package it.twinsbrains.chapter5
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import it.twinsbrains.chapter3.List
 import it.twinsbrains.chapter4.Option.Companion.some
 import it.twinsbrains.chapter5.Stream.Companion.cons
 import it.twinsbrains.chapter5.Stream.Companion.empty
@@ -19,7 +20,7 @@ class StreamTest {
 
   private val testOutput = ByteArrayOutputStream()
 
-  private val capturedOut: List<String>
+  private val capturedOut: kotlin.collections.List<String>
     get() {
       return testOutput.toString().split("\n")
     }
@@ -67,6 +68,6 @@ class StreamTest {
   fun `toList should work`() {
     val stream = Stream.of(1, 2, 3)
 
-    assertThat(stream.toList()).isEqualTo(listOf(1, 2, 3))
+    assertThat(stream.toList()).isEqualTo(List.of(1, 2, 3))
   }
 }
