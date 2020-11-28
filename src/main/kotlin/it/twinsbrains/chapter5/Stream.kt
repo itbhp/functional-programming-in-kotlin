@@ -10,6 +10,14 @@ sealed class Stream<out A> {
       is Empty -> None
       is Cons -> Some(head())
     }
+
+    fun <A> cons(hd: () -> A, tl: () -> Stream<A>): Stream<A> {
+      val head: A by lazy(hd)
+      val tail: Stream<A> by lazy(tl)
+      return Cons({ head }, { tail })
+    }
+
+    fun <A> empty(): Stream<A> = Empty
   }
 }
 
