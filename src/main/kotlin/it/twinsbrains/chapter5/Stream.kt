@@ -26,13 +26,7 @@ sealed class Stream<out A> {
       foldRight({ false }, { a, b -> p(a) || b() })
 
     fun <A> Stream<A>.takeWhile(p: (A) -> Boolean): Stream<A> =
-      when (this) {
-        is Empty -> Empty
-        is Cons -> {
-          if (p(this.head())) cons(this.head, { this.tail().takeWhile(p) })
-          else Empty
-        }
-      }
+      foldRight({ empty() }, { a, thunkAcc -> if (p(a)) cons({ a }, thunkAcc) else thunkAcc() })
 
     fun <A> Stream<A>.take(n: Int): Stream<A> =
       if (n <= 0)
