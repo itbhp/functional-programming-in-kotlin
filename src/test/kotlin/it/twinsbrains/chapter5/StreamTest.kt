@@ -2,11 +2,13 @@ package it.twinsbrains.chapter5
 
 import it.twinsbrains.chapter3.List
 import it.twinsbrains.chapter4.Option.Companion.some
+import it.twinsbrains.chapter5.Stream.Companion.append
 import it.twinsbrains.chapter5.Stream.Companion.cons
 import it.twinsbrains.chapter5.Stream.Companion.drop
 import it.twinsbrains.chapter5.Stream.Companion.empty
 import it.twinsbrains.chapter5.Stream.Companion.exists
 import it.twinsbrains.chapter5.Stream.Companion.filter
+import it.twinsbrains.chapter5.Stream.Companion.flatMap
 import it.twinsbrains.chapter5.Stream.Companion.forAll
 import it.twinsbrains.chapter5.Stream.Companion.headOption
 import it.twinsbrains.chapter5.Stream.Companion.map
@@ -115,5 +117,17 @@ class StreamTest {
   fun `filter should work`() {
     expectThat(Stream.of(1, 2, 3, 4).filter { it % 2 == 0 }.toList())
       .isEqualTo(List.of(2, 4))
+  }
+
+  @Test
+  fun `append should work`() {
+    expectThat(Stream.of(1, 2, 3, 4).append(Stream.of(5, 6)).toList())
+      .isEqualTo(List.of(1, 2, 3, 4, 5, 6))
+  }
+
+  @Test
+  fun `flatMap should work`() {
+    expectThat(Stream.of(1, 2, 4).flatMap { Stream.of(it.toString()) }.toList())
+      .isEqualTo(List.of("1", "2", "4"))
   }
 }
