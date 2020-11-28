@@ -8,6 +8,24 @@ import it.twinsbrains.chapter3.Cons as consL
 
 sealed class Stream<out A> {
   companion object {
+    fun <A> Stream<A>.take(n: Int): Stream<A> =
+      if (n <= 0)
+        empty()
+      else
+        when (this) {
+          is Empty -> Empty
+          is Cons -> cons(this.head, { this.tail().take(n - 1) })
+        }
+
+    fun <A> Stream<A>.drop(n: Int): Stream<A> =
+      if (n <= 0)
+        this
+      else
+        when (this) {
+          is Empty -> Empty
+          is Cons -> this.tail().drop(n - 1)
+        }
+
     fun <A> Stream<A>.toList(): List<A> {
       tailrec fun loop(stream: Stream<A>, acc: List<A>): List<A> {
         return when (stream) {

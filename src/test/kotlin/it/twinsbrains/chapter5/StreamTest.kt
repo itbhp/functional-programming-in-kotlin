@@ -5,8 +5,10 @@ import assertk.assertions.isEqualTo
 import it.twinsbrains.chapter3.List
 import it.twinsbrains.chapter4.Option.Companion.some
 import it.twinsbrains.chapter5.Stream.Companion.cons
+import it.twinsbrains.chapter5.Stream.Companion.drop
 import it.twinsbrains.chapter5.Stream.Companion.empty
 import it.twinsbrains.chapter5.Stream.Companion.headOption
+import it.twinsbrains.chapter5.Stream.Companion.take
 import it.twinsbrains.chapter5.Stream.Companion.toList
 import org.junit.After
 import org.junit.Before
@@ -69,5 +71,15 @@ class StreamTest {
     val stream = Stream.of(1, 2, 3)
 
     assertThat(stream.toList()).isEqualTo(List.of(1, 2, 3))
+  }
+
+  @Test
+  fun `take test`() {
+    assertThat(Stream.of(1, 2, 3, 4, 5, 6, 7).take(3).toList()).isEqualTo(List.of(1, 2, 3))
+  }
+
+  @Test
+  fun `drop test`() {
+    assertThat(Stream.of(1, 2, 3, 4, 5, 6, 7).drop(3).toList()).isEqualTo(List.of(4, 5, 6, 7))
   }
 }
