@@ -35,4 +35,17 @@ class EitherTest {
     assertThat(Either.sequence(List.of(right<String, Int>(42), right(43))))
       .isEqualTo(right(List.of(42, 43)))
   }
+
+  @Test
+  fun `lift test`() {
+    val convert = { a: Int -> a.toString() }
+    assertThat(Either.lift<String, Int, String>(convert)(right(2))).isEqualTo(right("2"))
+  }
+
+  @Test
+  fun `catches test`() {
+    val runtimeException = RuntimeException("boom")
+    assertThat(Either.catches { throw runtimeException }).isEqualTo(left(runtimeException))
+    assertThat(Either.catches { 1 }).isEqualTo(right(1))
+  }
 }

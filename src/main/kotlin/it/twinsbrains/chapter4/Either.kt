@@ -9,11 +9,12 @@ sealed class Either<out E, out A> {
     fun <E, A> right(a: A): Either<E, A> = Right(a)
     fun <E, A> left(e: E): Either<E, A> = Left(e)
 
-    fun <A> catches(a: () -> A): Either<Exception, A> = try {
-      Right(a())
-    } catch (e: Exception) {
-      Left(e)
-    }
+    fun <A> catches(a: () -> A): Either<Exception, A> =
+      try {
+        Right(a())
+      } catch (e: Exception) {
+        Left(e)
+      }
 
     fun <E, A, B> lift(f: (A) -> B): (Either<E, A>) -> Either<E, B> = { oa -> oa.map(f) }
     fun <E, A, B, C> lift2(f: (A, B) -> C): (Either<E, A>, Either<E, B>) -> Either<E, C> =
