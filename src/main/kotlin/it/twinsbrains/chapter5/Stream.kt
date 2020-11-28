@@ -9,6 +9,9 @@ import it.twinsbrains.chapter3.Cons as consL
 sealed class Stream<out A> {
   companion object {
 
+    fun <A> Stream<A>.filter(p: (A) -> Boolean): Stream<A> =
+      foldRight({ empty() }) { a, s -> if (p(a)) cons({ a }, s) else s() }
+
     fun <A, B> Stream<A>.map(f: (A) -> B): Stream<B> =
       foldRight({ empty() }) { a, s -> cons({ f(a) }, s) }
 
