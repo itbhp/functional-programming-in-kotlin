@@ -8,6 +8,16 @@ import it.twinsbrains.chapter3.Cons as consL
 
 sealed class Stream<out A> {
   companion object {
+
+    fun <A> Stream<A>.takeWhile(p: (A) -> Boolean): Stream<A> =
+      when (this) {
+        is Empty -> Empty
+        is Cons -> {
+          if (p(this.head())) cons(this.head, { this.tail().takeWhile(p) })
+          else Empty
+        }
+      }
+
     fun <A> Stream<A>.take(n: Int): Stream<A> =
       if (n <= 0)
         empty()
