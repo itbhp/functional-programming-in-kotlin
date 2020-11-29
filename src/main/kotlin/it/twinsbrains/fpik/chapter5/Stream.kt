@@ -6,6 +6,7 @@ import it.twinsbrains.fpik.chapter4.Option.Companion.none
 import it.twinsbrains.fpik.chapter4.Option.Companion.some
 import it.twinsbrains.fpik.chapter4.getOrElse
 import it.twinsbrains.fpik.chapter4.map
+import it.twinsbrains.fpik.chapter5.InfiniteStreams.unfold
 import it.twinsbrains.fpik.chapter5.Stream.Companion.cons
 import it.twinsbrains.fpik.chapter3.Cons as consL
 
@@ -24,8 +25,20 @@ sealed class Stream<out A> {
     fun <A> Stream<A>.filter(p: (A) -> Boolean): Stream<A> =
       foldRight({ empty() }) { a, s -> if (p(a)) cons({ a }, s) else s() }
 
-    fun <A, B> Stream<A>.map(f: (A) -> B): Stream<B> =
-      foldRight({ empty() }) { a, s -> cons({ f(a) }, s) }
+    fun <A, B> Stream<A>.map(f: (A) -> B): Stream<B>
+//      = foldRight({ empty() }) { a, s -> cons({ f(a) }, s) }
+    {
+      return unfold(this, { cur ->
+        when (cur) {
+          is Empty -> none()
+          is Cons -> {
+            val res = f(cur.head())
+            some(res to cur.tail())
+          }
+        }
+      })
+    }
+
 
     fun <A> Stream<A>.forAll(p: (A) -> Boolean): Boolean =
       foldRight({ false }, { a, b -> p(a) && b() })
@@ -90,6 +103,7 @@ sealed class Stream<out A> {
         { of(*xs.sliceArray(1 until xs.size)) })
   }
 }
+
 
 data class Cons<out A>(
   val head: () -> A,
