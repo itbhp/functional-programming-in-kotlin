@@ -5,6 +5,16 @@ import it.twinsbrains.fpik.chapter3.List
 
 sealed class Option<out A> {
   companion object {
+
+    fun <A> Option<A>.isNone(): Boolean =
+      when (this) {
+        is None -> true
+        is Some -> false
+      }
+
+    fun <A> Option<A>.isSome(): Boolean =
+      !this.isNone()
+
     fun <A> none(): Option<A> = None
     fun <A> some(a: A): Option<A> = Some(a)
 

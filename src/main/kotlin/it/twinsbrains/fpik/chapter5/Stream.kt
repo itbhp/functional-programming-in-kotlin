@@ -2,33 +2,38 @@ package it.twinsbrains.fpik.chapter5
 
 import it.twinsbrains.fpik.chapter3.List
 import it.twinsbrains.fpik.chapter4.Option
+import it.twinsbrains.fpik.chapter4.Option.Companion.isSome
 import it.twinsbrains.fpik.chapter4.Option.Companion.none
 import it.twinsbrains.fpik.chapter4.Option.Companion.some
 import it.twinsbrains.fpik.chapter4.getOrElse
 import it.twinsbrains.fpik.chapter4.map
 import it.twinsbrains.fpik.chapter5.InfiniteStreams.unfold
+import it.twinsbrains.fpik.chapter5.InfiniteStreams.zipAll
 import it.twinsbrains.fpik.chapter5.Stream.Companion.cons
 import it.twinsbrains.fpik.chapter3.Cons as consL
 
 sealed class Stream<out A> {
   companion object {
 
-    fun <A> Stream<A>.startsWith(that: Stream<A>): Boolean =
-      when (this) {
-        is Empty -> false
-        is Cons -> when (that) {
-          is Empty -> true
-          is Cons -> {
-            val thisHead = this.head()
-            val thatHead = that.head()
-            if (thatHead == thisHead) {
-              this.tail().startsWith(that.tail())
-            } else {
-              false
-            }
-          }
-        }
-      }
+    fun <A> Stream<A>.startsWith(that: Stream<A>): Boolean
+//      when (this) {
+//        is Empty -> false
+//        is Cons -> when (that) {
+//          is Empty -> true
+//          is Cons -> {
+//            val thisHead = this.head()
+//            val thatHead = that.head()
+//            if (thatHead == thisHead) {
+//              this.tail().startsWith(that.tail())
+//            } else {
+//              false
+//            }
+//          }
+//        }
+//      }
+      = zipAll(that)
+      .takeWhile { it.second.isSome() }
+      .forAll { it.first == it.second }
 
     fun <A> Stream<A>.find(p: (A) -> Boolean): Option<A> =
       filter(p).headOption()
@@ -57,7 +62,7 @@ sealed class Stream<out A> {
     }
 
     fun <A> Stream<A>.forAll(p: (A) -> Boolean): Boolean =
-      foldRight({ false }, { a, b -> p(a) && b() })
+      foldRight({ true }, { a, b -> p(a) && b() })
 
     fun <A, B> Stream<A>.foldRight(
       z: () -> B,
@@ -95,7 +100,6 @@ sealed class Stream<out A> {
         }
       })
     }
-
 
     fun <A> Stream<A>.drop(n: Int): Stream<A> =
       if (n <= 0)
@@ -180,7 +184,14 @@ object InfiniteStreams {
             is Empty -> some((some(curA.head()) to none<B>()) to ZipState(curA.tail(), curB))
           }
         }
-        is Empty -> none()
+        is Empty -> {
+          when (curB) {
+            is Cons -> {
+              some((none<A>() to some(curB.head())) to ZipState(curA, curB.tail()))
+            }
+            is Empty -> none()
+          }
+        }
       }
     })
   }

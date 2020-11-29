@@ -114,6 +114,7 @@ class StreamTest {
   @Test
   fun `forAll test`() {
     expectThat(Stream.of(2, 3, 4, 5).forAll { it % 2 == 0 }).isFalse()
+    expectThat(Stream.of(2, 3, 4, 5).forAll { it < 6 }).isTrue()
   }
 
   @Test
@@ -151,7 +152,9 @@ class StreamTest {
 
   @Test
   fun `startsWith should work`() {
-    expectThat(Stream.of(1, 2, 4).startsWith(Stream.of(1, 2))).isTrue()
+    expectThat(Stream.of(1, 2, 4).startsWith(Stream.of(1, 2)))
+      .describedAs("stream (1, 2, 4) starts with stream (1, 2)")
+      .isTrue()
 
     expectThat(Stream.of(1, 2).startsWith(Stream.of(1, 2, 3))).isFalse()
   }

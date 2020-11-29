@@ -69,4 +69,10 @@ class InfiniteStreamsTest {
     expectThat(of(1, 2, 3).zipAll(of(1, 4)).toList())
       .isEqualTo(List.of(some(1) to some(1), some(2) to some(4), some(3) to none()))
   }
+
+  @Test
+  fun `zipAll on different length (first shorter)`() {
+    expectThat(of(1, 2).zipAll(of(1, 4, 3)).toList())
+      .isEqualTo(List.of(some(1) to some(1), some(2) to some(4), none<Int>() to some(3)))
+  }
 }
