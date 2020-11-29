@@ -1,7 +1,7 @@
-package it.twinsbrains.chapter4
+package it.twinsbrains.fpik.chapter4
 
-import it.twinsbrains.chapter3.Cons
-import it.twinsbrains.chapter3.List
+import it.twinsbrains.fpik.chapter3.Cons
+import it.twinsbrains.fpik.chapter3.List
 
 sealed class Option<out A> {
   companion object {

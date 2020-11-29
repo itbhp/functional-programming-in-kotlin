@@ -1,7 +1,7 @@
-package it.twinsbrains.chapter2
+package it.twinsbrains.fpik.chapter2
 
-import it.twinsbrains.chapter2.Currying.curry
-import it.twinsbrains.chapter2.Currying.uncurry
+import it.twinsbrains.fpik.chapter2.Currying.curry
+import it.twinsbrains.fpik.chapter2.Currying.uncurry
 import org.junit.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo

@@ -1,9 +1,9 @@
-package it.twinsbrains.chapter4
+package it.twinsbrains.fpik.chapter4
 
-import it.twinsbrains.chapter3.List
-import it.twinsbrains.chapter4.Option.Companion.catches
-import it.twinsbrains.chapter4.Option.Companion.none
-import it.twinsbrains.chapter4.Option.Companion.some
+import it.twinsbrains.fpik.chapter3.List
+import it.twinsbrains.fpik.chapter4.Option.Companion.catches
+import it.twinsbrains.fpik.chapter4.Option.Companion.none
+import it.twinsbrains.fpik.chapter4.Option.Companion.some
 import org.junit.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo

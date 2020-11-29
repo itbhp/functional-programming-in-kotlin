@@ -1,4 +1,4 @@
-package it.twinsbrains.chapter3
+package it.twinsbrains.fpik.chapter3
 
 sealed class List<out A> {
     companion object {

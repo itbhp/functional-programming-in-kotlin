@@ -1,10 +1,10 @@
-package it.twinsbrains.chapter5
+package it.twinsbrains.fpik.chapter5
 
-import it.twinsbrains.chapter3.List
-import it.twinsbrains.chapter5.InfiniteStreams.ones
-import it.twinsbrains.chapter5.Stream.Companion.exists
-import it.twinsbrains.chapter5.Stream.Companion.take
-import it.twinsbrains.chapter5.Stream.Companion.toList
+import it.twinsbrains.fpik.chapter3.List
+import it.twinsbrains.fpik.chapter5.InfiniteStreams.ones
+import it.twinsbrains.fpik.chapter5.Stream.Companion.exists
+import it.twinsbrains.fpik.chapter5.Stream.Companion.take
+import it.twinsbrains.fpik.chapter5.Stream.Companion.toList
 import org.junit.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
@@ -26,5 +26,11 @@ class InfiniteStreamsTest {
   fun `constant infinite streams`() {
     expectThat(InfiniteStreams.constant(5).take(5).toList())
       .isEqualTo(List.of(5, 5, 5, 5, 5))
+  }
+
+  @Test
+  fun `from n infinite streams`() {
+    expectThat(InfiniteStreams.from(5).take(5).toList())
+      .isEqualTo(List.of(5, 6, 7, 8, 9))
   }
 }

@@ -1,4 +1,4 @@
-package it.twinsbrains.chapter3
+package it.twinsbrains.fpik.chapter3
 
 import kotlin.math.max
 

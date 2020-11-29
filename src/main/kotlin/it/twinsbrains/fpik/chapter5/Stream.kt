@@ -1,10 +1,10 @@
-package it.twinsbrains.chapter5
+package it.twinsbrains.fpik.chapter5
 
-import it.twinsbrains.chapter3.List
-import it.twinsbrains.chapter4.Option
-import it.twinsbrains.chapter4.Option.Companion.none
-import it.twinsbrains.chapter4.Option.Companion.some
-import it.twinsbrains.chapter3.Cons as consL
+import it.twinsbrains.fpik.chapter3.List
+import it.twinsbrains.fpik.chapter4.Option
+import it.twinsbrains.fpik.chapter4.Option.Companion.none
+import it.twinsbrains.fpik.chapter4.Option.Companion.some
+import it.twinsbrains.fpik.chapter3.Cons as consL
 
 sealed class Stream<out A> {
   companion object {
@@ -100,4 +100,6 @@ object InfiniteStreams {
   fun ones(): Stream<Int> = constant(1)
 
   fun <A> constant(a: A): Stream<A> = Stream.cons({ a }, { constant(a) })
+
+  fun from(n: Int): Stream<Int> = Stream.cons({ n }, { from(n + 1) })
 }

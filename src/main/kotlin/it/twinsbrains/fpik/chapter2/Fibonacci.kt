@@ -1,4 +1,4 @@
-package it.twinsbrains.chapter2
+package it.twinsbrains.fpik.chapter2
 
 object Fibonacci {
     fun fibonacci(n: Int): Int {

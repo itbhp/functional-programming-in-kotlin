@@ -1,6 +1,6 @@
-package it.twinsbrains.chapter2
+package it.twinsbrains.fpik.chapter2
 
-import it.twinsbrains.chapter2.Fibonacci.fibonacci
+import it.twinsbrains.fpik.chapter2.Fibonacci.fibonacci
 import org.junit.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo

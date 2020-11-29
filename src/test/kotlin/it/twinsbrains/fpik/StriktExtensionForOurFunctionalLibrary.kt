@@ -1,7 +1,7 @@
-package it.twinsbrains
+package it.twinsbrains.fpik
 
-import it.twinsbrains.chapter4.None
-import it.twinsbrains.chapter4.Option
+import it.twinsbrains.fpik.chapter4.None
+import it.twinsbrains.fpik.chapter4.Option
 import strikt.api.Assertion
 
 
