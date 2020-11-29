@@ -33,4 +33,10 @@ class InfiniteStreamsTest {
     expectThat(InfiniteStreams.from(5).take(5).toList())
       .isEqualTo(List.of(5, 6, 7, 8, 9))
   }
+
+  @Test
+  fun `fibonacci stream`() {
+    expectThat(InfiniteStreams.fibs().take(6).toList())
+      .isEqualTo(List.of(0, 1, 1, 2, 3, 5))
+  }
 }

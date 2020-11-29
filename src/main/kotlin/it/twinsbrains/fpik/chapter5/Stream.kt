@@ -102,4 +102,10 @@ object InfiniteStreams {
   fun <A> constant(a: A): Stream<A> = Stream.cons({ a }, { constant(a) })
 
   fun from(n: Int): Stream<Int> = Stream.cons({ n }, { from(n + 1) })
+
+  fun fibs(): Stream<Int> {
+    fun loop(beforePrev: Int, prev: Int): Stream<Int> =
+      Stream.cons({ beforePrev }, { loop(prev, prev + beforePrev) })
+    return loop(0, 1)
+  }
 }
