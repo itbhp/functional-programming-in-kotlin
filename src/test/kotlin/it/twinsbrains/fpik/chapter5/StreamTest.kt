@@ -12,6 +12,7 @@ import it.twinsbrains.fpik.chapter5.Stream.Companion.filter
 import it.twinsbrains.fpik.chapter5.Stream.Companion.find
 import it.twinsbrains.fpik.chapter5.Stream.Companion.flatMap
 import it.twinsbrains.fpik.chapter5.Stream.Companion.forAll
+import it.twinsbrains.fpik.chapter5.Stream.Companion.hasSubsequence
 import it.twinsbrains.fpik.chapter5.Stream.Companion.headOption
 import it.twinsbrains.fpik.chapter5.Stream.Companion.map
 import it.twinsbrains.fpik.chapter5.Stream.Companion.startsWith
@@ -164,5 +165,11 @@ class StreamTest {
           .isEqualTo(List.of(List.of(1, 2, 3), List.of(2, 3), List.of(3)))
       }
     }
+  }
+
+  @Test
+  fun `hasSubsequence should work`() {
+    expectThat(Stream.of(1, 2, 3).hasSubsequence(Stream.of(2, 3))).isTrue()
+    expectThat(Stream.of(1, 2, 3).hasSubsequence(Stream.of(3, 4))).isFalse()
   }
 }

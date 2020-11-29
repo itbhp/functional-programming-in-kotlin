@@ -14,6 +14,10 @@ import it.twinsbrains.fpik.chapter3.Cons as consL
 
 sealed class Stream<out A> {
   companion object {
+
+    fun <A> Stream<A>.hasSubsequence(s: Stream<A>): Boolean =
+      this.tails().exists { it.startsWith(s) }
+
     fun <A> Stream<A>.tails(): Stream<Stream<A>>
 //     = when (this) {
 //        is Empty -> Empty
