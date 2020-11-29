@@ -101,16 +101,23 @@ object InfiniteStreams {
 
   fun ones(): Stream<Int> = constant(1)
 
-  fun <A> constant(a: A): Stream<A> = Stream.cons({ a }, { constant(a) })
+  fun <A> constant(a: A): Stream<A> =
+//    Stream.cons({ a }, { constant(a) })
+    unfold(a, { n -> some(n to n) })
 
   fun from(n: Int): Stream<Int> =
 //    Stream.cons({ n }, { from(n + 1) })
     unfold(n, { s -> some(s to s + 1) })
 
-  fun fibs(): Stream<Int> {
-    fun loop(beforePrev: Int, prev: Int): Stream<Int> =
-      Stream.cons({ beforePrev }, { loop(prev, prev + beforePrev) })
-    return loop(0, 1)
+  fun fibs(): Stream<Int>
+//  {
+//    fun loop(beforePrev: Int, prev: Int): Stream<Int> =
+//      Stream.cons({ beforePrev }, { loop(prev, prev + beforePrev) })
+//    return loop(0, 1)
+//  }
+  {
+    data class State(val beforePrev: Int, val prev: Int)
+    return unfold(State(0, 1), { (beforePrev, prev) -> some(beforePrev to State(prev, beforePrev + prev)) })
   }
 
   fun <A, S> unfold(z: S, f: (S) -> Option<Pair<A, S>>): Stream<A> {
