@@ -117,7 +117,7 @@ object InfiniteStreams {
 //  }
   {
     data class State(val beforePrev: Int, val prev: Int)
-    return unfold(State(0, 1), { (beforePrev, prev) -> some(beforePrev to State(prev, beforePrev + prev)) })
+    return unfold(State(0, 1), { (value, previousValue) -> some(value to State(previousValue, value + previousValue)) })
   }
 
   fun <A, S> unfold(z: S, f: (S) -> Option<Pair<A, S>>): Stream<A> {
