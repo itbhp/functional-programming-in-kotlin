@@ -14,6 +14,7 @@ import it.twinsbrains.fpik.chapter5.Stream.Companion.flatMap
 import it.twinsbrains.fpik.chapter5.Stream.Companion.forAll
 import it.twinsbrains.fpik.chapter5.Stream.Companion.headOption
 import it.twinsbrains.fpik.chapter5.Stream.Companion.map
+import it.twinsbrains.fpik.chapter5.Stream.Companion.startsWith
 import it.twinsbrains.fpik.chapter5.Stream.Companion.take
 import it.twinsbrains.fpik.chapter5.Stream.Companion.takeWhile
 import it.twinsbrains.fpik.chapter5.Stream.Companion.toList
@@ -140,5 +141,14 @@ class StreamTest {
 
     expectThat(Stream.of(1, 2, 4).find { it > 5 })
       .isNone()
+  }
+
+  @Test
+  fun `startsWith should work`() {
+    expectThat(Stream.of(1, 2, 4).startsWith(Stream.of(1,2)))
+      .isTrue()
+
+    expectThat(Stream.of(1, 2, 4).startsWith(Stream.of(2,3)))
+      .isFalse()
   }
 }
