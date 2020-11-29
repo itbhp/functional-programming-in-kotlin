@@ -1,6 +1,6 @@
 package it.twinsbrains.chapter5
 
-import it.twinsbrains.StriktExtensionFourOurFunctionalLibrary.isNone
+import it.twinsbrains.StriktExtensionForOurFunctionalLibrary.isNone
 import it.twinsbrains.chapter3.List
 import it.twinsbrains.chapter4.Option.Companion.some
 import it.twinsbrains.chapter5.Stream.Companion.append

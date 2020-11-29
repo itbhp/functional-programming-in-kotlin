@@ -5,7 +5,7 @@ import it.twinsbrains.chapter4.Option
 import strikt.api.Assertion
 
 
-object StriktExtensionFourOurFunctionalLibrary {
+object StriktExtensionForOurFunctionalLibrary {
   fun <T> Assertion.Builder<Option<T>>.isNone(): Assertion.Builder<Option<T>> =
     assert("should be None") {
       when (it) {
