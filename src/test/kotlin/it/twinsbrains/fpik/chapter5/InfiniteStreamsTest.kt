@@ -1,10 +1,14 @@
 package it.twinsbrains.fpik.chapter5
 
 import it.twinsbrains.fpik.chapter3.List
+import it.twinsbrains.fpik.chapter4.Option.Companion.none
+import it.twinsbrains.fpik.chapter4.Option.Companion.some
 import it.twinsbrains.fpik.chapter5.InfiniteStreams.fibs
 import it.twinsbrains.fpik.chapter5.InfiniteStreams.ones
+import it.twinsbrains.fpik.chapter5.InfiniteStreams.zipAll
 import it.twinsbrains.fpik.chapter5.InfiniteStreams.zipWith
 import it.twinsbrains.fpik.chapter5.Stream.Companion.exists
+import it.twinsbrains.fpik.chapter5.Stream.Companion.of
 import it.twinsbrains.fpik.chapter5.Stream.Companion.take
 import it.twinsbrains.fpik.chapter5.Stream.Companion.toList
 import org.junit.Test
@@ -50,7 +54,19 @@ class InfiniteStreamsTest {
 
   @Test
   fun `zipWith should work on stream different length`() {
-    expectThat(Stream.of(1, 2, 3).zipWith(Stream.of(1, 2), Int::plus).take(6).toList())
+    expectThat(of(1, 2, 3).zipWith(of(1, 2), Int::plus).take(6).toList())
       .isEqualTo(List.of(2, 4))
+  }
+
+  @Test
+  fun `zipAll on same length`() {
+    expectThat(of(1, 2, 3).zipAll(of(1, 4, 9)).toList())
+      .isEqualTo(List.of(some(1) to some(1), some(2) to some(4), some(3) to some(9)))
+  }
+
+  @Test
+  fun `zipAll on different length`() {
+    expectThat(of(1, 2, 3).zipAll(of(1, 4)).toList())
+      .isEqualTo(List.of(some(1) to some(1), some(2) to some(4), some(3) to none()))
   }
 }

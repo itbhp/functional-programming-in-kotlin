@@ -121,6 +121,27 @@ object InfiniteStreams {
     return unfold(State(0, 1), { (value, previousValue) -> some(value to State(previousValue, value + previousValue)) })
   }
 
+
+  fun <A, B> Stream<A>.zipAll(
+    that: Stream<B>
+  ): Stream<Pair<Option<A>, Option<B>>> {
+    data class ZipState(val a: Stream<A>, val b: Stream<B>)
+    return unfold(ZipState(this, that), { (curA, curB) ->
+      when (curA) {
+        is Cons -> {
+          when (curB) {
+            is Cons -> {
+              val res = some(curA.head()) to some(curB.head())
+              some(res to ZipState(curA.tail(), curB.tail()))
+            }
+            is Empty -> some((some(curA.head()) to none<B>()) to ZipState(curA.tail(), curB))
+          }
+        }
+        is Empty -> none()
+      }
+    })
+  }
+
   fun <A, B, C> Stream<A>.zipWith(
     that: Stream<B>,
     f: (A, B) -> C
