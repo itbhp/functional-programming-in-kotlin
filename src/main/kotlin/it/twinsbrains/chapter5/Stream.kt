@@ -94,3 +94,8 @@ data class Cons<out A>(
 ) : Stream<A>()
 
 object Empty : Stream<Nothing>()
+
+object InfiniteStreams {
+
+  fun ones(): Stream<Int> = Stream.cons({ 1 }, { ones() })
+}
