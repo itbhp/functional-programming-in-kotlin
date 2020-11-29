@@ -6,6 +6,7 @@ import it.twinsbrains.fpik.chapter4.Option.Companion.none
 import it.twinsbrains.fpik.chapter4.Option.Companion.some
 import it.twinsbrains.fpik.chapter4.getOrElse
 import it.twinsbrains.fpik.chapter4.map
+import it.twinsbrains.fpik.chapter5.Stream.Companion.cons
 import it.twinsbrains.fpik.chapter3.Cons as consL
 
 sealed class Stream<out A> {
@@ -120,9 +121,30 @@ object InfiniteStreams {
     return unfold(State(0, 1), { (value, previousValue) -> some(value to State(previousValue, value + previousValue)) })
   }
 
+  fun <A, B, C> Stream<A>.zipWith(
+    that: Stream<B>,
+    f: (A, B) -> C
+  ): Stream<C> {
+    data class State(val a: Stream<A>, val b: Stream<B>)
+    return unfold(State(this, that), { (curA, curB) ->
+      when (curA) {
+        is Cons -> {
+          when (curB) {
+            is Cons -> {
+              val res = f(curA.head(), curB.head())
+              some(res to State(curA.tail(), curB.tail()))
+            }
+            is Empty -> none()
+          }
+        }
+        is Empty -> none()
+      }
+    })
+  }
+
   fun <A, S> unfold(z: S, f: (S) -> Option<Pair<A, S>>): Stream<A> {
     return f(z).map { (a, s) ->
-      Stream.cons({ a }, { unfold(s, f) })
+      cons({ a }, { unfold(s, f) })
     }.getOrElse { Stream.empty() }
   }
 }

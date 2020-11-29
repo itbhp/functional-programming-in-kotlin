@@ -1,7 +1,9 @@
 package it.twinsbrains.fpik.chapter5
 
 import it.twinsbrains.fpik.chapter3.List
+import it.twinsbrains.fpik.chapter5.InfiniteStreams.fibs
 import it.twinsbrains.fpik.chapter5.InfiniteStreams.ones
+import it.twinsbrains.fpik.chapter5.InfiniteStreams.zipWith
 import it.twinsbrains.fpik.chapter5.Stream.Companion.exists
 import it.twinsbrains.fpik.chapter5.Stream.Companion.take
 import it.twinsbrains.fpik.chapter5.Stream.Companion.toList
@@ -36,7 +38,19 @@ class InfiniteStreamsTest {
 
   @Test
   fun `fibonacci stream`() {
-    expectThat(InfiniteStreams.fibs().take(6).toList())
+    expectThat(fibs().take(6).toList())
       .isEqualTo(List.of(0, 1, 1, 2, 3, 5))
+  }
+
+  @Test
+  fun `zipWith should work on stream same length`() {
+    expectThat(fibs().zipWith(fibs(), Int::plus).take(6).toList())
+      .isEqualTo(List.of(0, 2, 2, 4, 6, 10))
+  }
+
+  @Test
+  fun `zipWith should work on stream different length`() {
+    expectThat(Stream.of(1, 2, 3).zipWith(Stream.of(1, 2), Int::plus).take(6).toList())
+      .isEqualTo(List.of(2, 4))
   }
 }
