@@ -15,6 +15,7 @@ import it.twinsbrains.fpik.chapter5.Stream.Companion.forAll
 import it.twinsbrains.fpik.chapter5.Stream.Companion.hasSubsequence
 import it.twinsbrains.fpik.chapter5.Stream.Companion.headOption
 import it.twinsbrains.fpik.chapter5.Stream.Companion.map
+import it.twinsbrains.fpik.chapter5.Stream.Companion.scanRight
 import it.twinsbrains.fpik.chapter5.Stream.Companion.startsWith
 import it.twinsbrains.fpik.chapter5.Stream.Companion.tails
 import it.twinsbrains.fpik.chapter5.Stream.Companion.take
@@ -171,5 +172,11 @@ class StreamTest {
   fun `hasSubsequence should work`() {
     expectThat(Stream.of(1, 2, 3).hasSubsequence(Stream.of(2, 3))).isTrue()
     expectThat(Stream.of(1, 2, 3).hasSubsequence(Stream.of(3, 4))).isFalse()
+  }
+
+  @Test
+  fun `scanRight should work`() {
+    expectThat(Stream.of(1, 2, 3).scanRight(0, { a, b -> a + b }).toList())
+      .isEqualTo(List.of(6, 5, 3, 0))
   }
 }

@@ -15,6 +15,27 @@ import it.twinsbrains.fpik.chapter3.Cons as consL
 sealed class Stream<out A> {
   companion object {
 
+    fun <A, B> Stream<A>.foldRight(
+      z: () -> B,
+      f: (A, () -> B) -> B
+    ): B =
+      when (this) {
+        is Cons -> f(this.head()) { tail().foldRight(z, f) }
+        else -> z()
+      }
+
+    fun <A, B> Stream<A>.scanRight(z: B, f: (A, B) -> B): Stream<B> =
+      foldRight({ of(z) }) { a: A, thunkStream: () -> Stream<B> ->
+        val s = thunkStream()
+        when (s) {
+          is Cons -> {
+            val r = f(a, s.head())
+            cons({ r }, { s })
+          }
+          is Empty -> s
+        }
+      }
+
     fun <A> Stream<A>.hasSubsequence(s: Stream<A>): Boolean =
       this.tails().exists { it.startsWith(s) }
 
@@ -63,15 +84,6 @@ sealed class Stream<out A> {
 
     fun <A> Stream<A>.forAll(p: (A) -> Boolean): Boolean =
       foldRight({ true }, { a, b -> p(a) && b() })
-
-    fun <A, B> Stream<A>.foldRight(
-      z: () -> B,
-      f: (A, () -> B) -> B
-    ): B =
-      when (this) {
-        is Cons -> f(this.head()) { tail().foldRight(z, f) }
-        else -> z()
-      }
 
     fun <A> Stream<A>.exists(p: (A) -> Boolean): Boolean =
       foldRight({ false }, { a, b -> p(a) || b() })
