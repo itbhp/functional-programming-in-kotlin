@@ -39,7 +39,6 @@ sealed class Stream<out A> {
       })
     }
 
-
     fun <A> Stream<A>.forAll(p: (A) -> Boolean): Boolean =
       foldRight({ false }, { a, b -> p(a) && b() })
 
@@ -55,8 +54,16 @@ sealed class Stream<out A> {
     fun <A> Stream<A>.exists(p: (A) -> Boolean): Boolean =
       foldRight({ false }, { a, b -> p(a) || b() })
 
-    fun <A> Stream<A>.takeWhile(p: (A) -> Boolean): Stream<A> =
-      foldRight({ empty() }, { a, thunkAcc -> if (p(a)) cons({ a }, thunkAcc) else thunkAcc() })
+    fun <A> Stream<A>.takeWhile(p: (A) -> Boolean): Stream<A>
+//       = foldRight({ empty() }, { a, thunkAcc -> if (p(a)) cons({ a }, thunkAcc) else thunkAcc() })
+    {
+      return unfold(this, { cur ->
+        when (cur) {
+          is Empty -> none()
+          is Cons -> if (p(cur.head())) some(cur.head() to cur.tail()) else none()
+        }
+      })
+    }
 
     fun <A> Stream<A>.take(n: Int): Stream<A> =
       if (n <= 0)
@@ -103,7 +110,6 @@ sealed class Stream<out A> {
         { of(*xs.sliceArray(1 until xs.size)) })
   }
 }
-
 
 data class Cons<out A>(
   val head: () -> A,
