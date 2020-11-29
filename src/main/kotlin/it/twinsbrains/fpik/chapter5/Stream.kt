@@ -65,14 +65,20 @@ sealed class Stream<out A> {
       })
     }
 
-    fun <A> Stream<A>.take(n: Int): Stream<A> =
-      if (n <= 0)
-        empty()
-      else
-        when (this) {
-          is Empty -> Empty
-          is Cons -> cons(this.head, { this.tail().take(n - 1) })
+    fun <A> Stream<A>.take(n: Int): Stream<A> {
+      data class TakeState(val cur: Stream<A>, val count: Int)
+      return unfold(TakeState(this, n), { (cur, count) ->
+        if (count <= 0) {
+          none()
+        } else {
+          when (cur) {
+            is Empty -> none()
+            is Cons -> some(cur.head() to TakeState(cur.tail(), count - 1))
+          }
         }
+      })
+    }
+
 
     fun <A> Stream<A>.drop(n: Int): Stream<A> =
       if (n <= 0)

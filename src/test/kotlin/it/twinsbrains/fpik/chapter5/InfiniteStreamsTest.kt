@@ -48,13 +48,13 @@ class InfiniteStreamsTest {
 
   @Test
   fun `zipWith should work on stream same length`() {
-    expectThat(fibs().zipWith(fibs(), Int::plus).take(6).toList())
-      .isEqualTo(List.of(0, 2, 2, 4, 6, 10))
+    expectThat(of(1, 2, 3).zipWith(of(1, 2, 3), Int::plus).toList())
+      .isEqualTo(List.of(2, 4, 6))
   }
 
   @Test
   fun `zipWith should work on stream different length`() {
-    expectThat(of(1, 2, 3).zipWith(of(1, 2), Int::plus).take(6).toList())
+    expectThat(of(1, 2, 3).zipWith(of(1, 2), Int::plus).toList())
       .isEqualTo(List.of(2, 4))
   }
 
