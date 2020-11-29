@@ -25,16 +25,11 @@ sealed class Stream<out A> {
       }
 
     fun <A, B> Stream<A>.scanRight(z: B, f: (A, B) -> B): Stream<B> =
-      foldRight({ of(z) }) { a: A, thunkStream: () -> Stream<B> ->
-        val s = thunkStream()
-        when (s) {
-          is Cons -> {
-            val r = f(a, s.head())
-            cons({ r }, { s })
-          }
-          is Empty -> s
-        }
-      }
+      foldRight({ Pair(z, of(z)) }) { a: A, b: () -> Pair<B, Stream<B>> ->
+        val p: Pair<B, Stream<B>> by lazy(b)
+        val r = f(a, p.first)
+        Pair(r, cons({ r }, { p.second }))
+      }.second
 
     fun <A> Stream<A>.hasSubsequence(s: Stream<A>): Boolean =
       this.tails().exists { it.startsWith(s) }
