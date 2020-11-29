@@ -1,7 +1,7 @@
 package it.twinsbrains.chapter5
 
+import it.twinsbrains.StriktExtensionFourOurFunctionalLibrary.isNone
 import it.twinsbrains.chapter3.List
-import it.twinsbrains.chapter4.Option.Companion.none
 import it.twinsbrains.chapter4.Option.Companion.some
 import it.twinsbrains.chapter5.Stream.Companion.append
 import it.twinsbrains.chapter5.Stream.Companion.cons
@@ -139,6 +139,6 @@ class StreamTest {
       .isEqualTo(some(2))
 
     expectThat(Stream.of(1, 2, 4).find { it > 5 })
-      .isEqualTo(none())
+      .isNone()
   }
 }
