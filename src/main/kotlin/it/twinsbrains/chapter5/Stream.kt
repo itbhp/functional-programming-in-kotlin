@@ -97,5 +97,7 @@ object Empty : Stream<Nothing>()
 
 object InfiniteStreams {
 
-  fun ones(): Stream<Int> = Stream.cons({ 1 }, { ones() })
+  fun ones(): Stream<Int> = constant(1)
+
+  fun <A> constant(a: A): Stream<A> = Stream.cons({ a }, { constant(a) })
 }
