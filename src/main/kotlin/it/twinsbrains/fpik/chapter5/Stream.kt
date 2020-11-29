@@ -4,6 +4,8 @@ import it.twinsbrains.fpik.chapter3.List
 import it.twinsbrains.fpik.chapter4.Option
 import it.twinsbrains.fpik.chapter4.Option.Companion.none
 import it.twinsbrains.fpik.chapter4.Option.Companion.some
+import it.twinsbrains.fpik.chapter4.getOrElse
+import it.twinsbrains.fpik.chapter4.map
 import it.twinsbrains.fpik.chapter3.Cons as consL
 
 sealed class Stream<out A> {
@@ -101,11 +103,19 @@ object InfiniteStreams {
 
   fun <A> constant(a: A): Stream<A> = Stream.cons({ a }, { constant(a) })
 
-  fun from(n: Int): Stream<Int> = Stream.cons({ n }, { from(n + 1) })
+  fun from(n: Int): Stream<Int> =
+//    Stream.cons({ n }, { from(n + 1) })
+    unfold(n, { s -> some(s to s + 1) })
 
   fun fibs(): Stream<Int> {
     fun loop(beforePrev: Int, prev: Int): Stream<Int> =
       Stream.cons({ beforePrev }, { loop(prev, prev + beforePrev) })
     return loop(0, 1)
+  }
+
+  fun <A, S> unfold(z: S, f: (S) -> Option<Pair<A, S>>): Stream<A> {
+    return f(z).map { (a, s) ->
+      Stream.cons({ a }, { unfold(s, f) })
+    }.getOrElse { Stream.empty() }
   }
 }
