@@ -14,7 +14,6 @@ import it.twinsbrains.fpik.chapter3.Cons as consL
 
 sealed class Stream<out A> {
   companion object {
-
     fun <A> Stream<A>.tails(): Stream<Stream<A>>
 //     = when (this) {
 //        is Empty -> Empty
@@ -136,9 +135,13 @@ sealed class Stream<out A> {
 data class Cons<out A>(
   val head: () -> A,
   val tail: () -> Stream<A>
-) : Stream<A>()
+) : Stream<A>() {
+  override fun toString(): String = "{${this.head()}, ${this.tail()}}"
+}
 
-object Empty : Stream<Nothing>()
+object Empty : Stream<Nothing>() {
+  override fun toString(): String = "-"
+}
 
 object InfiniteStreams {
 

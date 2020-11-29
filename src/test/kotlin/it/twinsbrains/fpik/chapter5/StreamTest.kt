@@ -22,6 +22,7 @@ import it.twinsbrains.fpik.chapter5.Stream.Companion.toList
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import strikt.api.expect
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import strikt.assertions.isFalse
@@ -157,10 +158,11 @@ class StreamTest {
 
   @Test
   fun `tails should work`() {
-    expectThat(Stream.of(1, 2, 3).tails())
-      .and {
+    expect {
+      that(Stream.of(1, 2, 3).tails()) {
         get("as list") { map { e -> e.toList() }.toList() }
           .isEqualTo(List.of(List.of(1, 2, 3), List.of(2, 3), List.of(3)))
       }
+    }
   }
 }
