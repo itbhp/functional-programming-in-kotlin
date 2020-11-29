@@ -15,6 +15,7 @@ import it.twinsbrains.fpik.chapter5.Stream.Companion.forAll
 import it.twinsbrains.fpik.chapter5.Stream.Companion.headOption
 import it.twinsbrains.fpik.chapter5.Stream.Companion.map
 import it.twinsbrains.fpik.chapter5.Stream.Companion.startsWith
+import it.twinsbrains.fpik.chapter5.Stream.Companion.tails
 import it.twinsbrains.fpik.chapter5.Stream.Companion.take
 import it.twinsbrains.fpik.chapter5.Stream.Companion.takeWhile
 import it.twinsbrains.fpik.chapter5.Stream.Companion.toList
@@ -97,13 +98,8 @@ class StreamTest {
 
   @Test
   fun `takeWhile n`() {
-    expectThat(Stream.of(1, 2, 3, 4, 5, 6, 7).takeWhile { it < 4 }.toList()).isEqualTo(
-      List.of(
-        1,
-        2,
-        3
-      )
-    )
+    expectThat(Stream.of(1, 2, 3, 4, 5, 6, 7).takeWhile { it < 4 }.toList())
+      .isEqualTo(List.of(1, 2, 3))
   }
 
   @Test
@@ -157,5 +153,14 @@ class StreamTest {
       .isTrue()
 
     expectThat(Stream.of(1, 2).startsWith(Stream.of(1, 2, 3))).isFalse()
+  }
+
+  @Test
+  fun `tails should work`() {
+    expectThat(Stream.of(1, 2, 3).tails())
+      .and {
+        get("as list") { map { e -> e.toList() }.toList() }
+          .isEqualTo(List.of(List.of(1, 2, 3), List.of(2, 3), List.of(3)))
+      }
   }
 }

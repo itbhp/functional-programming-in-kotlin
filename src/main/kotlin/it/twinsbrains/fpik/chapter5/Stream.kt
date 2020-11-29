@@ -15,25 +15,16 @@ import it.twinsbrains.fpik.chapter3.Cons as consL
 sealed class Stream<out A> {
   companion object {
 
-    fun <A> Stream<A>.startsWith(that: Stream<A>): Boolean
-//      when (this) {
-//        is Empty -> false
-//        is Cons -> when (that) {
-//          is Empty -> true
-//          is Cons -> {
-//            val thisHead = this.head()
-//            val thatHead = that.head()
-//            if (thatHead == thisHead) {
-//              this.tail().startsWith(that.tail())
-//            } else {
-//              false
-//            }
-//          }
-//        }
-//      }
-      = zipAll(that)
-      .takeWhile { it.second.isSome() }
-      .forAll { it.first == it.second }
+    fun <A> Stream<A>.tails(): Stream<Stream<A>> =
+      when (this) {
+        is Empty -> Empty
+        is Cons -> cons({ this }, { this.tail().tails() })
+      }
+
+    fun <A> Stream<A>.startsWith(that: Stream<A>): Boolean =
+      zipAll(that)
+        .takeWhile { it.second.isSome() }
+        .forAll { it.first == it.second }
 
     fun <A> Stream<A>.find(p: (A) -> Boolean): Option<A> =
       filter(p).headOption()
@@ -47,9 +38,7 @@ sealed class Stream<out A> {
     fun <A> Stream<A>.filter(p: (A) -> Boolean): Stream<A> =
       foldRight({ empty() }) { a, s -> if (p(a)) cons({ a }, s) else s() }
 
-    fun <A, B> Stream<A>.map(f: (A) -> B): Stream<B>
-//      = foldRight({ empty() }) { a, s -> cons({ f(a) }, s) }
-    {
+    fun <A, B> Stream<A>.map(f: (A) -> B): Stream<B> {
       return unfold(this, { cur ->
         when (cur) {
           is Empty -> none()
@@ -76,9 +65,7 @@ sealed class Stream<out A> {
     fun <A> Stream<A>.exists(p: (A) -> Boolean): Boolean =
       foldRight({ false }, { a, b -> p(a) || b() })
 
-    fun <A> Stream<A>.takeWhile(p: (A) -> Boolean): Stream<A>
-//       = foldRight({ empty() }, { a, thunkAcc -> if (p(a)) cons({ a }, thunkAcc) else thunkAcc() })
-    {
+    fun <A> Stream<A>.takeWhile(p: (A) -> Boolean): Stream<A> {
       return unfold(this, { cur ->
         when (cur) {
           is Empty -> none()
@@ -150,20 +137,12 @@ object InfiniteStreams {
   fun ones(): Stream<Int> = constant(1)
 
   fun <A> constant(a: A): Stream<A> =
-//    Stream.cons({ a }, { constant(a) })
     unfold(a, { n -> some(n to n) })
 
   fun from(n: Int): Stream<Int> =
-//    Stream.cons({ n }, { from(n + 1) })
     unfold(n, { s -> some(s to s + 1) })
 
-  fun fibs(): Stream<Int>
-//  {
-//    fun loop(beforePrev: Int, prev: Int): Stream<Int> =
-//      Stream.cons({ beforePrev }, { loop(prev, prev + beforePrev) })
-//    return loop(0, 1)
-//  }
-  {
+  fun fibs(): Stream<Int> {
     data class State(val beforePrev: Int, val prev: Int)
     return unfold(State(0, 1), { (value, previousValue) -> some(value to State(previousValue, value + previousValue)) })
   }
