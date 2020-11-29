@@ -14,16 +14,16 @@ sealed class Stream<out A> {
   companion object {
 
     fun <A> Stream<A>.startsWith(that: Stream<A>): Boolean =
-      when(this){
+      when (this) {
         is Empty -> false
-        is Cons -> when(that){
+        is Cons -> when (that) {
           is Empty -> true
           is Cons -> {
             val thisHead = this.head()
             val thatHead = that.head()
-            if(thatHead == thisHead){
+            if (thatHead == thisHead) {
               this.tail().startsWith(that.tail())
-            }else{
+            } else {
               false
             }
           }

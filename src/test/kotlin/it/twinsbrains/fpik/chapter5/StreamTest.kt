@@ -97,7 +97,13 @@ class StreamTest {
 
   @Test
   fun `takeWhile n`() {
-    expectThat(Stream.of(1, 2, 3, 4, 5, 6, 7).takeWhile { it < 4 }.toList()).isEqualTo(List.of(1, 2, 3))
+    expectThat(Stream.of(1, 2, 3, 4, 5, 6, 7).takeWhile { it < 4 }.toList()).isEqualTo(
+      List.of(
+        1,
+        2,
+        3
+      )
+    )
   }
 
   @Test
@@ -145,10 +151,8 @@ class StreamTest {
 
   @Test
   fun `startsWith should work`() {
-    expectThat(Stream.of(1, 2, 4).startsWith(Stream.of(1,2)))
-      .isTrue()
+    expectThat(Stream.of(1, 2, 4).startsWith(Stream.of(1, 2))).isTrue()
 
-    expectThat(Stream.of(1, 2, 4).startsWith(Stream.of(2,3)))
-      .isFalse()
+    expectThat(Stream.of(1, 2).startsWith(Stream.of(1, 2, 3))).isFalse()
   }
 }
