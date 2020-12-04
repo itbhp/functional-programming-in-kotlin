@@ -13,5 +13,12 @@ class RandomsDoublesTest : StringSpec() {
                 num >= 0 && num < 1
             }
         }
+
+        "doubles as Rand should also be in [0,1)"{
+            forAll<Long> { seed ->
+                val (num, _) = RandExamples.doubleR(SimpleRNG(seed))
+                num >= 0 && num < 1
+            }
+        }
     }
 }

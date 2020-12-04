@@ -3,10 +3,6 @@ package it.twinsbrains.fpik.chapter6
 import it.twinsbrains.fpik.chapter3.Cons
 import it.twinsbrains.fpik.chapter3.List
 
-interface RNG {
-    fun nextInt(): Pair<Int, RNG>
-}
-
 class LinearCongruentialGenerator(private val seed: Long) : RNG {
     override fun nextInt(): Pair<Int, RNG> {
         val newSeed =
@@ -22,10 +18,10 @@ object Randoms {
 
     fun nonNegativeInt(rng: RNG): Pair<Int, RNG> {
         val (num, nextRng) = rng.nextInt()
-        if (num < 0) {
-            return (-(num + 1) to nextRng)
+        return if (num < 0) {
+            (-(num + 1) to nextRng)
         } else {
-            return num to nextRng
+            num to nextRng
         }
     }
 
