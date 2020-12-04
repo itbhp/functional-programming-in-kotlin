@@ -3,7 +3,7 @@ package it.twinsbrains.fpik.chapter4
 import it.twinsbrains.fpik.chapter3.List
 import it.twinsbrains.fpik.chapter4.Either.Companion.left
 import it.twinsbrains.fpik.chapter4.Either.Companion.right
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 

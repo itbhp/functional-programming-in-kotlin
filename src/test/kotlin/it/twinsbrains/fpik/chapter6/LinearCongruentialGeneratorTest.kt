@@ -1,8 +1,8 @@
 package it.twinsbrains.fpik.chapter6
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Test
 import it.twinsbrains.fpik.chapter6.LinearCongruentialGenerator as SimpleRNG
 
 class LinearCongruentialGeneratorTest {

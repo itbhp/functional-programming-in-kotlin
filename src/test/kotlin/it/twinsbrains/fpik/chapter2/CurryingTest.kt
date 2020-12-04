@@ -2,7 +2,7 @@ package it.twinsbrains.fpik.chapter2
 
 import it.twinsbrains.fpik.chapter2.Currying.curry
 import it.twinsbrains.fpik.chapter2.Currying.uncurry
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 

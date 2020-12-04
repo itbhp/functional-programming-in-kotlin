@@ -4,7 +4,7 @@ import it.twinsbrains.fpik.chapter3.List
 import it.twinsbrains.fpik.chapter4.Option.Companion.catches
 import it.twinsbrains.fpik.chapter4.Option.Companion.none
 import it.twinsbrains.fpik.chapter4.Option.Companion.some
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 

@@ -1,6 +1,6 @@
 package it.twinsbrains.fpik.chapter3
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo

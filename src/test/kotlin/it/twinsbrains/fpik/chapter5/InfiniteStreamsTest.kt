@@ -11,7 +11,8 @@ import it.twinsbrains.fpik.chapter5.Stream.Companion.exists
 import it.twinsbrains.fpik.chapter5.Stream.Companion.of
 import it.twinsbrains.fpik.chapter5.Stream.Companion.take
 import it.twinsbrains.fpik.chapter5.Stream.Companion.toList
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import strikt.assertions.isTrue
@@ -23,9 +24,9 @@ class InfiniteStreamsTest {
     expectThat(ones().exists { it % 2 != 0 }).isTrue()
   }
 
-  @Test(expected = StackOverflowError::class)
+  @Test
   fun `exists will stack overflow on infinite streams if not verified`() {
-    ones().exists { it % 2 == 0 }
+   assertThrows<StackOverflowError> { ones().exists { it % 2 == 0 } }
   }
 
   @Test

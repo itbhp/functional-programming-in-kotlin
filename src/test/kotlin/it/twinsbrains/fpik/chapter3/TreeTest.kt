@@ -4,7 +4,7 @@ import it.twinsbrains.fpik.chapter3.Tree.Companion.depth
 import it.twinsbrains.fpik.chapter3.Tree.Companion.map
 import it.twinsbrains.fpik.chapter3.Tree.Companion.maximum
 import it.twinsbrains.fpik.chapter3.Tree.Companion.size
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 

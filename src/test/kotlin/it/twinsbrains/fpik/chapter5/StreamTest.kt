@@ -21,9 +21,9 @@ import it.twinsbrains.fpik.chapter5.Stream.Companion.tails
 import it.twinsbrains.fpik.chapter5.Stream.Companion.take
 import it.twinsbrains.fpik.chapter5.Stream.Companion.takeWhile
 import it.twinsbrains.fpik.chapter5.Stream.Companion.toList
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import strikt.api.expect
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
@@ -43,14 +43,14 @@ class StreamTest {
       return testOutput.toString().split("\n")
     }
 
-  @Before
+  @BeforeEach
   fun setUp() {
     previousOut = System.out
     val ps = PrintStream(testOutput)
     System.setOut(ps)
   }
 
-  @After
+  @AfterEach
   fun tearDown() {
     System.setOut(previousOut)
   }
