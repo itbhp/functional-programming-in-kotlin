@@ -1,8 +1,7 @@
 package it.twinsbrains.fpik.chapter6
 
-import arrow.core.Id
 import arrow.core.Tuple2
-import arrow.core.extensions.id.monad.monad
+import arrow.core.extensions.IdMonad
 import arrow.mtl.State
 import arrow.mtl.stateSequential
 
@@ -20,13 +19,13 @@ object StateMonadComprehension {
     fun <A, B> flatMap(
         s: State<RNG, A>,
         f: (A) -> State<RNG, B>
-    ): State<RNG, B> = s.flatMap(Id.monad(), f)
+    ): State<RNG, B> = s.flatMap(object : IdMonad {}, f)
 
     fun <A, B> map(
         s: State<RNG, A>, f: (A) -> B
     ): State<RNG, B> = flatMap(s) { a -> State { rng -> Tuple2(rng, f(a)) } }
 
-    fun <A> sequence(fs: List<State<RNG, A>>): State<RNG, List<A>> =
+    private fun <A> sequence(fs: List<State<RNG, A>>): State<RNG, List<A>> =
         fs.stateSequential()
 
 }

@@ -48,12 +48,6 @@
         </dependency>
 
         <dependency>
-            <groupId>io.arrow-kt</groupId>
-            <artifactId>arrow-annotations</artifactId>
-            <version>${arrow.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit-jupiter-api.version}</version>
@@ -139,24 +133,6 @@
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${kotlin.version}</version>
                 <executions>
-                    <execution>
-                        <id>kapt</id>
-                        <goals>
-                            <goal>kapt</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>src/main/kotlin</sourceDir>
-                            </sourceDirs>
-                            <annotationProcessorPaths>
-                                <annotationProcessorPath>
-                                    <groupId>io.arrow-kt</groupId>
-                                    <artifactId>arrow-meta</artifactId>
-                                    <version>${arrow.version}</version>
-                                </annotationProcessorPath>
-                            </annotationProcessorPaths>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>compile</id>
                         <phase>compile</phase>
