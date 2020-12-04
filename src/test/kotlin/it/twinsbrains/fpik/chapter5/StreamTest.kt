@@ -1,6 +1,6 @@
 package it.twinsbrains.fpik.chapter5
 
-import it.twinsbrains.fpik.StriktExtensionForOurFunctionalLibrary.isNone
+import it.twinsbrains.fpik.AssertionsForOurFunctionalLibrary.isNone
 import it.twinsbrains.fpik.chapter3.List
 import it.twinsbrains.fpik.chapter4.Option.Companion.some
 import it.twinsbrains.fpik.chapter5.Stream.Companion.append
