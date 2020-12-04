@@ -1,5 +1,8 @@
 package it.twinsbrains.fpik.chapter6
 
+import it.twinsbrains.fpik.chapter3.Cons
+import it.twinsbrains.fpik.chapter3.List
+
 interface RNG {
     fun nextInt(): Pair<Int, RNG>
 }
@@ -31,22 +34,16 @@ object Randoms {
         return num.toDouble() / Int.MAX_VALUE to nextRng
     }
 
-    fun intDouble(rng: RNG): Pair<Pair<Int, Double>, RNG> {
-        val (i, r) = nonNegativeInt(rng)
-        return (i to i.toDouble()) to r
-    }
-
-    fun doubleInt(rng: RNG): Pair<Pair<Double, Int>, RNG> {
-        val (d, r) = double(rng)
-        return (d to d.toInt()) to r
-    }
-
-    fun double3(rng: RNG): Pair<Triple<Double, Double, Double>, RNG> {
-        val (v1, rng1) = double(rng)
-        val (v2, rng2) = double(rng1)
-        val (v3, rng3) = double(rng2)
-
-        return Triple(v1, v2, v3) to rng3
+    fun ints(count: Int, rng: RNG): Pair<List<Int>, RNG> {
+        tailrec fun loop(n: Int, nRNG: RNG, l: List<Int>): Pair<List<Int>, RNG> {
+            return if (n <= 0) {
+                l to nRNG
+            } else {
+                val (i, rng1) = nRNG.nextInt()
+                loop(n - 1, rng1, Cons(i, l))
+            }
+        }
+        return loop(count, rng, List.empty())
     }
 
 }
