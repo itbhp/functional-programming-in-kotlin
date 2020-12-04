@@ -15,7 +15,7 @@ import it.twinsbrains.fpik.chapter3.Cons as consL
 sealed class Stream<out A> {
   companion object {
 
-    fun <A, B> Stream<A>.foldRight(
+    private fun <A, B> Stream<A>.foldRight(
       z: () -> B,
       f: (A, () -> B) -> B
     ): B =

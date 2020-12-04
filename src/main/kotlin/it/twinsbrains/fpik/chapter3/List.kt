@@ -71,7 +71,7 @@ sealed class List<out A> {
 
     fun <A> length(xs: List<A>): Int = foldRight(xs, 0, { _, acc -> acc + 1 })
 
-    tailrec fun <A, B> foldLeft(xs: List<A>, z: B, f: (B, A) -> B): B =
+    private tailrec fun <A, B> foldLeft(xs: List<A>, z: B, f: (B, A) -> B): B =
       when (xs) {
         is Nil -> z
         is Cons -> foldLeft(xs.tail, f(z, xs.head), f)
@@ -83,7 +83,7 @@ sealed class List<out A> {
     fun addOne(xs: List<Int>): List<Int> =
       map(xs) { e -> e + 1 }
 
-    fun <A, B> map(xs: List<A>, f: (A) -> B): List<B> =
+    private fun <A, B> map(xs: List<A>, f: (A) -> B): List<B> =
       foldRight(xs, empty(), { e, l -> Cons(f(e), l) })
 
     fun <A> filter(xs: List<A>, f: (A) -> Boolean): List<A> =

@@ -17,7 +17,7 @@ sealed class Either<out E, out A> {
       }
 
     fun <E, A, B> lift(f: (A) -> B): (Either<E, A>) -> Either<E, B> = { oa -> oa.map(f) }
-    fun <E, A, B, C> lift2(f: (A, B) -> C): (Either<E, A>, Either<E, B>) -> Either<E, C> =
+    private fun <E, A, B, C> lift2(f: (A, B) -> C): (Either<E, A>, Either<E, B>) -> Either<E, C> =
       { optA, optB ->
         optA.flatMap { a ->
           optB.map { b ->
@@ -26,12 +26,13 @@ sealed class Either<out E, out A> {
         }
       }
 
-    fun <E, A, B, C> map2(a: Either<E, A>, b: Either<E, B>, f: (A, B) -> C): Either<E, C> = lift2<E, A, B, C>(f)(a, b)
+    private fun <E, A, B, C> map2(a: Either<E, A>, b: Either<E, B>, f: (A, B) -> C): Either<E, C> =
+      lift2<E, A, B, C>(f)(a, b)
 
     fun <E, A> sequence(xs: List<Either<E, A>>): Either<E, List<A>> =
       traverse(xs) { it }
 
-    fun <E, A, B> traverse(
+    private fun <E, A, B> traverse(
       xa: List<A>,
       f: (A) -> Either<E, B>
     ): Either<E, List<B>> =

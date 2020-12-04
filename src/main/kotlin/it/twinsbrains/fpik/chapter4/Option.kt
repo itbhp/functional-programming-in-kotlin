@@ -6,7 +6,7 @@ import it.twinsbrains.fpik.chapter3.List
 sealed class Option<out A> {
   companion object {
 
-    fun <A> Option<A>.isNone(): Boolean =
+    private fun <A> Option<A>.isNone(): Boolean =
       when (this) {
         is None -> true
         is Some -> false
@@ -19,7 +19,7 @@ sealed class Option<out A> {
     fun <A> some(a: A): Option<A> = Some(a)
 
     fun <A, B> lift(f: (A) -> B): (Option<A>) -> Option<B> = { oa -> oa.map(f) }
-    fun <A, B, C> lift2(f: (A, B) -> C): (Option<A>, Option<B>) -> Option<C> =
+    private fun <A, B, C> lift2(f: (A, B) -> C): (Option<A>, Option<B>) -> Option<C> =
       { optA, optB ->
         optA.flatMap { a ->
           optB.map { b ->
