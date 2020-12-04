@@ -9,7 +9,6 @@ import it.twinsbrains.fpik.chapter6.StateMonadComprehension.int
 import it.twinsbrains.fpik.chapter6.StateMonadComprehension.ints
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
-import strikt.assertions.containsExactly
 import strikt.assertions.isEqualTo
 
 class StateMonadComprehensionTest {
