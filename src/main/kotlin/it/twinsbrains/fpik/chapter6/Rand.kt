@@ -23,13 +23,15 @@ object RandCompanion {
         f: (A, B) -> C
     ): Rand<C> = flatMap(ra) { a -> flatMap(rb) { b -> { rng -> f(a, b) to rng } } }
 
-    fun <A> sequence(fs: List<Rand<A>>): Rand<List<A>> = { rng ->
-        fs.fold(listOf<A>() to rng) { acc, randA ->
-            val (l, r) = acc
-            val (a, rng1) = randA(r)
-            (l + a) to rng1
-        }
-    }
+    fun <A> sequence(fs: List<Rand<A>>): Rand<List<A>> =
+        fs.fold(unit(listOf())) { acc, r -> map2(acc, r) { l, a -> l + a } }
+//        { rng ->
+//            fs.fold(listOf<A>() to rng) { acc, randA ->
+//                val (l, r) = acc
+//                val (a, rng1) = randA(r)
+//                (l + a) to rng1
+//            }
+//        }
 
     fun <A, B> flatMap(f: Rand<A>, g: (A) -> Rand<B>): Rand<B> = { rng ->
         val (a, rng1) = f(rng)
