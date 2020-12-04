@@ -34,16 +34,11 @@ object Randoms {
         return num.toDouble() / Int.MAX_VALUE to nextRng
     }
 
-    fun ints(count: Int, rng: RNG): Pair<List<Int>, RNG> {
-        tailrec fun loop(n: Int, nRNG: RNG, l: List<Int>): Pair<List<Int>, RNG> {
-            return if (n <= 0) {
-                l to nRNG
-            } else {
-                val (i, rng1) = nRNG.nextInt()
-                loop(n - 1, rng1, Cons(i, l))
+    fun ints(count: Int, rng: RNG): Pair<List<Int>, RNG> =
+        (1..count)
+            .fold(List.empty<Int>() to rng) { (l, r), _ ->
+                val (num, nRng) = nonNegativeInt(r)
+                Cons(num, l) to nRng
             }
-        }
-        return loop(count, rng, List.empty())
-    }
 
 }
