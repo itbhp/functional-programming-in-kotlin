@@ -43,6 +43,12 @@
 
         <dependency>
             <groupId>io.arrow-kt</groupId>
+            <artifactId>arrow-mtl</artifactId>
+            <version>${arrow.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.arrow-kt</groupId>
             <artifactId>arrow-mtl-data</artifactId>
             <version>${arrow.version}</version>
         </dependency>
