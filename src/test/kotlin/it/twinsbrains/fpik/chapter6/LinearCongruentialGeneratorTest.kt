@@ -1,5 +1,6 @@
 package it.twinsbrains.fpik.chapter6
 
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Test
 import it.twinsbrains.fpik.chapter6.LinearCongruentialGenerator as SimpleRNG
@@ -15,5 +16,17 @@ class LinearCongruentialGeneratorTest {
     assertNotEquals(r1, r2)
     assertNotEquals(r2, r3)
     assertNotEquals(r1, r3)
+  }
+
+  @Test
+  fun `using the same instance we get the same result no randomness`() {
+    val s = SimpleRNG(3)
+    val (r1, _) = s.nextInt()
+    val (r2, _) = s.nextInt()
+    val (r3, _) = s.nextInt()
+
+    assertEquals(r1, r2)
+    assertEquals(r2, r3)
+    assertEquals(r1, r3)
   }
 }
