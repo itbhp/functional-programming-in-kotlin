@@ -15,10 +15,7 @@ interface RNG {
 object RandCompanion {
     fun <A> unit(a: A): Rand<A> = { rng -> Pair(a, rng) }
 
-    fun <A, B> map(s: Rand<A>, f: (A) -> B): Rand<B> = { rng ->
-        val (a, rng2) = s(rng)
-        Pair(f(a), rng2)
-    }
+    fun <A, B> map(s: Rand<A>, f: (A) -> B): Rand<B> = flatMap(s) { a -> { rng -> f(a) to rng } }
 
     fun <A, B, C> map2(
         ra: Rand<A>,
@@ -37,7 +34,6 @@ object RandCompanion {
             (l + a) to rng1
         }
     }
-
 
     fun <A, B> flatMap(f: Rand<A>, g: (A) -> Rand<B>): Rand<B> = { rng ->
         val (a, rng1) = f(rng)
