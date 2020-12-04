@@ -26,4 +26,9 @@ object Randoms {
         }
     }
 
+    fun double(rng: RNG): Pair<Double, RNG> {
+        val (num, nextRng) = nonNegativeInt(rng)
+        return num.toDouble() / Int.MAX_VALUE to nextRng
+    }
+
 }
