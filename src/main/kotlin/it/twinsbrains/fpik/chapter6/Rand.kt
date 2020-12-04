@@ -1,5 +1,6 @@
 package it.twinsbrains.fpik.chapter6
 
+import it.twinsbrains.fpik.chapter6.RandCompanion.flatMap
 import it.twinsbrains.fpik.chapter6.RandCompanion.map
 import it.twinsbrains.fpik.chapter6.RandCompanion.map2
 import it.twinsbrains.fpik.chapter6.RandCompanion.sequence
@@ -36,6 +37,12 @@ object RandCompanion {
             (l + a) to rng1
         }
     }
+
+
+    fun <A, B> flatMap(f: Rand<A>, g: (A) -> Rand<B>): Rand<B> = { rng ->
+        val (a, rng1) = f(rng)
+        g(a)(rng1)
+    }
 }
 
 object RandExamples {
@@ -44,4 +51,12 @@ object RandExamples {
     val doubleR: Rand<Double> = map(nonNegativeIntR) { it.toDouble() / Int.MAX_VALUE }
     val intDoubleR: Rand<Pair<Int, Double>> = map2(nonNegativeIntR, doubleR) { a, b -> a to b }
     fun intsR(count: Int): Rand<List<Int>> = sequence((1..count).map { nonNegativeIntR })
+    fun nonNegativeIntLessThan(n: Int): Rand<Int> = flatMap(nonNegativeIntR) { i ->
+        val mod = i % n
+        if (i + (n - 1) - mod >= 0) {
+            unit(mod)
+        } else { rng ->
+            nonNegativeIntLessThan(n)(rng)
+        }
+    }
 }
