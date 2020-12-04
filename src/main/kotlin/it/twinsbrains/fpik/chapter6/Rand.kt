@@ -1,42 +1,15 @@
 package it.twinsbrains.fpik.chapter6
 
-import it.twinsbrains.fpik.chapter6.RandCompanion.flatMap
-import it.twinsbrains.fpik.chapter6.RandCompanion.map
-import it.twinsbrains.fpik.chapter6.RandCompanion.map2
-import it.twinsbrains.fpik.chapter6.RandCompanion.sequence
-import it.twinsbrains.fpik.chapter6.RandCompanion.unit
+import it.twinsbrains.fpik.chapter6.State.Companion.flatMap
+import it.twinsbrains.fpik.chapter6.State.Companion.map
+import it.twinsbrains.fpik.chapter6.State.Companion.map2
+import it.twinsbrains.fpik.chapter6.State.Companion.sequence
+import it.twinsbrains.fpik.chapter6.State.Companion.unit
 
-typealias Rand<A> = (RNG) -> Pair<A, RNG>
+typealias Rand<A> = State<RNG, A>
 
 interface RNG {
     fun nextInt(): Pair<Int, RNG>
-}
-
-object RandCompanion {
-    fun <A> unit(a: A): Rand<A> = { rng -> Pair(a, rng) }
-
-    fun <A, B> map(s: Rand<A>, f: (A) -> B): Rand<B> = flatMap(s) { a -> { rng -> f(a) to rng } }
-
-    fun <A, B, C> map2(
-        ra: Rand<A>,
-        rb: Rand<B>,
-        f: (A, B) -> C
-    ): Rand<C> = flatMap(ra) { a -> map(rb) { b -> f(a, b) } }
-
-    fun <A> sequence(fs: List<Rand<A>>): Rand<List<A>> =
-        fs.fold(unit(listOf())) { acc, r -> map2(acc, r) { l, a -> l + a } }
-//        { rng ->
-//            fs.fold(listOf<A>() to rng) { acc, randA ->
-//                val (l, r) = acc
-//                val (a, rng1) = randA(r)
-//                (l + a) to rng1
-//            }
-//        }
-
-    fun <A, B> flatMap(f: Rand<A>, g: (A) -> Rand<B>): Rand<B> = { rng ->
-        val (a, rng1) = f(rng)
-        g(a)(rng1)
-    }
 }
 
 object RandExamples {
@@ -49,8 +22,8 @@ object RandExamples {
         val mod = i % n
         if (i + (n - 1) - mod >= 0) {
             unit(mod)
-        } else { rng ->
-            nonNegativeIntLessThan(n)(rng)
+        } else State { rng ->
+            nonNegativeIntLessThan(n).run(rng)
         }
     }
 }
