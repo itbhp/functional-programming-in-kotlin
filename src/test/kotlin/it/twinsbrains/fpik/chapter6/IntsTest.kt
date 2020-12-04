@@ -1,5 +1,6 @@
 package it.twinsbrains.fpik.chapter6
 
+import arrow.mtl.run
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.property.forAll
 import it.twinsbrains.fpik.chapter3.List.Companion.length
@@ -21,6 +22,14 @@ class IntsTest : StringSpec() {
             forAll<Long> { seed ->
                 val n = 100
                 val (list, _) = intsR(n).run(SimpleRNG(seed))
+                list.size == n
+            }
+        }
+
+        "random ints with arrow State Monad" {
+            forAll<Long> { seed ->
+                val n = 100
+                val (_, list) = StateMonadComprehension.ints(n).run(SimpleRNG(seed))
                 list.size == n
             }
         }

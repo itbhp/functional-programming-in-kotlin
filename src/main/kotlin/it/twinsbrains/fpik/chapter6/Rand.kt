@@ -1,12 +1,12 @@
 package it.twinsbrains.fpik.chapter6
 
-import it.twinsbrains.fpik.chapter6.State.Companion.flatMap
-import it.twinsbrains.fpik.chapter6.State.Companion.map
-import it.twinsbrains.fpik.chapter6.State.Companion.map2
-import it.twinsbrains.fpik.chapter6.State.Companion.sequence
-import it.twinsbrains.fpik.chapter6.State.Companion.unit
+import it.twinsbrains.fpik.chapter6.AState.Companion.flatMap
+import it.twinsbrains.fpik.chapter6.AState.Companion.map
+import it.twinsbrains.fpik.chapter6.AState.Companion.map2
+import it.twinsbrains.fpik.chapter6.AState.Companion.sequence
+import it.twinsbrains.fpik.chapter6.AState.Companion.unit
 
-typealias Rand<A> = State<RNG, A>
+typealias Rand<A> = AState<RNG, A>
 
 interface RNG {
     fun nextInt(): Pair<Int, RNG>
@@ -27,7 +27,7 @@ object RandExamples {
         val mod = i % n
         if (i + (n - 1) - mod >= 0) {
             unit(mod)
-        } else State { rng ->
+        } else AState { rng ->
             nonNegativeIntLessThan(n).run(rng)
         }
     }

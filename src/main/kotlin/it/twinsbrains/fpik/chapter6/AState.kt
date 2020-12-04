@@ -1,19 +1,19 @@
 package it.twinsbrains.fpik.chapter6
 
 
-data class State<S, out A>(val run: (S) -> Pair<A, S>) {
+data class AState<S, out A>(val run: (S) -> Pair<A, S>) {
 
     companion object {
-        fun <S, A> unit(a: A): State<S, A> = State { s -> a to s }
+        fun <S, A> unit(a: A): AState<S, A> = AState { s -> a to s }
 
-        fun <S, A, B> flatMap(f: State<S, A>, g: (A) -> State<S, B>): State<S, B> =
-            State { s ->
+        fun <S, A, B> flatMap(f: AState<S, A>, g: (A) -> AState<S, B>): AState<S, B> =
+            AState { s ->
                 val (a, s1) = f.run(s)
                 g(a).run(s1)
             }
 
-        fun <S, A, B> map(s: State<S, A>, f: (A) -> B): State<S, B> =
-            flatMap(s) { a -> State { s -> f(a) to s } }
+        fun <S, A, B> map(s: AState<S, A>, f: (A) -> B): AState<S, B> =
+            flatMap(s) { a -> AState { s -> f(a) to s } }
 
         fun <A, B, C> map2(
             ra: Rand<A>,
