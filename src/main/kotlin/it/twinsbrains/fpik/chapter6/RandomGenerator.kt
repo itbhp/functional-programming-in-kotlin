@@ -4,7 +4,7 @@ interface RNG {
   fun nextInt(): Pair<Int, RNG>
 }
 
-class LinearCongruentialGenerator(val seed: Long) : RNG {
+class LinearCongruentialGenerator(private val seed: Long) : RNG {
   override fun nextInt(): Pair<Int, RNG> {
     val newSeed =
       (seed * 0x5DEECE66DL + 0xBL) and
