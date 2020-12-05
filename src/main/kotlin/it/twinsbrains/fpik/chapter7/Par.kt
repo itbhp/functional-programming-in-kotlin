@@ -80,9 +80,9 @@ data class UnitFuture<A>(
 }
 
 data class TimedMap2Future<A, B, C>(
-  val pa: Future<A>, val pb
-  : Future<B>, val f
-  : (A, B) -> C
+  val pa: Future<A>,
+  val pb: Future<B>,
+  val f: (A, B) -> C
 ) : Future<C> {
   override fun get(to: Long, tu: TimeUnit): C {
     val timeoutMillis = TimeUnit.MILLISECONDS.convert(to, tu)
