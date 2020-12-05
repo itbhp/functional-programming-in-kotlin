@@ -32,12 +32,9 @@ object CandyMachine {
 
     fun simulateMachine(
         inputs: List<Input>
-    ): State<Machine, Tuple2<Int, Int>> = State { machine ->
-        transitionTo(inputs.map { i ->
+    ): State<Machine, Unit> = State { machine ->
+        inputs.map { i ->
             modify<Machine> { s -> transform(s, i) }
-        }.fold(machine) { cur, s -> s.run(cur).a })
+        }.fold(Tuple2(machine, Unit)) { cur, s -> s.run(cur.a) }
     }
-
-    private fun transitionTo(machine: Machine) =
-        Tuple2(machine, Tuple2(machine.candies, machine.coins))
 }
