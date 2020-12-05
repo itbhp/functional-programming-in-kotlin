@@ -1,7 +1,6 @@
 package it.twinsbrains.fpik.chapter6
 
-import arrow.core.Id
-import arrow.core.extensions.id.monad.monad
+import arrow.core.extensions.IdMonad
 import arrow.mtl.State
 import arrow.mtl.extensions.fx
 import arrow.mtl.run
@@ -14,7 +13,7 @@ import strikt.assertions.isEqualTo
 class StateMonadComprehensionTest {
     @Test
     fun `state monad comprehension`() {
-        val ns2: State<RNG, List<Int>> = State.fx(Id.monad()) {
+        val ns2: State<RNG, List<Int>> = State.fx(object : IdMonad {}) {
             val x: Int = int.bind()
             val y: Int = int.bind()
             val xs: List<Int> = ints(x).bind()
