@@ -1,9 +1,12 @@
 package it.twinsbrains.fpik.chapter6
 
+import arrow.core.Id
 import arrow.core.Tuple2
+import arrow.core.extensions.id.monad.monad
 import arrow.mtl.State
-import arrow.mtl.run
-import it.twinsbrains.fpik.chapter6.ArrowStateMonad.modify
+import arrow.mtl.StateApi
+import arrow.mtl.extensions.fx
+import arrow.mtl.stateSequential
 
 object CandyMachine {
     sealed class Input {
@@ -18,10 +21,9 @@ object CandyMachine {
     )
 
     private fun transform(
-        machine: Machine,
         input: Input
-    ): Machine {
-        return when {
+    ): (Machine) -> Machine = { machine ->
+        when {
             input is Input.Turn && !machine.locked && machine.candies > 0 ->
                 Machine(true, machine.candies - 1, machine.coins)
             input is Input.Coin && machine.locked && machine.candies > 0 ->
@@ -32,9 +34,12 @@ object CandyMachine {
 
     fun simulateMachine(
         inputs: List<Input>
-    ): State<Machine, Unit> = State { machine ->
-        inputs.map { i ->
-            modify<Machine> { s -> transform(s, i) }
-        }.fold(Tuple2(machine, Unit)) { cur, s -> s.run(cur.a) }
+    ): State<Machine, Unit> = State.fx(Id.monad()) {
+        val aMap: List<(Machine) -> Machine> = inputs.map(::transform)
+        val anotherMap: List<State<Machine, Unit>> = aMap.map(StateApi::modify)
+        val x: List<Unit> = anotherMap.stateSequential().bind()
+        val s: Machine = StateApi.get<Machine>().bind()
+        Tuple2(s.candies, s.coins)
     }
+
 }
