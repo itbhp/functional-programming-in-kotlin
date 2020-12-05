@@ -32,9 +32,46 @@ object Pars {
   fun <A, B> asyncF(f: (A) -> B): (A) -> Par<B> = { a ->
     lazyUnit { f(a) }
   }
+
+  fun sortPar(parList: Par<List<Int>>): Par<List<Int>> =
+    map(parList) { it.sorted() }
+
+  fun <A, B> map(pa: Par<A>, f: (A) -> B): Par<B> =
+    map2(pa, unit(Unit), { a, _ -> f(a) })
+
+  fun <A, B> parMap(
+    ps: List<A>,
+    f: (A) -> B
+  ): Par<List<B>> = fork {
+    val fbs: List<Par<B>> = ps.map(asyncF(f))
+    sequence(fbs)
+  }
+
+  fun <A> sequence(ps: List<Par<A>>): Par<List<A>> =
+    when {
+      ps.isEmpty() -> unit(Nil)
+      ps.size == 1 -> map(ps.head) { listOf(it) }
+      else -> {
+        val (l, r) = ps.splitAt(ps.size / 2)
+        map2(fork { sequence(l) }, fork { sequence(r) }) { la, lb -> la + lb }
+      }
+    }
 }
 
-data class UnitFuture<A>(val a: A) : Future<A> {
+val <T> List<T>.head: T
+  get() = first()
+val <T> List<T>.tail: List<T>
+  get() = this.drop(1)
+
+val Nil = listOf<Nothing>()
+
+fun <T> List<T>.splitAt(i: Int) =
+  this.subList(0, i) to this.subList(i, this.size)
+
+
+data class UnitFuture<A>(
+  val a: A
+) : Future<A> {
   override fun get(): A = a
   override fun get(timeout: Long, timeUnit: TimeUnit): A = a
   override fun cancel(evenIfRunning: Boolean): Boolean = false
@@ -42,7 +79,14 @@ data class UnitFuture<A>(val a: A) : Future<A> {
   override fun isCancelled(): Boolean = false
 }
 
-data class TimedMap2Future<A, B, C>(val pa: Future<A>, val pb: Future<B>, val f: (A, B) -> C) : Future<C> {
+data class TimedMap2Future<A, B, C>(
+  val pa: Future<A>, val pb
+  : Future<B>, val f
+  : (
+    A, B
+  )
+  -> C
+) : Future<C> {
   override fun get(to: Long, tu: TimeUnit): C {
     val timeoutMillis = TimeUnit.MILLISECONDS.convert(to, tu)
     val start = System.currentTimeMillis()
@@ -81,6 +125,3 @@ object ParExamples {
       map2(fork { sum(l) }, fork { sum(r) }) { lx: Int, rx: Int -> lx + rx }
     }
 }
-
-fun List<Int>.splitAt(i: Int) =
-  this.subList(0, i) to this.subList(i, this.size)
