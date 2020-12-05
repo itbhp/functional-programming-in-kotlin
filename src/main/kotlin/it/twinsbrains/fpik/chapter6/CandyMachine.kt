@@ -31,11 +31,10 @@ object CandyMachine {
     ): Tuple2<Machine, Tuple2<Int, Int>> {
         val doNothing = transitionTo(machine)
         return when {
-            machine.candies == 0 -> doNothing
-            input is Input.Turn && machine.locked -> doNothing
-            input is Input.Coin && !machine.locked -> doNothing
-            input is Input.Turn -> transitionTo(Machine(true, machine.candies - 1, machine.coins))
-            input is Input.Coin -> transitionTo(Machine(false, machine.candies, machine.coins + 1))
+            input is Input.Turn && !machine.locked && machine.candies > 0 ->
+                transitionTo(Machine(true, machine.candies - 1, machine.coins))
+            input is Input.Coin && machine.locked && machine.candies > 0 ->
+                transitionTo(Machine(false, machine.candies, machine.coins + 1))
             else -> doNothing
         }
     }
