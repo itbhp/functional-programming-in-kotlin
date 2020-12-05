@@ -48,19 +48,19 @@ data class TimedMap2Future<A, B, C>(val pa: Future<A>, val pb: Future<B>, val f:
   }
 
   override fun get(): C {
-    return get(100, TimeUnit.MILLISECONDS)
+    return f(pa.get(), pb.get())
   }
 
   override fun cancel(mayInterruptIfRunning: Boolean): Boolean {
-    return false
+    return pa.cancel(mayInterruptIfRunning) && pa.cancel(mayInterruptIfRunning)
   }
 
   override fun isCancelled(): Boolean {
-    return false
+    return pa.isCancelled && pb.isCancelled
   }
 
   override fun isDone(): Boolean {
-    return true
+    return pa.isDone && pb.isDone
   }
 
 }
