@@ -16,7 +16,7 @@ object Pars {
   fun <A, B, C> map2(a: Par<A>, b: Par<B>, f: (A, B) -> C): Par<C> = { es: ExecutorService ->
     val af: Future<A> = a(es)
     val bf: Future<B> = b(es)
-    UnitFuture(f(af.get(), bf.get()))
+    TimedMap2Future(af, bf, f)
   }
 
   fun <A> unit(a: A): Par<A> = { _: ExecutorService -> UnitFuture(a) }
@@ -34,6 +34,35 @@ data class UnitFuture<A>(val a: A) : Future<A> {
   override fun cancel(evenIfRunning: Boolean): Boolean = false
   override fun isDone(): Boolean = true
   override fun isCancelled(): Boolean = false
+}
+
+data class TimedMap2Future<A, B, C>(val pa: Future<A>, val pb: Future<B>, val f: (A, B) -> C) : Future<C> {
+  override fun get(to: Long, tu: TimeUnit): C {
+    val timeoutMillis = TimeUnit.MILLISECONDS.convert(to, tu)
+    val start = System.currentTimeMillis()
+    val a = pa.get(to, tu)
+    val duration = System.currentTimeMillis() - start
+    val remainder = timeoutMillis - duration
+    val b = pb.get(remainder, TimeUnit.MILLISECONDS)
+    return f(a, b)
+  }
+
+  override fun get(): C {
+    return get(100, TimeUnit.MILLISECONDS)
+  }
+
+  override fun cancel(mayInterruptIfRunning: Boolean): Boolean {
+    return false
+  }
+
+  override fun isCancelled(): Boolean {
+    return false
+  }
+
+  override fun isDone(): Boolean {
+    return true
+  }
+
 }
 
 
