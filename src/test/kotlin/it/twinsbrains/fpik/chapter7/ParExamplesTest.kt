@@ -20,4 +20,10 @@ class ParExamplesTest {
     val res = Pars.run(newCachedThreadPool(), sum(listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)))
     expectThat(res.get(5, TimeUnit.MILLISECONDS)).isEqualTo(55)
   }
+
+  @Test
+  fun `asyncF should work`() {
+    val res = Pars.run(newCachedThreadPool(), Pars.asyncF<Int, String> { it.toString() }(1))
+    expectThat(res.get(5, TimeUnit.MILLISECONDS)).isEqualTo("1")
+  }
 }

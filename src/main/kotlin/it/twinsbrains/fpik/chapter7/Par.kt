@@ -25,7 +25,13 @@ object Pars {
     es.submit(Callable { a()(es).get() })
   }
 
+  fun <A> lazyUnit(a: () -> A): Par<A> = fork { unit(a()) }
+
   fun <A> run(es: ExecutorService, a: Par<A>): Future<A> = a(es)
+
+  fun <A, B> asyncF(f: (A) -> B): (A) -> Par<B> = { a ->
+    lazyUnit { f(a) }
+  }
 }
 
 data class UnitFuture<A>(val a: A) : Future<A> {
