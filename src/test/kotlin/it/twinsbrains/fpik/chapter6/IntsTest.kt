@@ -29,7 +29,7 @@ class IntsTest : StringSpec() {
         "random ints with arrow State Monad" {
             forAll<Long> { seed ->
                 val n = 100
-                val (_, list) = StateMonadComprehension.ints(n).run(SimpleRNG(seed))
+                val (_, list) = ArrowStateMonad.ints(n).run(SimpleRNG(seed))
                 list.size == n
             }
         }
