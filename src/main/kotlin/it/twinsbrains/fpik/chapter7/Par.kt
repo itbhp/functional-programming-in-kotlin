@@ -42,7 +42,10 @@ object ParExamples {
     if (ints.size <= 1)
       unit(ints.firstOption().getOrElse { 0 })
     else {
-      val (l, r) = ints.chunked(ints.size / 2)
+      val (l, r) = ints.splitAt(ints.size / 2)
       map2(fork { sum(l) }, fork { sum(r) }) { lx: Int, rx: Int -> lx + rx }
     }
 }
+
+fun List<Int>.splitAt(i: Int) =
+  this.subList(0, i) to this.subList(i, this.size)
