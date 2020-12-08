@@ -13,6 +13,10 @@ import java.util.concurrent.TimeUnit
 typealias Par<A> = (ExecutorService) -> Future<A>
 
 object Pars {
+
+  fun <A, B, C, D> map3(a: Par<A>, b: Par<B>, c: Par<C>, f: (A, B, C) -> D): Par<D> =
+    map2(a, map2(b, c, { vB, vC -> { vA: A -> f(vA, vB, vC) } }), { vA, mapping -> mapping(vA) })
+
   fun <A, B, C> map2(a: Par<A>, b: Par<B>, f: (A, B) -> C): Par<C> = { es: ExecutorService ->
     val af: Future<A> = a(es)
     val bf: Future<B> = b(es)

@@ -45,4 +45,10 @@ class ParExamplesTest {
     val res = Pars.run(newCachedThreadPool(), Pars.parFilter(listOf(4, 5, 2, 3, 1)) { it < 4 })
     expectThat(res.get(500, TimeUnit.MILLISECONDS)).isEqualTo(listOf(2, 3, 1))
   }
+
+  @Test
+  fun `map3 should work`() {
+    val res = Pars.run(newCachedThreadPool(), Pars.map3(unit(1), unit(2), unit(4)) { a, b, c -> a + b + c })
+    expectThat(res.get(500, TimeUnit.MILLISECONDS)).isEqualTo(7)
+  }
 }
