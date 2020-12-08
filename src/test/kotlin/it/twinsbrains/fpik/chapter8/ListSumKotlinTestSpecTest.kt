@@ -16,6 +16,13 @@ class ListSumKotlinTestSpecTest : StringSpec() {
       }
     }
 
+    "sum of a list and sorted list should be the same"{
+      val intList = Arb.list(Arb.int(1..100))
+      forAll(intList) { l ->
+        l.sum() == l.sorted().sum()
+      }
+    }
+
     "sum of a list containing the same element should be size * element"{
       val intList = Arb.list(Arb.constant(4))
       forAll(intList) { l ->
