@@ -86,7 +86,8 @@ object Pars {
 
   fun <A> choiceN(n: Par<Int>, choices: List<Par<A>>): Par<A> =
     { es: ExecutorService ->
-      run(es, choices[run(es, n).get()])
+      val index = run(es, n).get()
+      run(es, choices[index])
     }
 
   fun <K, V> choiceMap(
