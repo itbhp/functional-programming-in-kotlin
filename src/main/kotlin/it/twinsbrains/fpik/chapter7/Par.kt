@@ -100,10 +100,7 @@ object Pars {
     }
 
   fun <A, B> flatMap(pa: Par<A>, choices: (A) -> Par<B>): Par<B> =
-    { es: ExecutorService ->
-      val vA: A = run(es, pa).get()
-      run(es, choices(vA))
-    }
+    join(map(pa, choices))
 
 
   fun <A> join(a: Par<Par<A>>): Par<A> =
