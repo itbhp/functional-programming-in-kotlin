@@ -31,6 +31,9 @@ object Pars {
     })
   }
 
+  fun <A> delay(pa: () -> Par<A>): Par<A> =
+    { es -> pa()(es) }
+
   fun <A> lazyUnit(a: () -> A): Par<A> = fork { unit(a()) }
 
   fun <A> run(es: ExecutorService, a: Par<A>): Future<A> = a(es)
