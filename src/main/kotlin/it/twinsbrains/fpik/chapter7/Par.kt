@@ -89,6 +89,15 @@ object Pars {
       run(es, choices[run(es, n).get()])
     }
 
+  fun <K, V> choiceMap(
+    key: Par<K>,
+    choices: Map<K, Par<V>>
+  ): Par<V> =
+    { es: ExecutorService ->
+      val keyV: K = run(es, key).get()
+      run(es, choices.getValue(keyV))
+    }
+
 }
 
 val <T> List<T>.head: T
