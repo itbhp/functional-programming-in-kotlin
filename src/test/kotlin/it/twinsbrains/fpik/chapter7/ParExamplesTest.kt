@@ -1,14 +1,17 @@
 package it.twinsbrains.fpik.chapter7
 
 import it.twinsbrains.fpik.chapter7.ParExamples.sum
+import it.twinsbrains.fpik.chapter7.Pars.fork
+import it.twinsbrains.fpik.chapter7.Pars.lazyUnit
 import it.twinsbrains.fpik.chapter7.Pars.unit
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors.newCachedThreadPool
-import java.util.concurrent.Executors.newSingleThreadExecutor
+import java.util.concurrent.Executors.*
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 class ParExamplesTest {
   @Test
@@ -53,8 +56,18 @@ class ParExamplesTest {
     res.shouldBe(unit(7))(newCachedThreadPool())
   }
 
+  @Test
+  fun `deadlock due to fork impl`() {
+    val a = lazyUnit { 43 }
+    val b = fork { a }
+    assertThrows<TimeoutException> {
+      (a shouldBe b)(newFixedThreadPool(1))
+      // during shouldBe on the right side we submit a callable inside another callable submit
+    }
+  }
+
   private infix fun <A> Par<A>.shouldBe(other: Par<A>) = { es: ExecutorService ->
-    if (this(es).get() != other(es).get())
+    if (this(es).get(500, TimeUnit.MILLISECONDS) != other(es).get(500, TimeUnit.MILLISECONDS))
       throw AssertionError("Par instances not equal")
   }
 }
