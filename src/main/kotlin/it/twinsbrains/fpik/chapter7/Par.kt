@@ -98,6 +98,12 @@ object Pars {
       run(es, choices.getValue(keyV))
     }
 
+  fun <A, B> chooser(pa: Par<A>, choices: (A) -> Par<B>): Par<B> =
+    { es: ExecutorService ->
+      val vA: A = run(es, pa).get()
+      run(es, choices(vA))
+    }
+
 }
 
 val <T> List<T>.head: T

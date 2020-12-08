@@ -85,6 +85,12 @@ class ParExamplesTest {
     res.shouldBe(unit(2))(newCachedThreadPool())
   }
 
+  @Test
+  fun `chooser should work`() {
+    val res = Pars.chooser(unit("a"), { vA -> if (vA == "a") unit(2) else unit(4) })
+    res.shouldBe(unit(2))(newCachedThreadPool())
+  }
+
   private infix fun <A> Par<A>.shouldBe(other: Par<A>) = { es: ExecutorService ->
     if (this(es).get(500, TimeUnit.MILLISECONDS) != other(es).get(500, TimeUnit.MILLISECONDS))
       throw AssertionError("Par instances not equal")
