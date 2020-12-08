@@ -53,7 +53,22 @@ object Pars {
       ps.size == 1 -> map(ps.head) { listOf(it) }
       else -> {
         val (l, r) = ps.splitAt(ps.size / 2)
-        map2(fork { sequence(l) }, fork { sequence(r) }) { la, lb -> la + lb }
+        map2(sequence(l), sequence(r)) { la, lb -> la + lb }
+      }
+    }
+
+  fun <A> parFilter(
+    ps: List<A>,
+    f: (A) -> Boolean
+  ): Par<List<A>> =
+    when {
+      ps.isEmpty() -> unit(Nil)
+      ps.size == 1 -> if (f(ps.head)) {
+        unit(listOf(ps.head))
+      } else unit(emptyList())
+      else -> {
+        val (l, r) = ps.splitAt(ps.size / 2)
+        map2(parFilter(l, f), parFilter(r, f)) { la, lb -> la + lb }
       }
     }
 }
