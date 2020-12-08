@@ -2,7 +2,6 @@ package it.twinsbrains.fpik.chapter7
 
 import arrow.core.extensions.list.foldable.firstOption
 import arrow.core.getOrElse
-import arrow.core.identity
 import it.twinsbrains.fpik.chapter7.Pars.fork
 import it.twinsbrains.fpik.chapter7.Pars.map2
 import it.twinsbrains.fpik.chapter7.Pars.unit
@@ -107,7 +106,12 @@ object Pars {
     }
 
 
-  fun <A> join(a: Par<Par<A>>): Par<A> = flatMap(a, ::identity)
+  fun <A> join(a: Par<Par<A>>): Par<A> =
+//    flatMap(a, ::identity)
+    { es: ExecutorService ->
+      val vA: Par<A> = run(es, a).get()
+      run(es, vA)
+    }
 }
 
 val <T> List<T>.head: T
