@@ -63,7 +63,20 @@ class ParExamplesTest {
     assertThrows<TimeoutException> {
       (a shouldBe b)(newFixedThreadPool(1))
       // during shouldBe on the right side we submit a callable inside another callable submit
+      //having 1 thread only we miss another thread to spawn on the second callable and hence we have deadlock
     }
+  }
+
+  @Test
+  fun `choiceN should work`() {
+    val res = Pars.choiceN(unit(1), listOf(unit(2), unit(4)))
+    res.shouldBe(unit(4))(newCachedThreadPool())
+  }
+
+  @Test
+  fun `choice should work`() {
+    val res = Pars.choice(unit(true), unit(2), unit(4))
+    res.shouldBe(unit(2))(newCachedThreadPool())
   }
 
   private infix fun <A> Par<A>.shouldBe(other: Par<A>) = { es: ExecutorService ->

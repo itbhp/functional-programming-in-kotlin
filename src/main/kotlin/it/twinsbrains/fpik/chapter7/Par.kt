@@ -80,6 +80,15 @@ object Pars {
         map2(parFilter(l, f), parFilter(r, f)) { la, lb -> la + lb }
       }
     }
+
+  fun <A> choice(cond: Par<Boolean>, t: Par<A>, f: Par<A>): Par<A> =
+    choiceN(map(cond, { b -> if (b) 0 else 1 }), listOf(t, f))
+
+  fun <A> choiceN(n: Par<Int>, choices: List<Par<A>>): Par<A> =
+    { es: ExecutorService ->
+      run(es, choices[run(es, n).get()])
+    }
+
 }
 
 val <T> List<T>.head: T
