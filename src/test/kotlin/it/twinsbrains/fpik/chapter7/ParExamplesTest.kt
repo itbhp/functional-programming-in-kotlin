@@ -5,6 +5,7 @@ import it.twinsbrains.fpik.chapter7.Pars.unit
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors.newCachedThreadPool
 import java.util.concurrent.Executors.newSingleThreadExecutor
 import java.util.concurrent.TimeUnit
@@ -48,7 +49,15 @@ class ParExamplesTest {
 
   @Test
   fun `map3 should work`() {
-    val res = Pars.run(newCachedThreadPool(), Pars.map3(unit(1), unit(2), unit(4)) { a, b, c -> a + b + c })
-    expectThat(res.get(500, TimeUnit.MILLISECONDS)).isEqualTo(7)
+    val res = Pars.map3(unit(1), unit(2), unit(4)) { a, b, c -> a + b + c }
+    res.shouldBe(unit(7))(newCachedThreadPool())
+  }
+
+  private infix fun <A> Par<A>.shouldBe(other: Par<A>) = { es: ExecutorService ->
+    if (this(es).get() != other(es).get())
+      throw AssertionError("Par instances not equal")
   }
 }
+
+
+

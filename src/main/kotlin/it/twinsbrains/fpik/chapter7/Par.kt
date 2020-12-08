@@ -26,7 +26,9 @@ object Pars {
   fun <A> unit(a: A): Par<A> = { _: ExecutorService -> UnitFuture(a) }
 
   fun <A> fork(a: () -> Par<A>): Par<A> = { es: ExecutorService ->
-    es.submit(Callable { a()(es).get() })
+    es.submit(Callable {
+      a()(es).get()
+    })
   }
 
   fun <A> lazyUnit(a: () -> A): Par<A> = fork { unit(a()) }
