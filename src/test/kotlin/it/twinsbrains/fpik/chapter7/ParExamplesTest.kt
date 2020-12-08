@@ -86,8 +86,8 @@ class ParExamplesTest {
   }
 
   @Test
-  fun `chooser should work`() {
-    val res = Pars.chooser(unit("a"), { vA -> if (vA == "a") unit(2) else unit(4) })
+  fun `flatMap should work`() {
+    val res = Pars.flatMap(unit("a"), { vA -> if (vA == "a") unit(2) else unit(4) })
     res.shouldBe(unit(2))(newCachedThreadPool())
   }
 

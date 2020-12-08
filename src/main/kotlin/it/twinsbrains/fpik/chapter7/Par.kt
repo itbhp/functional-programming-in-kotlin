@@ -99,7 +99,7 @@ object Pars {
       run(es, choices.getValue(keyV))
     }
 
-  fun <A, B> chooser(pa: Par<A>, choices: (A) -> Par<B>): Par<B> =
+  fun <A, B> flatMap(pa: Par<A>, choices: (A) -> Par<B>): Par<B> =
     { es: ExecutorService ->
       val vA: A = run(es, pa).get()
       run(es, choices(vA))
