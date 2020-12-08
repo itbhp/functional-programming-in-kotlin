@@ -91,6 +91,12 @@ class ParExamplesTest {
     res.shouldBe(unit(2))(newCachedThreadPool())
   }
 
+  @Test
+  fun `join should work`() {
+    val res = Pars.join(unit(unit(2)))
+    res.shouldBe(unit(2))(newCachedThreadPool())
+  }
+
   private infix fun <A> Par<A>.shouldBe(other: Par<A>) = { es: ExecutorService ->
     if (this(es).get(500, TimeUnit.MILLISECONDS) != other(es).get(500, TimeUnit.MILLISECONDS))
       throw AssertionError("Par instances not equal")
