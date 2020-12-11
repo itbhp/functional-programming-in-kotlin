@@ -21,7 +21,11 @@ data class Gen<A>(val sample: State<RNG, A>) {
 
     fun <A> unit(a: A): Gen<A> = Gen(State.just(object : IdApplicative {}, a))
 
-    fun boolean(): Gen<Boolean> = TODO()
+    fun boolean(): Gen<Boolean> = Gen(State { rng ->
+      val (i, nRng) = rng.nextInt()
+      Tuple2(nRng, i < 0)
+    })
+
     fun <A> listOfN(n: Int, ga: Gen<A>): Gen<List<A>> = TODO()
   }
 }
