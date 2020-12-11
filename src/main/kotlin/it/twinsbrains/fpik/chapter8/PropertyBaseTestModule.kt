@@ -5,6 +5,7 @@ import arrow.core.Tuple2
 import arrow.core.extensions.IdApplicative
 import arrow.core.extensions.IdFunctor
 import arrow.mtl.State
+import arrow.mtl.run
 import it.twinsbrains.fpik.chapter6.RNG
 import it.twinsbrains.fpik.chapter6.Randoms.nonNegativeInt
 
@@ -26,7 +27,17 @@ data class Gen<A>(val sample: State<RNG, A>) {
       Tuple2(nRng, i < 0)
     })
 
-    fun <A> listOfN(n: Int, ga: Gen<A>): Gen<List<A>> = TODO()
+    fun <A> listOfN(n: Int, ga: Gen<A>): Gen<List<A>> = Gen(
+      State { rng ->
+        val (nRng, l) = (1..n)
+          .fold(Pair(rng, listOf<A>())) { acc, _ ->
+            val (iRng, l) = acc
+            val tuple2 = ga.sample.run(iRng)
+            tuple2.a to l + tuple2.b
+          }
+        Tuple2(nRng, l)
+      }
+    )
   }
 }
 

@@ -4,10 +4,7 @@ import arrow.mtl.run
 import it.twinsbrains.fpik.chapter6.LinearCongruentialGenerator
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
-import strikt.assertions.isA
-import strikt.assertions.isEqualTo
-import strikt.assertions.isGreaterThanOrEqualTo
-import strikt.assertions.isLessThan
+import strikt.assertions.*
 
 class GenTest {
   @Test
@@ -37,5 +34,14 @@ class GenTest {
     val gen = Gen.boolean()
     val aVal = gen.sample.run(LinearCongruentialGenerator(3)).b
     expectThat(aVal).isA<Boolean>()
+  }
+
+  @Test
+  fun `listOfN should work`() {
+    val gen = Gen.listOfN(10, Gen.choose(1, 100))
+    val aList = gen.sample.run(LinearCongruentialGenerator(3)).b
+    expectThat(aList).isA<List<Int>>()
+    expectThat(aList).hasSize(10)
+    expectThat(aList).all { isGreaterThanOrEqualTo(1) and { isLessThan(100) } }
   }
 }
