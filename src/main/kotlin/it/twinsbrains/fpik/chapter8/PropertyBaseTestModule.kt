@@ -1,7 +1,8 @@
 package it.twinsbrains.fpik.chapter8
 
-import arrow.core.Either
 import arrow.core.Tuple2
+import arrow.core.getOrElse
+import arrow.core.toOption
 import arrow.mtl.*
 import it.twinsbrains.fpik.chapter6.RNG
 import it.twinsbrains.fpik.chapter6.Randoms.double
@@ -68,14 +69,60 @@ data class Gen<A>(val sample: State<RNG, A>) {
 
 private fun <A, B> Pair<A, B>.flip(): Tuple2<B, A> = Tuple2(this.second, this.first)
 
+
+sealed class Result {
+  abstract fun isFalsified(): Boolean
+}
+
+object Passed : Result() {
+  override fun isFalsified(): Boolean = false
+}
+
+data class Falsified(
+  val failure: FailedCase,
+  val successes: SuccessCount
+) : Result() {
+  override fun isFalsified(): Boolean = true
+}
+
 typealias SuccessCount = Int
 typealias FailedCase = String
 
-interface Prop {
-  fun check(): Either<Pair<FailedCase, SuccessCount>, SuccessCount>
-  fun and(p: Prop): Prop
-}
+typealias TestCases = Int
+
+data class Prop(val check: (TestCases, RNG) -> Result)
 
 object Checkers {
-  fun <A> forAll(a: Gen<A>, f: (A) -> Boolean): Prop = TODO()
+  fun <A> forAll(ga: Gen<A>, f: (A) -> Boolean): Prop =
+    Prop { n: TestCases, rng: RNG ->
+      randomSequence(ga, rng).mapIndexed { i, a ->
+        try {
+          if (f(a)) Passed
+          else Falsified(a.toString(), i)
+        } catch (e: Exception) {
+          Falsified(buildMessage(a, e), i)
+        }
+      }.take(n)
+        .find { it.isFalsified() }
+        .toOption()
+        .getOrElse { Passed }
+    }
+
+  private fun <A> randomSequence(
+    ga: Gen<A>,
+    rng: RNG
+  ): Sequence<A> =
+    sequence {
+      val (rng2: RNG, valA: A) = ga.sample.run(rng)
+      yield(valA)
+      yieldAll(randomSequence(ga, rng2))
+    }
+
+  private fun <A> buildMessage(a: A, e: Exception) =
+    """
+    |test case: $a
+    |generated and exception: ${e.message}
+    |stacktrace:
+    |${e.stackTrace.joinToString("\n")}
+""".trimMargin()
 }
