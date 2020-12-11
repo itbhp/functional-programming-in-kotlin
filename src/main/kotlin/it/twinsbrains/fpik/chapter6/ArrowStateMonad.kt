@@ -1,10 +1,9 @@
 package it.twinsbrains.fpik.chapter6
 
-import arrow.core.Id
 import arrow.core.Tuple2
 import arrow.core.extensions.IdMonad
-import arrow.core.extensions.id.monad.monad
 import arrow.mtl.State
+import arrow.mtl.StateApi
 import arrow.mtl.StateApi.get
 import arrow.mtl.StateApi.set
 import arrow.mtl.extensions.fx
@@ -12,10 +11,10 @@ import arrow.mtl.stateSequential
 
 object ArrowStateMonad {
 
-    fun <S> modify(f: (S) -> S): State<S, Unit> = State.fx(Id.monad()) {
-        val s: S = get<S>().bind()
-        set(f(s)).bind()
-    }
+  fun <S> modify(f: (S) -> S): State<S, Unit> = StateApi.fx {
+    val s: S = get<S>().bind()
+    set(f(s)).bind()
+  }
 
     val int: State<RNG, Int> = State { rng ->
         val (n, nRng) = rng.nextInt()
