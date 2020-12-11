@@ -44,4 +44,13 @@ class GenTest {
     expectThat(aList).hasSize(10)
     expectThat(aList).all { isGreaterThanOrEqualTo(1) and { isLessThan(100) } }
   }
+
+  @Test
+  fun `listOfN with gen should work`() {
+    val gen = Gen.listOfN(Gen.unit(10), Gen.choose(1, 100))
+    val aList = gen.sample.run(LinearCongruentialGenerator(3)).b
+    expectThat(aList).isA<List<Int>>()
+    expectThat(aList).hasSize(10)
+    expectThat(aList).all { isGreaterThanOrEqualTo(1) and { isLessThan(100) } }
+  }
 }
