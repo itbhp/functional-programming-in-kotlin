@@ -6,7 +6,7 @@ import io.kotest.property.forAll
 import it.twinsbrains.fpik.chapter6.LinearCongruentialGenerator
 import kotlin.math.abs
 
-class GenSpecTest : StringSpec() {
+class GenChooseSpecTest : StringSpec() {
   init {
     "all Gen.choose should be greater or equal than start and less that stopExclusive"{
       forAll<Pair<Int, Int>> {

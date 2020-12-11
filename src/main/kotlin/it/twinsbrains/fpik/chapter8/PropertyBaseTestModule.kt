@@ -2,6 +2,7 @@ package it.twinsbrains.fpik.chapter8
 
 import arrow.core.Either
 import arrow.core.Tuple2
+import arrow.core.extensions.IdApplicative
 import arrow.core.extensions.IdFunctor
 import arrow.mtl.State
 import it.twinsbrains.fpik.chapter6.RNG
@@ -17,6 +18,11 @@ data class Gen<A>(val sample: State<RNG, A>) {
         }
       return Gen(s)
     }
+
+    fun <A> unit(a: A): Gen<A> = Gen(State.just(object : IdApplicative {}, a))
+
+    fun boolean(): Gen<Boolean> = TODO()
+    fun <A> listOfN(n: Int, ga: Gen<A>): Gen<List<A>> = TODO()
   }
 }
 
@@ -30,10 +36,6 @@ interface Prop {
   fun and(p: Prop): Prop
 }
 
-object Generators {
-  fun <A> listOf(a: Gen<A>): List<Gen<A>> = TODO()
-
-  fun <A> listOfN(n: Int, a: Gen<A>): List<Gen<A>> = TODO()
-
+object Checkers {
   fun <A> forAll(a: Gen<A>, f: (A) -> Boolean): Prop = TODO()
 }
