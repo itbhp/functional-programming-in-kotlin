@@ -20,7 +20,7 @@ data class Gen<A>(val sample: State<RNG, A>) {
   }
 }
 
-fun <A, B> Pair<A, B>.flip(): Tuple2<B, A> = Tuple2(this.second, this.first)
+private fun <A, B> Pair<A, B>.flip(): Tuple2<B, A> = Tuple2(this.second, this.first)
 
 typealias SuccessCount = Int
 typealias FailedCase = String
