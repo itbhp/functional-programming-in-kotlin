@@ -8,10 +8,7 @@ import it.twinsbrains.fpik.chapter6.Randoms.nonNegativeInt
 
 data class Gen<A>(val sample: State<RNG, A>) {
 
-  fun <B> flatMap(f: (A) -> Gen<B>): Gen<B> = Gen(State { rng ->
-    val (nRng, valA) = sample.run(rng)
-    f(valA).sample.run(nRng)
-  })
+  fun <B> flatMap(f: (A) -> Gen<B>): Gen<B> = Gen(sample.flatMap { valA -> f(valA).sample })
 
   companion object {
 
