@@ -65,8 +65,21 @@ class GenTest {
       nRng to (l + aVal)
     }
 
-    expectThat(genValues).filter { it == 2 }.hasSize(500)
-    expectThat(genValues).filter { it == 4 }.hasSize(500)
+    expectThat(genValues).filter { it == 2 }.get { size }.isIn(480..520)
+    expectThat(genValues).filter { it == 4 }.get { size }.isIn(480..520)
+  }
 
+  @Test
+  fun `weighted should work`() {
+    val union = Gen.weighted(Pair(Gen.unit(2), 0.2), Pair(Gen.unit(4), 0.8))
+    val rng: RNG = LinearCongruentialGenerator(2)
+    val (_, genValues) = (1..1000).fold(Pair(rng, listOf<Int>())) { acc, _ ->
+      val (iRng, l) = acc
+      val (nRng, aVal) = union.sample.run(iRng)
+      nRng to (l + aVal)
+    }
+
+    expectThat(genValues).filter { it == 2 }.get { size }.isIn(180..220)
+    expectThat(genValues).filter { it == 4 }.get { size }.isIn(780..820)
   }
 }

@@ -4,13 +4,30 @@ import arrow.core.Either
 import arrow.core.Tuple2
 import arrow.mtl.*
 import it.twinsbrains.fpik.chapter6.RNG
+import it.twinsbrains.fpik.chapter6.Randoms.double
 import it.twinsbrains.fpik.chapter6.Randoms.nonNegativeInt
+import kotlin.math.absoluteValue
 
 data class Gen<A>(val sample: State<RNG, A>) {
 
   fun <B> flatMap(f: (A) -> Gen<B>): Gen<B> = Gen(sample.flatMap { valA -> f(valA).sample })
 
   companion object {
+
+    fun <A> weighted(
+      pga: Pair<Gen<A>, Double>,
+      pgb: Pair<Gen<A>, Double>
+    ): Gen<A> {
+      val (ga, p1) = pga
+      val (gb, p2) = pgb
+      val prob =
+        p1.absoluteValue /
+          (p1.absoluteValue + p2.absoluteValue)
+      return Gen(State { rng: RNG -> double(rng).flip() })
+        .flatMap { d ->
+          if (d < prob) ga else gb
+        }
+    }
 
     fun <A> union(ga: Gen<A>, gb: Gen<A>): Gen<A> = boolean().flatMap { if (it) ga else gb }
 
