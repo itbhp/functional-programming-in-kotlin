@@ -92,20 +92,17 @@ typealias TestCases = Int
 
 data class Prop(val check: (TestCases, RNG) -> Result) {
   fun and(p: Prop): Prop = Prop { n: TestCases, rng: RNG ->
-    val check1 = this.check(n, rng)
-    if (Passed != check1) {
-      check1
-    } else {
-      p.check(n, rng)
+
+    when (val check1 = this.check(n, rng)) {
+      is Falsified -> check1
+      is Passed -> p.check(n, rng)
     }
   }
 
   fun or(p: Prop): Prop = Prop { n: TestCases, rng: RNG ->
-    val check1 = this.check(n, rng)
-    if (Passed == check1) {
-      check1
-    } else {
-      p.check(n, rng)
+    when (val check1 = this.check(n, rng)) {
+      is Passed -> check1
+      is Falsified -> p.check(n, rng)
     }
   }
 }
