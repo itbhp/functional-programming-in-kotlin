@@ -9,7 +9,11 @@ import it.twinsbrains.fpik.chapter6.Randoms.double
 import it.twinsbrains.fpik.chapter6.Randoms.nonNegativeInt
 import kotlin.math.absoluteValue
 
+data class SGen<A>(val forSize: (Int) -> Gen<A>)
+
 data class Gen<A>(val sample: State<RNG, A>) {
+
+  fun unsized(): SGen<A> = SGen { this }
 
   fun <B> flatMap(f: (A) -> Gen<B>): Gen<B> = Gen(sample.flatMap { valA -> f(valA).sample })
 
@@ -52,17 +56,6 @@ data class Gen<A>(val sample: State<RNG, A>) {
     })
 
     fun <A> listOfN(n: Int, ga: Gen<A>): Gen<List<A>> =
-//      Gen(
-//        State { rng ->
-//          val (nRng, l) = (1..n)
-//            .fold(Pair(rng, listOf<A>())) { acc, _ ->
-//              val (iRng, l) = acc
-//              val tuple2 = ga.sample.run(iRng)
-//              tuple2.a to l + tuple2.b
-//            }
-//          Tuple2(nRng, l)
-//        }
-//      )
       Gen((1..n).map { ga.sample }.stateSequential())
   }
 }
