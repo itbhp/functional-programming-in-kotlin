@@ -15,7 +15,9 @@ data class SGen<A>(val forSize: (Int) -> Gen<A>) {
     forSize(n).map(f)
   }
 
-  fun <B> flatMap(f: (A) -> Gen<B>): SGen<B> = TODO()
+  fun <B> flatMap(f: (A) -> Gen<B>): SGen<B> = SGen { n: Int ->
+    forSize(n).flatMap(f)
+  }
 }
 
 data class Gen<A>(val sample: State<RNG, A>) {
