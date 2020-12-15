@@ -22,6 +22,10 @@ data class SGen<A>(val forSize: (Int) -> Gen<A>) {
 
 data class Gen<A>(val sample: State<RNG, A>) {
 
+  fun listOf(): SGen<List<A>> = SGen { n ->
+    listOfN(n, this)
+  }
+
   fun unsized(): SGen<A> = SGen { this }
 
   fun <B> map(f: (A) -> B): Gen<B> = Gen(sample.map(f))

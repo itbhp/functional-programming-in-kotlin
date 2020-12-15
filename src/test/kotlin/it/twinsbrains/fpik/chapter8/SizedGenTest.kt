@@ -12,7 +12,7 @@ class SizedGenTest {
   fun map() {
     val sgen = Gen.choose(1, 100).unsized()
     val mapped = sgen.map { it + 200 }
-    val result = forAll(mapped(1)) { it >= 201 }.check(10, AnRNG(2))
+    val result = forAll(mapped(1)) { it >= 201 }.verify()
     expectThat(result).isA<Passed>()
   }
 
@@ -20,7 +20,17 @@ class SizedGenTest {
   fun flatMap() {
     val sgen = Gen.choose(1, 100).unsized()
     val mapped = sgen.flatMap { Gen.unit(it) }
-    val result = forAll(mapped(1)) { it < 100 }.check(10, AnRNG(2))
+    val result = forAll(mapped(1)) { it < 100 }.verify()
     expectThat(result).isA<Passed>()
   }
+
+  @Test
+  fun `listOf should work`() {
+    val sgen = Gen.choose(1, 100).listOf()
+    val ga = sgen(10)
+    val res = forAll(ga) { it.size == 10 }.verify()
+    expectThat(res).isA<Passed>()
+  }
+
+  private fun Prop.verify() = this.check(10, AnRNG(2))
 }
