@@ -9,6 +9,7 @@ import it.twinsbrains.fpik.chapter6.Randoms.double
 import it.twinsbrains.fpik.chapter6.Randoms.nonNegativeInt
 import kotlin.math.absoluteValue
 import kotlin.math.min
+import it.twinsbrains.fpik.chapter6.LinearCongruentialGenerator as SimpleRNG
 
 data class SGen<A>(val forSize: (Int) -> Gen<A>) {
   operator fun invoke(i: Int): Gen<A> = forSize(i)
@@ -101,6 +102,29 @@ typealias FailedCase = String
 typealias TestCases = Int
 
 data class Prop(val check: (MaxSize, TestCases, RNG) -> Result) {
+
+  companion object {
+    fun run(
+      p: Prop,
+      maxSize: Int = 100,
+      testCases: Int = 100,
+      rng: RNG = SimpleRNG(System.currentTimeMillis())
+    ): Result =
+      when (val result = p.check(maxSize, testCases, rng)) {
+        is Falsified -> {
+          println(
+            "Falsified after ${result.successes}" +
+              "passed tests: ${result.failure}"
+          )
+          result
+        }
+        is Passed -> {
+          println("OK, passed $testCases tests.")
+          result
+        }
+      }
+  }
+
   fun and(p: Prop): Prop = Prop { m: MaxSize, n: TestCases, rng: RNG ->
 
     when (val check1 = this.check(m, n, rng)) {

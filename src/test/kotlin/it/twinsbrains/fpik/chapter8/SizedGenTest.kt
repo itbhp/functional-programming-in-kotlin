@@ -4,7 +4,6 @@ import it.twinsbrains.fpik.chapter8.Checkers.forAll
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isA
-import it.twinsbrains.fpik.chapter6.LinearCongruentialGenerator as AnRNG
 
 class SizedGenTest {
 
@@ -39,5 +38,5 @@ class SizedGenTest {
     expectThat(res).isA<Passed>()
   }
 
-  private fun Prop.verify() = this.check(100, 10, AnRNG(2))
+  private fun Prop.verify() = Prop.run(this)
 }

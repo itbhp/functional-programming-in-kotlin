@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isA
 import strikt.assertions.isEqualTo
-import it.twinsbrains.fpik.chapter6.LinearCongruentialGenerator as AnRNG
 
 class ForAllTest {
 
@@ -40,5 +39,5 @@ class ForAllTest {
     expectThat(res).isA<Passed>()
   }
 
-  private fun Prop.verify() = this.check(100, 10, AnRNG(2))
+  private fun Prop.verify() = Prop.run(this)
 }
