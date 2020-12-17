@@ -1,5 +1,6 @@
 package it.twinsbrains.fpik.chapter8
 
+import arrow.core.extensions.list.foldable.exists
 import it.twinsbrains.fpik.chapter8.Checkers.forAll
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
@@ -35,6 +36,23 @@ class SizedGenTest {
   fun `SGEN forAll should work`() {
     val sgen = Gen.choose(1, 100).listOf()
     val res = forAll(sgen) { it.isEmpty() || it.maxOrNull()!! < 100 }.verify()
+    expectThat(res).isA<Passed>()
+  }
+
+  @Test
+  fun `nonEmptyListOf should work`() {
+    val sgen = SGen.nonEmptyListOf(Gen.choose(1, 100))
+    val res = forAll(sgen) { it.isNotEmpty() }.verify()
+    expectThat(res).isA<Passed>()
+  }
+
+  @Test
+  fun `maxProp on nonEmptyListOf`() {
+    val sgen = SGen.nonEmptyListOf(Gen.choose(1, 100))
+    val res = forAll(sgen) { ns ->
+      val max = ns.maxOrNull()!!
+      !ns.exists { it > max }
+    }.verify()
     expectThat(res).isA<Passed>()
   }
 

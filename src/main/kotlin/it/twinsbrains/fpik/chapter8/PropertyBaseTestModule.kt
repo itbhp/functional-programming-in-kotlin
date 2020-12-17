@@ -8,6 +8,7 @@ import it.twinsbrains.fpik.chapter6.RNG
 import it.twinsbrains.fpik.chapter6.Randoms.double
 import it.twinsbrains.fpik.chapter6.Randoms.nonNegativeInt
 import kotlin.math.absoluteValue
+import kotlin.math.max
 import kotlin.math.min
 import it.twinsbrains.fpik.chapter6.LinearCongruentialGenerator as SimpleRNG
 
@@ -19,6 +20,12 @@ data class SGen<A>(val forSize: (Int) -> Gen<A>) {
 
   fun <B> flatMap(f: (A) -> Gen<B>): SGen<B> = SGen { n: Int ->
     forSize(n).flatMap(f)
+  }
+
+  companion object {
+    fun <A> nonEmptyListOf(ga: Gen<A>): SGen<List<A>> = SGen { n: Int ->
+      Gen.listOfN(max(1, n), ga)
+    }
   }
 }
 
