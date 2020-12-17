@@ -26,7 +26,7 @@ class ForAllTest {
   @Test
   fun `and should work`() {
     val gen = choose(1, 100)
-    val propToCheck = forAll(gen) { it < 100 }.and(forAll(gen) { it > 1 })
+    val propToCheck = forAll(gen) { it < 100 }.and(forAll(gen) { it >= 1 })
     val res = propToCheck.verify()
     expectThat(res).isA<Passed>()
   }

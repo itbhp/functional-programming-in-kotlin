@@ -118,16 +118,14 @@ data class Prop(val check: (MaxSize, TestCases, RNG) -> Result) {
       rng: RNG = SimpleRNG(System.currentTimeMillis())
     ): Result =
       when (val result = p.check(maxSize, testCases, rng)) {
-        is Falsified -> {
+        is Falsified -> result.also {
           println(
-            "Falsified after ${result.successes}" +
-              "passed tests: ${result.failure}"
+            "Falsified after ${it.successes}" +
+              "passed tests: ${it.failure}"
           )
-          result
         }
-        is Passed -> {
+        is Passed -> result.also {
           println("OK, passed $testCases tests.")
-          result
         }
       }
   }
