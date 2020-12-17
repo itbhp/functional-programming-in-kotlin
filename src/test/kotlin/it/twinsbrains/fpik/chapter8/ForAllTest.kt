@@ -1,26 +1,26 @@
 package it.twinsbrains.fpik.chapter8
 
-import it.twinsbrains.fpik.chapter6.LinearCongruentialGenerator
 import it.twinsbrains.fpik.chapter8.Checkers.forAll
 import it.twinsbrains.fpik.chapter8.Gen.Companion.choose
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isA
 import strikt.assertions.isEqualTo
+import it.twinsbrains.fpik.chapter6.LinearCongruentialGenerator as AnRNG
 
 class ForAllTest {
 
   @Test
   fun `it should work`() {
     val propToCheck = forAll(choose(1, 100)) { it < 100 }
-    val res = propToCheck.check(100, LinearCongruentialGenerator(2))
+    val res = propToCheck.verify()
     expectThat(res).isEqualTo(Passed)
   }
 
   @Test
   fun `it should also fail`() {
     val propToCheck = forAll(choose(1, 100)) { it > 100 }
-    val res = propToCheck.check(100, LinearCongruentialGenerator(2))
+    val res = propToCheck.verify()
     expectThat(res).isA<Falsified>()
   }
 
@@ -28,7 +28,7 @@ class ForAllTest {
   fun `and should work`() {
     val gen = choose(1, 100)
     val propToCheck = forAll(gen) { it < 100 }.and(forAll(gen) { it > 1 })
-    val res = propToCheck.check(100, LinearCongruentialGenerator(2))
+    val res = propToCheck.verify()
     expectThat(res).isA<Passed>()
   }
 
@@ -36,7 +36,9 @@ class ForAllTest {
   fun `or should work`() {
     val gen = choose(1, 100)
     val propToCheck = forAll(gen) { it < 100 }.or(forAll(gen) { it > 1 })
-    val res = propToCheck.check(100, LinearCongruentialGenerator(2))
+    val res = propToCheck.verify()
     expectThat(res).isA<Passed>()
   }
+
+  private fun Prop.verify() = this.check(100, 10, AnRNG(2))
 }

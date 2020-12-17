@@ -8,6 +8,7 @@ import it.twinsbrains.fpik.chapter6.RNG
 import it.twinsbrains.fpik.chapter6.Randoms.double
 import it.twinsbrains.fpik.chapter6.Randoms.nonNegativeInt
 import kotlin.math.absoluteValue
+import kotlin.math.min
 
 data class SGen<A>(val forSize: (Int) -> Gen<A>) {
   operator fun invoke(i: Int): Gen<A> = forSize(i)
@@ -94,30 +95,50 @@ data class Falsified(
 }
 
 typealias SuccessCount = Int
+typealias MaxSize = Int
 typealias FailedCase = String
 
 typealias TestCases = Int
 
-data class Prop(val check: (TestCases, RNG) -> Result) {
-  fun and(p: Prop): Prop = Prop { n: TestCases, rng: RNG ->
+data class Prop(val check: (MaxSize, TestCases, RNG) -> Result) {
+  fun and(p: Prop): Prop = Prop { m: MaxSize, n: TestCases, rng: RNG ->
 
-    when (val check1 = this.check(n, rng)) {
+    when (val check1 = this.check(m, n, rng)) {
       is Falsified -> check1
-      is Passed -> p.check(n, rng)
+      is Passed -> p.check(m, n, rng)
     }
   }
 
-  fun or(p: Prop): Prop = Prop { n: TestCases, rng: RNG ->
-    when (val check1 = this.check(n, rng)) {
+  fun or(p: Prop): Prop = Prop { m: MaxSize, n: TestCases, rng: RNG ->
+    when (val check1 = this.check(m, n, rng)) {
       is Passed -> check1
-      is Falsified -> p.check(n, rng)
+      is Falsified -> p.check(m, n, rng)
     }
   }
 }
 
 object Checkers {
+
+  fun <A> forAll(g: SGen<A>, f: (A) -> Boolean): Prop =
+    forAll({ i -> g(i) }, f)
+
+  fun <A> forAll(g: (Int) -> Gen<A>, f: (A) -> Boolean): Prop =
+    Prop { max, n, rng ->
+      val casePerSize: Int = (n + (max - 1)) / max
+      val props: Sequence<Prop> =
+        generateSequence(0) { it + 1 }
+          .take(min(n, max) + 1)
+          .map { i -> forAll(g(i), f) }
+      val prop: Prop = props.map { p ->
+        Prop { max, _, rng ->
+          p.check(max, casePerSize, rng)
+        }
+      }.reduce { p1, p2 -> p1.and(p2) }
+      prop.check(max, n, rng)
+    }
+
   fun <A> forAll(ga: Gen<A>, f: (A) -> Boolean): Prop =
-    Prop { n: TestCases, rng: RNG ->
+    Prop { _: MaxSize, n: TestCases, rng: RNG ->
       randomSequence(ga, rng).mapIndexed { i, a ->
         try {
           if (f(a)) Passed

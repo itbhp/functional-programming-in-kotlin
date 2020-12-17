@@ -32,5 +32,12 @@ class SizedGenTest {
     expectThat(res).isA<Passed>()
   }
 
-  private fun Prop.verify() = this.check(10, AnRNG(2))
+  @Test
+  fun `SGEN forAll should work`() {
+    val sgen = Gen.choose(1, 100).listOf()
+    val res = forAll(sgen) { it.isEmpty() || it.maxOrNull()!! < 100 }.verify()
+    expectThat(res).isA<Passed>()
+  }
+
+  private fun Prop.verify() = this.check(100, 10, AnRNG(2))
 }
