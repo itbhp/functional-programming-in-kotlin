@@ -49,11 +49,12 @@ class SizedGenTest {
   @Test
   fun `maxProp on nonEmptyListOf`() {
     val sgen = SGen.nonEmptyListOf(Gen.choose(1, 100))
-    val res = forAll(sgen) { ns ->
+    val maxProp = forAll(sgen) { ns ->
       val max = ns.maxOrNull()!!
       !ns.exists { it > max }
-    }.verify()
-    expectThat(res).isA<Passed>()
+    }
+
+    expectThat(maxProp.verify()).isA<Passed>()
   }
 
   private fun Prop.verify() = Prop.run(this)
