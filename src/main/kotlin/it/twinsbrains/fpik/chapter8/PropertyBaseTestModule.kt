@@ -95,6 +95,10 @@ object Passed : Result() {
   override fun isFalsified(): Boolean = false
 }
 
+object Proved : Result() {
+  override fun isFalsified(): Boolean = false
+}
+
 data class Falsified(
   val failure: FailedCase,
   val successes: SuccessCount
@@ -111,6 +115,13 @@ typealias TestCases = Int
 data class Prop(val check: (MaxSize, TestCases, RNG) -> Result) {
 
   companion object {
+
+    fun check(p: () -> Boolean): Prop =
+      Prop { _, _, _ ->
+        if (p()) Proved
+        else Falsified("()", 0)
+      }
+
     fun run(
       p: Prop,
       maxSize: Int = 100,
@@ -127,6 +138,7 @@ data class Prop(val check: (MaxSize, TestCases, RNG) -> Result) {
         is Passed -> result.also {
           println("OK, passed $testCases tests.")
         }
+        is Proved -> result.also { println("OK, proved property.") }
       }
   }
 
@@ -134,13 +146,13 @@ data class Prop(val check: (MaxSize, TestCases, RNG) -> Result) {
 
     when (val check1 = this.check(m, n, rng)) {
       is Falsified -> check1
-      is Passed -> p.check(m, n, rng)
+      else -> p.check(m, n, rng)
     }
   }
 
   fun or(p: Prop): Prop = Prop { m: MaxSize, n: TestCases, rng: RNG ->
     when (val check1 = this.check(m, n, rng)) {
-      is Passed -> check1
+      is Passed, is Proved -> check1
       is Falsified -> p.check(m, n, rng)
     }
   }
