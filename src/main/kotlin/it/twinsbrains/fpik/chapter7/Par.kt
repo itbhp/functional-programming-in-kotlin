@@ -14,6 +14,9 @@ typealias Par<A> = (ExecutorService) -> Future<A>
 
 object Pars {
 
+  fun <A> equal(p1: Par<A>, p2: Par<A>): Par<Boolean> =
+    map2(p1, p2, { a, b -> a == b })
+
   fun <A, B, C, D> map3(a: Par<A>, b: Par<B>, c: Par<C>, f: (A, B, C) -> D): Par<D> =
     map2(a, map2(b, c, { vB, vC -> { vA: A -> f(vA, vB, vC) } }), { vA, mapping -> mapping(vA) })
 
