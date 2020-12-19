@@ -107,9 +107,9 @@ data class Falsified(
 }
 
 typealias SuccessCount = Int
-typealias MaxSize = Int
 typealias FailedCase = String
 
+typealias MaxSize = Int
 typealias TestCases = Int
 
 data class Prop(val check: (MaxSize, TestCases, RNG) -> Result) {
