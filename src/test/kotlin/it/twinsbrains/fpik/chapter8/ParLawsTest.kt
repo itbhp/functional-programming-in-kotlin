@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 class ParLawsTest {
 
   @Test
-  fun identity() {
+  fun mappingLaw() {
     val es = Executors.newCachedThreadPool()
     val p = check {
       val p1 = map(unit(1)) { it + 1 }
