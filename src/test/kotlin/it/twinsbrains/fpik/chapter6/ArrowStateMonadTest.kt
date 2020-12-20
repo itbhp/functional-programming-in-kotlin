@@ -21,7 +21,7 @@ class ArrowStateMonadTest {
         xs.map { it % y }
       }
 
-        val listInt = ns2.run(Fixed(2)).b
+        val listInt = ns2.run(FixedRNG(2)).b
 
         expectThat(listInt.size).isEqualTo(2)
     }
