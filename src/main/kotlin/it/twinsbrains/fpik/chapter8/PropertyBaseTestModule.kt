@@ -7,6 +7,10 @@ import arrow.mtl.*
 import it.twinsbrains.fpik.chapter6.RNG
 import it.twinsbrains.fpik.chapter6.Randoms.double
 import it.twinsbrains.fpik.chapter6.Randoms.nonNegativeInt
+import it.twinsbrains.fpik.chapter7.Par
+import it.twinsbrains.fpik.chapter8.Gen.Companion.combine
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min
@@ -42,6 +46,12 @@ data class Gen<A>(val sample: State<RNG, A>) {
   fun <B> flatMap(f: (A) -> Gen<B>): Gen<B> = Gen(sample.flatMap { valA -> f(valA).sample })
 
   companion object {
+
+    private fun <A, B, C> map2(a: Gen<A>, b: Gen<B>, f: (A, B) -> C): Gen<C> =
+      a.flatMap { vA -> b.map { vB -> f(vA, vB) } }
+
+    infix fun <A, B> Gen<A>.combine(gb: Gen<B>): Gen<Pair<A, B>> =
+      map2(this, gb) { s, a -> s to a }
 
     fun <A> weighted(
       pga: Pair<Gen<A>, Double>,
@@ -159,6 +169,22 @@ data class Prop(val check: (MaxSize, TestCases, RNG) -> Result) {
 }
 
 object Checkers {
+
+  fun checkPar(p: Par<Boolean>): Prop =
+    forAllPar(Gen.unit(Unit)) { p }
+
+  private val ges: Gen<ExecutorService> = Gen.weighted(
+    Gen.choose(1, 4).map {
+      Executors.newFixedThreadPool(it)
+    } to .75,
+    Gen.unit(
+      Executors.newCachedThreadPool()
+    ) to .25)
+
+  fun <A> forAllPar(ga: Gen<A>, f: (A) -> Par<Boolean>): Prop =
+    forAll(ges combine ga) { (es, a) ->
+      f(a)(es).get()
+    }
 
   fun <A> forAll(g: SGen<A>, f: (A) -> Boolean): Prop =
     forAll({ i -> g(i) }, f)
