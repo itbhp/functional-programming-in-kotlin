@@ -40,7 +40,7 @@ abstract class Laws : Parsers<ParseError> {
   fun <A> mapLaw(p: Parser<A>, i: Gen<String>): Prop =
     equal(p, p.map { a -> a }, i)
 
-  fun pureLaw(gc: Gen<String>): Prop = forAll(gc) { s -> run(pure(s), s) == Right(s) }
+  fun pureLaw(gc: Gen<String>): Prop = forAll(gc combine gc) { (s, a) -> run(pure(s), a) == Right(s) }
 
   fun orAssociativity(gc: Gen<String>): Prop = forAll(gc combine gc combine gc) { (ab, c) ->
     val (a, b) = ab
