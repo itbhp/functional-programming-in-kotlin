@@ -54,23 +54,21 @@ abstract class Laws : Parsers<ParseError> {
 
   fun pureLaw(gc: Gen<String>): Prop = forAll(gc combine gc) { (s, a) -> run(pure(s), a) == Right(s) }
 
-  fun orAssociativity(gc: Gen<String>): Prop = forAll(gc combine gc combine gc) { (ab, c) ->
-    val (a, b) = ab
-    val right = or(pure(a), (b or c))
-    val left = or((a or b), pure(c))
-    run(right, a) == run(left, a) &&
-      run(right, b) == run(left, b) &&
-      run(right, c) == run(left, c)
-  }
+  fun <A> orAssociativity(pa: Parser<A>, pb: Parser<A>, pc: Parser<A>, gc: Gen<String>): Prop =
+    equal(or(pa, (or(pb, pc))), or(or(pa, pb), pc), gc)
 
-  fun productAssociativity(gc: Gen<String>): Prop = forAll(gc combine gc combine gc) { (ab, c) ->
-    val (a, b) = ab
-    val right = pure(a) product (pure(b) product pure(c))
-    val left = (pure(a) product pure(b)) product pure(c)
-    run(right, a) == run(left, a) &&
-      run(right, b) == run(left, b) &&
-      run(right, c) == run(left, c)
-  }
+  fun <A, B, C> productAssociativity(pa: Parser<A>, pb: Parser<B>, pc: Parser<C>, gc: Gen<String>): Prop =
+    equal(
+      (pa product (pb product pc)).map(::unbiasR),
+      ((pa product pb) product pc).map(::unbiasL),
+      gc
+    )
 
+
+  private fun <A, B, C> unbiasL(p: Pair<Pair<A, B>, C>): Triple<A, B, C> =
+    Triple(p.first.first, p.first.second, p.second)
+
+  private fun <A, B, C> unbiasR(p: Pair<A, Pair<B, C>>): Triple<A, B, C> =
+    Triple(p.first, p.second.first, p.second.second)
 
 }
