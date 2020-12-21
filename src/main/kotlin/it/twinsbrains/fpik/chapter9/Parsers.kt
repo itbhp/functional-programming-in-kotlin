@@ -30,7 +30,9 @@ interface Parsers<PE> {
 
   fun <A> Parser<A>.slice(): Parser<String>
 
-  infix fun <A, B> Parser<A>.product(pb: () -> Parser<B>): Parser<Pair<A, B>>
+  infix fun <A, B> Parser<A>.product(pb: () -> Parser<B>): Parser<Pair<A, B>> = this.flatMap { a ->
+    pb().map { b -> a to b }
+  }
 
   fun <A, B, C> map2(
     pa: Parser<A>,
