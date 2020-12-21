@@ -21,6 +21,18 @@ interface Parsers<PE> {
 
   fun <A, B> Parser<A>.map(f: (A) -> B): Parser<B>
 
+  fun <A> Parser<A>.slice(): Parser<String>
+
+  infix fun <A, B> Parser<A>.product(pb: Parser<B>): Parser<Pair<A, B>>
+
+  fun <A, B, C> map2(
+    pa: Parser<A>,
+    pb: () -> Parser<B>,
+    f: (A, B) -> C
+  ): Parser<C> = (pa product pb()).map { (a, b) -> f(a, b) }
+
+  fun <A> many1(p: Parser<A>): Parser<List<A>> = map2(p, { p.many() }, { a, la -> listOf(a) + la })
+
   fun <A> run(p: Parser<A>, input: String): Either<PE, A>
 
   infix fun String.or(other: String): Parser<String> =
