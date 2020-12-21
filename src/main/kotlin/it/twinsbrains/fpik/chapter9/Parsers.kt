@@ -44,6 +44,14 @@ interface Parsers<PE> {
 
   fun <A> run(p: Parser<A>, input: String): Either<PE, A>
 
+  fun <A> skipR(pa: Parser<A>, ps: Parser<String>): Parser<A>
+
+  fun <B> skipL(ps: Parser<String>, pb: Parser<B>): Parser<B>
+
+  fun <A> sep(p1: Parser<A>, p2: Parser<String>): Parser<List<A>>
+
+  fun <A> surround(start: Parser<String>, stop: Parser<String>, p: Parser<A>): Parser<A>
+
   infix fun String.or(other: String): Parser<String> =
     pure(this) or { pure(other) }
 
@@ -91,5 +99,36 @@ abstract class Laws : Parsers<ParseError> {
 
   private fun <A, B, C> unbiasR(p: Pair<A, Pair<B, C>>): Triple<A, B, C> =
     Triple(p.first, p.second.first, p.second.second)
+
+}
+
+sealed class JSON {
+  object JNull : JSON()
+  data class JNumber(val get: Double) : JSON()
+  data class JString(val get: String) : JSON()
+  data class JBoolean(val get: Boolean) : JSON()
+  data class JArray(val get: List<JSON>) : JSON()
+  data class JObject(val get: Map<String, JSON>) : JSON()
+}
+
+interface JsonParser : Parsers<ParseError> {
+
+  fun nullJson(): Parser<JSON> = pure(JSON.JNull)
+
+  fun stringJson(): Parser<JSON> = regexp("^\".*\"$").map { JSON.JString(it.removeSurrounding("\"")) }
+
+  fun numberJson(): Parser<JSON> = regexp("^[0-9\\.]*$").map { JSON.JNumber(it.toDouble()) }
+
+  fun booleanJson(): Parser<JSON> = regexp("(true|false)").map { JSON.JBoolean(it.toBoolean()) }
+
+  fun oneOfPrimitiveJson(): Parser<JSON> = nullJson() or { stringJson() or { numberJson() or { booleanJson() } } }
+
+  fun arrayJson(): Parser<JSON> {
+    TODO()
+  }
+
+  fun objectJson(): Parser<JSON> {
+    TODO()
+  }
 
 }
