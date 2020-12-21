@@ -28,13 +28,13 @@ interface Parsers<PE> {
 
   fun <A> Parser<A>.slice(): Parser<String>
 
-  infix fun <A, B> Parser<A>.product(pb: Parser<B>): Parser<Pair<A, B>>
+  infix fun <A, B> Parser<A>.product(pb: () -> Parser<B>): Parser<Pair<A, B>>
 
   fun <A, B, C> map2(
     pa: Parser<A>,
     pb: () -> Parser<B>,
     f: (A, B) -> C
-  ): Parser<C> = (pa product pb()).map { (a, b) -> f(a, b) }
+  ): Parser<C> = (pa product pb).map { (a, b) -> f(a, b) }
 
   fun <A> many1(p: Parser<A>): Parser<List<A>> = map2(p, { p.many() }, { a, la -> listOf(a) + la })
 
@@ -64,13 +64,13 @@ abstract class Laws : Parsers<ParseError> {
 
   fun <A, B, C> productAssociativity(pa: Parser<A>, pb: Parser<B>, pc: Parser<C>, gc: Gen<String>): Prop =
     equal(
-      (pa product (pb product pc)).map(::unbiasR),
-      ((pa product pb) product pc).map(::unbiasL),
+      (pa product { (pb product { pc }) }).map(::unbiasR),
+      ((pa product { pb }) product { pc }).map(::unbiasL),
       gc
     )
 
   fun <A, B, C, D> mapProductLaw(pa: Parser<A>, pb: Parser<B>, f: (A) -> C, g: (B) -> D, gc: Gen<String>): Prop =
-    equal(pa.map(f) product pb.map(g), (pa product pb).map { (a, b) -> f(a) to g(b) }, gc)
+    equal(pa.map(f) product { pb.map(g) }, (pa product { pb }).map { (a, b) -> f(a) to g(b) }, gc)
 
 
   private fun <A, B, C> unbiasL(p: Pair<Pair<A, B>, C>): Triple<A, B, C> =
