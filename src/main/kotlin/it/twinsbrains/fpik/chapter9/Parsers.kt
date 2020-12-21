@@ -13,11 +13,16 @@ interface Parsers<PE> {
 
   fun <A> pure(a: A): Parser<A>
 
-  fun <A> or(a1: Parser<A>, a2: Parser<A>): Parser<A>
+  infix fun <A> Parser<A>.or(a2: Parser<A>): Parser<A>
 
-  fun <A> listOfN(n: Int, p: Parser<A>): Parser<List<A>>
+  fun <A> listOfN(n: Int, p: Parser<A>): Parser<List<A>> =
+    if (n < 0) {
+      pure(emptyList())
+    } else {
+      map2(p, { listOfN(n - 1, p) }, { a, la -> listOf(a) + la })
+    }
 
-  fun <A> Parser<A>.many(): Parser<List<A>>
+  fun <A> Parser<A>.many(): Parser<List<A>> = many1(this) or pure(emptyList())
 
   fun <A, B> Parser<A>.map(f: (A) -> B): Parser<B>
 
@@ -36,7 +41,7 @@ interface Parsers<PE> {
   fun <A> run(p: Parser<A>, input: String): Either<PE, A>
 
   infix fun String.or(other: String): Parser<String> =
-    or(pure(this), pure(other))
+    pure(this).or(pure(other))
 }
 
 object ParseError
@@ -55,7 +60,7 @@ abstract class Laws : Parsers<ParseError> {
   fun pureLaw(gc: Gen<String>): Prop = forAll(gc combine gc) { (s, a) -> run(pure(s), a) == Right(s) }
 
   fun <A> orAssociativity(pa: Parser<A>, pb: Parser<A>, pc: Parser<A>, gc: Gen<String>): Prop =
-    equal(or(pa, (or(pb, pc))), or(or(pa, pb), pc), gc)
+    equal(pa or (pb or (pc)), (pa or pb) or pc, gc)
 
   fun <A, B, C> productAssociativity(pa: Parser<A>, pb: Parser<B>, pc: Parser<C>, gc: Gen<String>): Prop =
     equal(
