@@ -24,7 +24,7 @@ interface Parsers<PE> {
 
   fun <A> Parser<A>.many(): Parser<List<A>> = many1(this) or { pure(emptyList()) }
 
-  fun <A, B> Parser<A>.map(f: (A) -> B): Parser<B>
+  fun <A, B> Parser<A>.map(f: (A) -> B): Parser<B> = this.flatMap { a -> pure(f(a)) }
 
   fun <A, B> Parser<A>.flatMap(f: (A) -> Parser<B>): Parser<B>
 
