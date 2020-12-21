@@ -26,6 +26,8 @@ interface Parsers<PE> {
 
   fun <A, B> Parser<A>.map(f: (A) -> B): Parser<B>
 
+  fun <A, B> Parser<A>.flatMap(f: (A) -> Parser<B>): Parser<B>
+
   fun <A> Parser<A>.slice(): Parser<String>
 
   infix fun <A, B> Parser<A>.product(pb: () -> Parser<B>): Parser<Pair<A, B>>
