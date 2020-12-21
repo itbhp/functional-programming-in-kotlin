@@ -44,6 +44,15 @@ interface Parsers<PE> {
 
   infix fun String.or(other: String): Parser<String> =
     pure(this) or { pure(other) }
+
+  fun regexp(s: String): Parser<String>
+
+  fun repeatedChar(aChar: Char): Parser<Int> =
+    regexp("\\d{1}")
+      .flatMap { c ->
+        val size = c.toInt()
+        listOfN(size, pure(aChar)).map { size }
+      }
 }
 
 object ParseError
