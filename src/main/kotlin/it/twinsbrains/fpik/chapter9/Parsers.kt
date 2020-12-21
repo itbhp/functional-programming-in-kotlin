@@ -62,4 +62,15 @@ abstract class Laws : Parsers<ParseError> {
       run(right, b) == run(left, b) &&
       run(right, c) == run(left, c)
   }
+
+  fun productAssociativity(gc: Gen<String>): Prop = forAll(gc combine gc combine gc) { (ab, c) ->
+    val (a, b) = ab
+    val right = pure(a) product (pure(b) product pure(c))
+    val left = (pure(a) product pure(b)) product pure(c)
+    run(right, a) == run(left, a) &&
+      run(right, b) == run(left, b) &&
+      run(right, c) == run(left, c)
+  }
+
+
 }
