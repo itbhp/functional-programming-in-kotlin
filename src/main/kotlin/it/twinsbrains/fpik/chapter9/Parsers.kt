@@ -7,9 +7,10 @@ import it.twinsbrains.fpik.chapter8.Gen
 import it.twinsbrains.fpik.chapter8.Gen.Companion.combine
 import it.twinsbrains.fpik.chapter8.Prop
 import it.twinsbrains.fpik.chapter9.Parsers.Parser
+import java.util.regex.Pattern
 
 interface Parsers<PE> {
-  interface Parser<A>
+  interface Parser<out A>
 
   fun <A> pure(a: A): Parser<A>
 
@@ -44,11 +45,11 @@ interface Parsers<PE> {
 
   fun <A> run(p: Parser<A>, input: String): Either<PE, A>
 
-  fun <A> skipR(pa: Parser<A>, ps: Parser<String>): Parser<A>
+  infix fun <A> Parser<A>.skipR(ps: Parser<String>): Parser<A>
 
-  fun <B> skipL(ps: Parser<String>, pb: Parser<B>): Parser<B>
+  infix fun <B> Parser<String>.skipL(pb: Parser<B>): Parser<B>
 
-  fun <A> sep(p1: Parser<A>, p2: Parser<String>): Parser<List<A>>
+  infix fun <A> Parser<A>.sep(p2: Parser<String>): Parser<List<A>>
 
   fun <A> surround(start: Parser<String>, stop: Parser<String>, p: Parser<A>): Parser<A>
 
@@ -113,22 +114,54 @@ sealed class JSON {
 
 interface JsonParser : Parsers<ParseError> {
 
-  fun nullJson(): Parser<JSON> = pure(JSON.JNull)
+  private val JSON.parser: Parser<JSON>
+    get() = pure(this)
 
-  fun stringJson(): Parser<JSON> = regexp("^\".*\"$").map { JSON.JString(it.removeSurrounding("\"")) }
+  private val String.rp: Parser<String>
+    get() = regexp(this)
 
-  fun numberJson(): Parser<JSON> = regexp("^[0-9\\.]*$").map { JSON.JNumber(it.toDouble()) }
+  private val String.sp: Parser<String>
+    get() = pure(this)
 
-  fun booleanJson(): Parser<JSON> = regexp("(true|false)").map { JSON.JBoolean(it.toBoolean()) }
+  private fun thru(s: String): Parser<String> =
+    ".*?${Pattern.quote(s)}".rp
 
-  fun oneOfPrimitiveJson(): Parser<JSON> = nullJson() or { stringJson() or { numberJson() or { booleanJson() } } }
+  private fun quoted(): Parser<String> =
+    "\"".sp skipL thru("\"").map { it.dropLast(1) }
 
-  fun arrayJson(): Parser<JSON> {
-    TODO()
-  }
+  private fun doubleString(): Parser<String> =
+    "[-+]?([0-9]*\\.)?[0-9]+([eE][-+]?[0-9]+)?".rp
 
-  fun objectJson(): Parser<JSON> {
-    TODO()
-  }
+  private fun doubleJson(): Parser<JSON.JNumber> = doubleString().map { JSON.JNumber(it.toDouble()) }
+
+  private fun literals(): Parser<JSON> =
+    JSON.JNull.parser or
+      { doubleJson() } or
+      { JSON.JBoolean(true).parser } or
+      { JSON.JBoolean(false).parser } or
+      { quoted().map { JSON.JString(it) } }
+
+  private fun value(): Parser<JSON> = literals() or { obj() or { array() } }
+
+  private fun keyval(): Parser<Pair<String, JSON>> =
+    quoted() product { (":".sp skipL value()) }
+
+  private fun whitespace(): Parser<String> = """\s*""".rp
+
+  private fun eof(): Parser<String> = """\z""".rp
+
+  private fun array(): Parser<JSON.JArray> =
+    surround("[".sp, "]".sp,
+      (value() sep ",".sp).map { vs -> JSON.JArray(vs) })
+
+  private fun obj(): Parser<JSON> =
+    surround("{".sp, "}".sp,
+      (keyval() sep ",".sp).map { kvs -> JSON.JObject(kvs.toMap()) })
+
+  private fun <A> root(p: Parser<A>): Parser<A> = p skipR eof()
+
+
+  fun jsonParser(): Parser<JSON> =
+    root(whitespace() skipL (obj() or { array() }))
 
 }
