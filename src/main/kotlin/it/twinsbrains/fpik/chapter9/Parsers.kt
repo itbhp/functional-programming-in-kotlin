@@ -64,6 +64,9 @@ abstract class Laws : Parsers<ParseError> {
       gc
     )
 
+  fun <A, B, C, D> mapProductLaw(pa: Parser<A>, pb: Parser<B>, f: (A) -> C, g: (B) -> D, gc: Gen<String>): Prop =
+    equal(pa.map(f) product pb.map(g), (pa product pb).map { (a, b) -> f(a) to g(b) }, gc)
+
 
   private fun <A, B, C> unbiasL(p: Pair<Pair<A, B>, C>): Triple<A, B, C> =
     Triple(p.first.first, p.first.second, p.second)
