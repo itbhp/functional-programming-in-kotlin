@@ -143,16 +143,12 @@ interface JsonParser : Parsers<ParseError> {
 
   private fun value(): Parser<JSON> = literals() or { obj() or { array() } }
 
-  private fun keyval(): Parser<Pair<String, JSON>> =
-    quoted() product { (":".sp skipL value()) }
-
-  private fun whitespace(): Parser<String> = """\s*""".rp
-
-  private fun eof(): Parser<String> = """\z""".rp
-
   private fun array(): Parser<JSON.JArray> =
     surround("[".sp, "]".sp,
       (value() sep ",".sp).map { vs -> JSON.JArray(vs) })
+
+  private fun keyval(): Parser<Pair<String, JSON>> =
+    quoted() product { (":".sp skipL value()) }
 
   private fun obj(): Parser<JSON> =
     surround("{".sp, "}".sp,
@@ -160,6 +156,9 @@ interface JsonParser : Parsers<ParseError> {
 
   private fun <A> root(p: Parser<A>): Parser<A> = p skipR eof()
 
+  private fun whitespace(): Parser<String> = """\s*""".rp
+
+  private fun eof(): Parser<String> = """\z""".rp
 
   fun jsonParser(): Parser<JSON> =
     root(whitespace() skipL (obj() or { array() }))
