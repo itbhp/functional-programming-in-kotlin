@@ -12,7 +12,23 @@ import java.util.regex.Pattern
 interface Parsers<PE> {
   interface Parser<out A>
 
+  fun <A> run(p: Parser<A>, input: String): Either<PE, A>
+
+  infix fun <A> Parser<A>.skipR(ps: Parser<String>): Parser<A>
+
+  infix fun <B> Parser<String>.skipL(pb: Parser<B>): Parser<B>
+
+  infix fun <A> Parser<A>.sep(p2: Parser<String>): Parser<List<A>>
+
+  fun <A> surround(start: Parser<String>, stop: Parser<String>, p: Parser<A>): Parser<A>
+
   fun <A> pure(a: A): Parser<A>
+
+  fun regexp(s: String): Parser<String>
+
+  fun <A, B> Parser<A>.flatMap(f: (A) -> Parser<B>): Parser<B>
+
+  fun <A> Parser<A>.slice(): Parser<String>
 
   infix fun <A> Parser<A>.or(a2: () -> Parser<A>): Parser<A>
 
@@ -27,10 +43,6 @@ interface Parsers<PE> {
 
   fun <A, B> Parser<A>.map(f: (A) -> B): Parser<B> = this.flatMap { a -> pure(f(a)) }
 
-  fun <A, B> Parser<A>.flatMap(f: (A) -> Parser<B>): Parser<B>
-
-  fun <A> Parser<A>.slice(): Parser<String>
-
   infix fun <A, B> Parser<A>.product(pb: () -> Parser<B>): Parser<Pair<A, B>> = this.flatMap { a ->
     pb().map { b -> a to b }
   }
@@ -43,20 +55,8 @@ interface Parsers<PE> {
 
   fun <A> many1(p: Parser<A>): Parser<List<A>> = map2(p, { p.many() }, { a, la -> listOf(a) + la })
 
-  fun <A> run(p: Parser<A>, input: String): Either<PE, A>
-
-  infix fun <A> Parser<A>.skipR(ps: Parser<String>): Parser<A>
-
-  infix fun <B> Parser<String>.skipL(pb: Parser<B>): Parser<B>
-
-  infix fun <A> Parser<A>.sep(p2: Parser<String>): Parser<List<A>>
-
-  fun <A> surround(start: Parser<String>, stop: Parser<String>, p: Parser<A>): Parser<A>
-
   infix fun String.or(other: String): Parser<String> =
     pure(this) or { pure(other) }
-
-  fun regexp(s: String): Parser<String>
 
   fun repeatedChar(aChar: Char): Parser<Int> =
     regexp("\\d{1}")
