@@ -12,11 +12,21 @@ import java.util.regex.Pattern
 interface Parsers<PE> {
   interface Parser<out A>
 
+  fun <A> pure(a: A): Parser<A>
+
+  fun regexp(s: String): Parser<String>
+
+  fun <A> Parser<A>.slice(): Parser<String>
+
   fun <A> tag(msg: String, p: Parser<A>): Parser<A>
 
   fun <A> scope(msg: String, p: Parser<A>): Parser<A>
 
+  fun <A, B> Parser<A>.flatMap(f: (A) -> Parser<B>): Parser<B>
+
   fun <A> attempt(p: Parser<A>): Parser<A>
+
+  infix fun <A> Parser<A>.or(a2: () -> Parser<A>): Parser<A>
 
   fun <A> furthest(pa: Parser<A>): Parser<A>
 
@@ -29,16 +39,6 @@ interface Parsers<PE> {
   infix fun <A> Parser<A>.sep(p2: Parser<String>): Parser<List<A>>
 
   fun <A> surround(start: Parser<String>, stop: Parser<String>, p: Parser<A>): Parser<A>
-
-  fun <A> pure(a: A): Parser<A>
-
-  fun regexp(s: String): Parser<String>
-
-  fun <A, B> Parser<A>.flatMap(f: (A) -> Parser<B>): Parser<B>
-
-  fun <A> Parser<A>.slice(): Parser<String>
-
-  infix fun <A> Parser<A>.or(a2: () -> Parser<A>): Parser<A>
 
   fun <A> listOfN(n: Int, p: Parser<A>): Parser<List<A>> =
     if (n < 0) {
