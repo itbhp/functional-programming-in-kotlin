@@ -12,7 +12,15 @@ import java.util.regex.Pattern
 interface Parsers<PE> {
   interface Parser<out A>
 
-  fun <A> run(p: Parser<A>, input: String): Either<PE, A>
+  fun <A> tag(msg: String, p: Parser<A>): Parser<A>
+
+  fun <A> scope(msg: String, p: Parser<A>): Parser<A>
+
+  fun <A> attempt(p: Parser<A>): Parser<A>
+
+  fun <A> furthest(pa: Parser<A>): Parser<A>
+
+  fun <A> latest(pa: Parser<A>): Parser<A>
 
   infix fun <A> Parser<A>.skipR(ps: Parser<String>): Parser<A>
 
@@ -66,7 +74,23 @@ interface Parsers<PE> {
       }
 }
 
-object ParseError
+fun <A> run(p: Parser<A>, input: String): Either<ParseError, A> = TODO()
+
+data class ParseError(val stack: List<Pair<Location, String>>)
+
+data class Location(val input: String, val offset: Int = 0) {
+  private val slice by lazy { input.slice(0..offset + 1) }
+  val line by lazy { slice.count { it == '\n' } + 1 }
+  val column by lazy {
+    when (val n = slice.lastIndexOf('\n')) {
+      -1 -> offset + 1
+      else -> offset - n
+    }
+  }
+}
+
+fun errorLocation(e: ParseError): Location = TODO()
+fun errorMessage(e: ParseError): String = TODO()
 
 abstract class Laws : Parsers<ParseError> {
   private fun <A> equal(
