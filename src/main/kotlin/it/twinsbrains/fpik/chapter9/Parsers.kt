@@ -8,7 +8,11 @@ import it.twinsbrains.fpik.chapter8.Gen.Companion.combine
 import it.twinsbrains.fpik.chapter8.Prop
 import java.util.regex.Pattern
 
-typealias Parser<A> = (String) -> Either<ParseError, A>
+typealias Parser<A> = (Location) -> Result<A>
+
+sealed class Result<out A>
+data class Success<out A>(val a: A, val consumed: Int) : Result<A>()
+data class Failure(val get: ParseError) : Result<Nothing>()
 
 interface Parsers<PE> {
 
