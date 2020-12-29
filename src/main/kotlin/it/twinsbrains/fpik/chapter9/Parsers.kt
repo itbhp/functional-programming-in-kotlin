@@ -6,11 +6,15 @@ import it.twinsbrains.fpik.chapter8.Checkers.forAll
 import it.twinsbrains.fpik.chapter8.Gen
 import it.twinsbrains.fpik.chapter8.Gen.Companion.combine
 import it.twinsbrains.fpik.chapter8.Prop
-import it.twinsbrains.fpik.chapter9.Parsers.Parser
 import java.util.regex.Pattern
 
+typealias Parser<A> = (String) -> Either<ParseError, A>
+
 interface Parsers<PE> {
-  interface Parser<out A>
+
+  fun <A> run(p: Parser<A>, input: String): Either<PE, A>
+
+  fun string(s: String): Parser<String>
 
   fun <A> pure(a: A): Parser<A>
 
@@ -73,8 +77,6 @@ interface Parsers<PE> {
         listOfN(size, pure(aChar)).map { size }
       }
 }
-
-fun <A> run(p: Parser<A>, input: String): Either<ParseError, A> = TODO()
 
 data class ParseError(val stack: List<Pair<Location, String>>)
 
