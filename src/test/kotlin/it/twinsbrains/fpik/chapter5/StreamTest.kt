@@ -176,7 +176,7 @@ class StreamTest {
 
   @Test
   fun `scanRight should work`() {
-    expectThat(Stream.of(1, 2, 3).scanRight(0, { a, b -> a + b }).toList())
+    expectThat(Stream.of(1, 2, 3).scanRight(0) { a, b -> a + b }.toList())
       .isEqualTo(List.of(6, 5, 3, 0))
   }
 }

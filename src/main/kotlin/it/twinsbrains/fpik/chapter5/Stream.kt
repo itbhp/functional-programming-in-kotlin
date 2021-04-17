@@ -40,12 +40,12 @@ sealed class Stream<out A> {
 //        is Cons -> cons({ this }, { this.tail().tails() })
 //      }
     {
-      return unfold(this, { state ->
+      return unfold(this) { state ->
         when (state) {
           is Empty -> none()
           is Cons -> some(state to state.tail())
         }
-      })
+      }
     }
 
     fun <A> Stream<A>.startsWith(that: Stream<A>): Boolean =
@@ -66,7 +66,7 @@ sealed class Stream<out A> {
       foldRight({ empty() }) { a, s -> if (p(a)) cons({ a }, s) else s() }
 
     fun <A, B> Stream<A>.map(f: (A) -> B): Stream<B> {
-      return unfold(this, { cur ->
+      return unfold(this) { cur ->
         when (cur) {
           is Empty -> none()
           is Cons -> {
@@ -74,7 +74,7 @@ sealed class Stream<out A> {
             some(res to cur.tail())
           }
         }
-      })
+      }
     }
 
     fun <A> Stream<A>.forAll(p: (A) -> Boolean): Boolean =
@@ -84,17 +84,17 @@ sealed class Stream<out A> {
       foldRight({ false }, { a, b -> p(a) || b() })
 
     fun <A> Stream<A>.takeWhile(p: (A) -> Boolean): Stream<A> {
-      return unfold(this, { cur ->
+      return unfold(this) { cur ->
         when (cur) {
           is Empty -> none()
           is Cons -> if (p(cur.head())) some(cur.head() to cur.tail()) else none()
         }
-      })
+      }
     }
 
     fun <A> Stream<A>.take(n: Int): Stream<A> {
       data class TakeState(val cur: Stream<A>, val count: Int)
-      return unfold(TakeState(this, n), { (cur, count) ->
+      return unfold(TakeState(this, n)) { (cur, count) ->
         if (count <= 0) {
           none()
         } else {
@@ -103,7 +103,7 @@ sealed class Stream<out A> {
             is Cons -> some(cur.head() to TakeState(cur.tail(), count - 1))
           }
         }
-      })
+      }
     }
 
     fun <A> Stream<A>.drop(n: Int): Stream<A> =
@@ -159,14 +159,14 @@ object InfiniteStreams {
   fun ones(): Stream<Int> = constant(1)
 
   fun <A> constant(a: A): Stream<A> =
-    unfold(a, { n -> some(n to n) })
+    unfold(a) { n -> some(n to n) }
 
   fun from(n: Int): Stream<Int> =
-    unfold(n, { s -> some(s to s + 1) })
+    unfold(n) { s -> some(s to s + 1) }
 
   fun fibs(): Stream<Int> {
     data class State(val beforePrev: Int, val prev: Int)
-    return unfold(State(0, 1), { (value, previousValue) -> some(value to State(previousValue, value + previousValue)) })
+    return unfold(State(0, 1)) { (value, previousValue) -> some(value to State(previousValue, value + previousValue)) }
   }
 
 
@@ -174,7 +174,7 @@ object InfiniteStreams {
     that: Stream<B>
   ): Stream<Pair<Option<A>, Option<B>>> {
     data class ZipState(val a: Stream<A>, val b: Stream<B>)
-    return unfold(ZipState(this, that), { (curA, curB) ->
+    return unfold(ZipState(this, that)) { (curA, curB) ->
       when (curA) {
         is Cons -> {
           when (curB) {
@@ -194,7 +194,7 @@ object InfiniteStreams {
           }
         }
       }
-    })
+    }
   }
 
   fun <A, B, C> Stream<A>.zipWith(
@@ -202,7 +202,7 @@ object InfiniteStreams {
     f: (A, B) -> C
   ): Stream<C> {
     data class State(val a: Stream<A>, val b: Stream<B>)
-    return unfold(State(this, that), { (curA, curB) ->
+    return unfold(State(this, that)) { (curA, curB) ->
       when (curA) {
         is Cons -> {
           when (curB) {
@@ -215,7 +215,7 @@ object InfiniteStreams {
         }
         is Empty -> none()
       }
-    })
+    }
   }
 
   fun <A, S> unfold(z: S, f: (S) -> Option<Pair<A, S>>): Stream<A> {
