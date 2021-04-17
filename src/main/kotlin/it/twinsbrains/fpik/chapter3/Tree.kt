@@ -30,7 +30,7 @@ sealed class Tree<out A> {
 //        is Leaf -> Leaf(f(t.value))
 //        is Branch -> Branch(map(t.left, f), map(t.right, f))
 //      }
-      fold(t, { a -> Leaf(f(a)) as Tree<B> }, { tl, tr -> Branch(tl, tr) })
+      fold(t, { a -> leaf(f(a)) }, { tl, tr -> branch(tl, tr) })
 
     fun <A, B> fold(ta: Tree<A>, l: (A) -> B, b: (B, B) -> B): B =
       when (ta) {
@@ -38,6 +38,8 @@ sealed class Tree<out A> {
         is Branch -> b(fold(ta.left, l, b), fold(ta.right, l, b))
       }
 
+    fun <A> branch(l: Tree<A>, r: Tree<A>): Tree<A> = Branch(l, r)
+    fun <A> leaf(v: A): Tree<A> = Leaf(v)
   }
 }
 

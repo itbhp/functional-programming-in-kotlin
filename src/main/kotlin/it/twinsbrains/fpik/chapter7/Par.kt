@@ -15,10 +15,10 @@ typealias Par<A> = (ExecutorService) -> Future<A>
 object Pars {
 
   infix fun <A> Par<A>.equalTo(other: Par<A>): Par<Boolean> =
-    map2(this, other, { a, b -> a == b })
+    map2(this, other) { a, b -> a == b }
 
   fun <A, B, C, D> map3(a: Par<A>, b: Par<B>, c: Par<C>, f: (A, B, C) -> D): Par<D> =
-    map2(a, map2(b, c, { vB, vC -> { vA: A -> f(vA, vB, vC) } }), { vA, mapping -> mapping(vA) })
+    map2(a, map2(b, c) { vB, vC -> { vA: A -> f(vA, vB, vC) } }) { vA, mapping -> mapping(vA) }
 
   fun <A, B, C> map2(a: Par<A>, b: Par<B>, f: (A, B) -> C): Par<C> = { es: ExecutorService ->
     val af: Future<A> = a(es)
@@ -49,7 +49,7 @@ object Pars {
     map(parList) { it.sorted() }
 
   fun <A, B> map(pa: Par<A>, f: (A) -> B): Par<B> =
-    map2(pa, unit(Unit), { a, _ -> f(a) })
+    map2(pa, unit(Unit)) { a, _ -> f(a) }
 
   fun <A, B> parMap(
     ps: List<A>,
@@ -85,7 +85,7 @@ object Pars {
     }
 
   fun <A> choice(cond: Par<Boolean>, t: Par<A>, f: Par<A>): Par<A> =
-    choiceN(map(cond, { b -> if (b) 0 else 1 }), listOf(t, f))
+    choiceN(map(cond) { b -> if (b) 0 else 1 }, listOf(t, f))
 
   fun <A> choiceN(n: Par<Int>, choices: List<Par<A>>): Par<A> =
     { es: ExecutorService ->
@@ -165,7 +165,6 @@ data class TimedMap2Future<A, B, C>(
   override fun isDone(): Boolean {
     return pa.isDone && pb.isDone
   }
-
 }
 
 
