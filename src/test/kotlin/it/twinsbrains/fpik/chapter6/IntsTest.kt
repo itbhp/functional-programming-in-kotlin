@@ -21,7 +21,7 @@ class IntsTest : StringSpec() {
         "random intsR" {
             forAll<Long> { seed ->
                 val n = 100
-                val (list, _) = intsR(n).run(SimpleRNG(seed))
+                val (list, _) = intsR(n).myRun(SimpleRNG(seed))
                 list.size == n
             }
         }

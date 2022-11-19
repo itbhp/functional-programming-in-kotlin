@@ -28,7 +28,7 @@ object RandExamples {
         if (i + (n - 1) - mod >= 0) {
             unit(mod)
         } else AState { rng ->
-            nonNegativeIntLessThan(n).run(rng)
+            nonNegativeIntLessThan(n).myRun(rng)
         }
     }
 }

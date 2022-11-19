@@ -10,7 +10,7 @@ class NonNegativeIntLessThanTest : StringSpec() {
         "all r should be >= 0 and <n"{
             forAll<Long> { seed ->
                 val n = 100
-                val (num, _) = nonNegativeIntLessThan(n).run(SimpleRNG(seed))
+                val (num, _) = nonNegativeIntLessThan(n).myRun(SimpleRNG(seed))
                 num in 0 until n
             }
         }
