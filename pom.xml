@@ -12,10 +12,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.7.20</kotlin.version>
+        <kotlin.version>1.7.21</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
+        <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+        <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
         <junit-jupiter-api.version>5.9.0</junit-jupiter-api.version>
-        <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
         <strikt.version>0.34.1</strikt.version>
         <kotest.version>5.5.4</kotest.version>
         <junit-platform.version>1.9.0</junit-platform.version>
