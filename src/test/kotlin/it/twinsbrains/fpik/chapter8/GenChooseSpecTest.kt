@@ -12,7 +12,7 @@ class GenChooseSpecTest : StringSpec() {
       forAll<Pair<Int, Int>> {
         val sorted = listOf(abs(it.first), abs(it.second)).sorted()
         val start = sorted[0]
-        val stopExclusive = sorted[1]
+        val stopExclusive = if (sorted[1] == sorted[0]) sorted[0] + 1 else sorted[1]
         val choose = Gen.choose(start, stopExclusive)
         val example = choose.sample.run(LinearCongruentialGenerator(3)).b
         example in start until stopExclusive
