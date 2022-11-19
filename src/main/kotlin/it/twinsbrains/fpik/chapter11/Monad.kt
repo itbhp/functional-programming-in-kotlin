@@ -6,7 +6,8 @@ interface Monad<F> : Functor<F> {
 
   fun <A> unit(a: A): Kind<F, A>
 
-  fun <A, B> flatMap(fa: Kind<F, A>, f: (A) -> Kind<F, B>): Kind<F, B>
+  fun <A, B> flatMap(fa: Kind<F, A>, f: (A) -> Kind<F, B>): Kind<F, B> =
+    compose<Unit, A, B>({ _ -> fa }, f)(Unit)
 
   override fun <A, B> map(fa: Kind<F, A>, f: (A) -> B): Kind<F, B> =
     flatMap(fa) { a -> unit(f(a)) }
@@ -19,9 +20,10 @@ interface Monad<F> : Functor<F> {
   fun <A, B, C> compose(
     f: (A) -> Kind<F, B>,
     g: (B) -> Kind<F, C>
-  ): (A) -> Kind<F, C> = { a: A ->
-    flatMap(f(a)) { b -> g(b) }
-  }
+  ): (A) -> Kind<F, C>
+//    = { a: A ->
+//    flatMap(f(a)) { b -> g(b) }
+//  }
 
   fun <A> replicateM(n: Int, fa: Kind<F, A>): List<Kind<F, A>>
 
