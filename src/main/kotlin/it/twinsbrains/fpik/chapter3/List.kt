@@ -11,10 +11,10 @@ sealed class List<out A> {
     }
 
     fun sum(ints: List<Int>): Int =
-      foldRight(ints, 0, { a, b -> a + b })
+      foldRight(ints, 0) { a, b -> a + b }
 
     fun product(doubles: List<Double>): Double =
-      foldRight(doubles, 1.0, { a, b -> a * b })
+      foldRight(doubles, 1.0) { a, b -> a * b }
 
     fun <A> tail(xs: List<A>): List<A> =
       when (xs) {
