@@ -22,21 +22,17 @@ data class AState<S, out A>(val myRun: (S) -> Pair<A, S>) : AStateOf<S, A> {
       override fun <A, B> flatMap(
         fa: AStateOf<S, A>,
         f: (A) -> AStateOf<S, B>
-      ): AStateOf<S, B> =
-        AState { s: S ->
-          val (a, s2) = fa.fix().myRun(s)
-          f(a).fix().myRun(s2)
-        }
+      ): AStateOf<S, B> = Companion.flatMap(fa, f)
 
-      override fun <A> unit(a: A): AStateOf<S, A> = AState { s -> a to s }
+      override fun <A> unit(a: A): AStateOf<S, A> = Companion.unit(a)
     }
 
     fun <S, A> unit(a: A): AState<S, A> = AState { s -> a to s }
 
-    fun <S, A, B> flatMap(f: AState<S, A>, g: (A) -> AState<S, B>): AState<S, B> =
+    fun <S, A, B> flatMap(fa: AStateOf<S, A>, f: (A) -> AStateOf<S, B>): AState<S, B> =
       AState { s ->
-        val (a, s1) = f.myRun(s)
-        g(a).myRun(s1)
+        val (a, s2) = fa.fix().myRun(s)
+        f(a).fix().myRun(s2)
       }
 
     fun <S, A, B> map(s: AState<S, A>, f: (A) -> B): AState<S, B> =
