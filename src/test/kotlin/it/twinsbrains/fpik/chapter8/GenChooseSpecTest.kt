@@ -2,20 +2,19 @@ package it.twinsbrains.fpik.chapter8
 
 import arrow.mtl.run
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.property.forAll
+import io.kotest.property.checkAll
+import io.kotest.property.withAssumptions
 import it.twinsbrains.fpik.chapter6.LinearCongruentialGenerator
-import kotlin.math.abs
 
 class GenChooseSpecTest : StringSpec() {
   init {
     "all Gen.choose should be greater or equal than start and less that stopExclusive" {
-      forAll<Pair<Int, Int>> {
-        val sorted = listOf(abs(it.first), abs(it.second)).sorted()
-        val start = sorted[0]
-        val stopExclusive = if (sorted[1] == sorted[0]) sorted[0] + 1 else sorted[1]
-        val choose = Gen.choose(start, stopExclusive)
-        val example = choose.sample.run(LinearCongruentialGenerator(3)).b
-        example in start until stopExclusive
+      checkAll<Pair<Int, Int>> { (a, b) ->
+        withAssumptions(a != b && a > 0 && a > b) {
+          val choose = Gen.choose(a, b)
+          val example = choose.sample.run(LinearCongruentialGenerator(3)).b
+          example in a until b
+        }
       }
     }
   }
