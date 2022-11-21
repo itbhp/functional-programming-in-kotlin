@@ -143,8 +143,8 @@ class ListTest {
   fun hasSubsequenceOnEmpty() {
     expectThat(
       List.hasSubsequence(
-        List.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
-        List.empty()
+        xs = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
+        sub = List.empty()
       )
     ).isEqualTo(true)
   }
@@ -153,8 +153,8 @@ class ListTest {
   fun hasSubsequenceOnBothEmpty() {
     expectThat(
       List.hasSubsequence(
-        List.empty<String>(),
-        List.empty()
+        xs = List.empty<String>(),
+        sub = List.empty()
       )
     ).isEqualTo(true)
   }
@@ -163,8 +163,8 @@ class ListTest {
   fun hasSubsequenceFromEmpty() {
     expectThat(
       List.hasSubsequence(
-        List.empty(),
-        List.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
+        xs = List.empty(),
+        sub = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
       )
     ).isEqualTo(false)
   }
@@ -173,8 +173,8 @@ class ListTest {
   fun hasSubsequence() {
     expectThat(
       List.hasSubsequence(
-        List.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
-        List.of(4, 5, 6, 7)
+        xs = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
+        sub = List.of(4, 5, 6, 7)
       )
     ).isEqualTo(true)
   }
