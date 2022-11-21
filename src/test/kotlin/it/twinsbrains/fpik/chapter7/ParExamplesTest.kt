@@ -9,7 +9,9 @@ import org.junit.jupiter.api.assertThrows
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors.*
+import java.util.concurrent.Executors.newCachedThreadPool
+import java.util.concurrent.Executors.newFixedThreadPool
+import java.util.concurrent.Executors.newSingleThreadExecutor
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
@@ -63,7 +65,7 @@ class ParExamplesTest {
     assertThrows<TimeoutException> {
       (a shouldBe b)(newFixedThreadPool(1))
       // during shouldBe on the right side we submit a callable inside another callable submit
-      //having 1 thread only we miss another thread to spawn on the second callable and hence we have deadlock
+      // having 1 thread only we miss another thread to spawn on the second callable and hence we have deadlock
     }
   }
 
@@ -98,10 +100,8 @@ class ParExamplesTest {
   }
 
   private infix fun <A> Par<A>.shouldBe(other: Par<A>) = { es: ExecutorService ->
-    if (this(es).get(500, TimeUnit.MILLISECONDS) != other(es).get(500, TimeUnit.MILLISECONDS))
+    if (this(es).get(500, TimeUnit.MILLISECONDS) != other(es).get(500, TimeUnit.MILLISECONDS)) {
       throw AssertionError("Par instances not equal")
+    }
   }
 }
-
-
-

@@ -125,13 +125,11 @@ abstract class Laws : Parsers<ParseError> {
   fun <A, B, C, D> mapProductLaw(pa: Parser<A>, pb: Parser<B>, f: (A) -> C, g: (B) -> D, gc: Gen<String>): Prop =
     equal(pa.map(f) product { pb.map(g) }, (pa product { pb }).map { (a, b) -> f(a) to g(b) }, gc)
 
-
   private fun <A, B, C> unbiasL(p: Pair<Pair<A, B>, C>): Triple<A, B, C> =
     Triple(p.first.first, p.first.second, p.second)
 
   private fun <A, B, C> unbiasR(p: Pair<A, Pair<B, C>>): Triple<A, B, C> =
     Triple(p.first, p.second.first, p.second.second)
-
 }
 
 sealed class JSON {
@@ -175,15 +173,25 @@ interface JsonParser : Parsers<ParseError> {
   private fun value(): Parser<JSON> = literals() or { obj() or { array() } }
 
   private fun array(): Parser<JSON.JArray> =
-    surround("[".sp, "]".sp,
-      (value() sep ",".sp).map { vs -> JSON.JArray(vs) })
+    surround(
+      "[".sp,
+      "]".sp,
+      (value() sep ",".sp).map { vs ->
+        JSON.JArray(vs)
+      }
+    )
 
   private fun keyval(): Parser<Pair<String, JSON>> =
     quoted() product { (":".sp skipL value()) }
 
   private fun obj(): Parser<JSON> =
-    surround("{".sp, "}".sp,
-      (keyval() sep ",".sp).map { kvs -> JSON.JObject(kvs.toMap()) })
+    surround(
+      "{".sp,
+      "}".sp,
+      (keyval() sep ",".sp).map { kvs ->
+        JSON.JObject(kvs.toMap())
+      }
+    )
 
   private fun <A> root(p: Parser<A>): Parser<A> = p skipR eof()
 
@@ -193,5 +201,4 @@ interface JsonParser : Parsers<ParseError> {
 
   fun jsonParser(): Parser<JSON> =
     root(whitespace() skipL (obj() or { array() }))
-
 }

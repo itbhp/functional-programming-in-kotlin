@@ -26,7 +26,7 @@ class InfiniteStreamsTest {
 
   @Test
   fun `exists will stack overflow on infinite streams if not verified`() {
-   assertThrows<StackOverflowError> { ones().exists { it % 2 == 0 } }
+    assertThrows<StackOverflowError> { ones().exists { it % 2 == 0 } }
   }
 
   @Test

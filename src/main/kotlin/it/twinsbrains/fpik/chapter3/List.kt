@@ -41,11 +41,7 @@ sealed class List<out A> {
       }
 
     fun <A> append(a1: List<A>, a2: List<A>): List<A> =
-//      when (a1) {
-//        is Nil -> a2
-//        is Cons -> Cons(a1.head, append(a1.tail, a2))
-//      }
-      foldRight(a1, a2, { e, l -> Cons(e, l) })
+      foldRight(a1, a2) { e, l -> Cons(e, l) }
 
     fun <A> init(l: List<A>): List<A> = when (l) {
       is Nil -> throw IllegalArgumentException("init called on empty list")
@@ -58,15 +54,10 @@ sealed class List<out A> {
     fun <A> reverse(l: List<A>): List<A> =
       foldLeft(
         l,
-        empty(),
-        { acc: List<A>, e: A -> Cons(e, acc) }
-      )
+        empty()
+      ) { acc: List<A>, e: A -> Cons(e, acc) }
 
     fun <A, B> foldRight(xs: List<A>, z: B, f: (A, B) -> B): B =
-//      when (xs) {
-//        is Nil -> z
-//        is Cons -> f(xs.head, foldRight(xs.tail, z, f))
-//      }
       foldLeft(xs, { it }, { acc: (B) -> B, e: A -> { b -> acc(f(e, b)) } })(z)
 
     fun <A> length(xs: List<A>): Int = foldRight(xs, 0, { _, acc -> acc + 1 })
@@ -78,16 +69,15 @@ sealed class List<out A> {
       }
 
     fun <A> concatenate(ls: List<List<A>>): List<A> =
-      foldRight(ls, empty(), { l, acc -> append(l, acc) })
+      foldRight(ls, empty()) { l, acc -> append(l, acc) }
 
     fun addOne(xs: List<Int>): List<Int> =
       map(xs) { e -> e + 1 }
 
     private fun <A, B> map(xs: List<A>, f: (A) -> B): List<B> =
-      foldRight(xs, empty(), { e, l -> Cons(f(e), l) })
+      foldRight(xs, empty()) { e, l -> Cons(f(e), l) }
 
     fun <A> filter(xs: List<A>, f: (A) -> Boolean): List<A> =
-//            foldRight(xs, empty(), { e, l -> if (f(e)) Cons(e, l) else l })
       flatMap(xs) { e -> if (f(e)) of(e) else empty() }
 
     fun <A, B> flatMap(xa: List<A>, f: (A) -> List<B>): List<B> =

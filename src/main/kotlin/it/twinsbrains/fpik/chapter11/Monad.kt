@@ -15,7 +15,6 @@ interface Monad<F> : Functor<F> {
   fun <A, B, C> map2(fa: Kind<F, A>, fb: Kind<F, B>, f: (A, B) -> C): Kind<F, C> =
     flatMap(fa) { a -> map(fb) { b -> f(a, b) } }
 
-
   // compose kleisli arrows
   fun <A, B, C> compose(
     f: (A) -> Kind<F, B>,

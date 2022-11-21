@@ -31,10 +31,10 @@ object ArrowStateMonad {
   ): State<RNG, B> = s.flatMap(object : IdMonad {}, f)
 
   fun <A, B> map(
-    s: State<RNG, A>, f: (A) -> B
+    s: State<RNG, A>,
+    f: (A) -> B
   ): State<RNG, B> = flatMap(s) { a -> State { rng -> Tuple2(rng, f(a)) } }
 
   private fun <A> sequence(fs: List<State<RNG, A>>): State<RNG, List<A>> =
     fs.stateSequential()
-
 }

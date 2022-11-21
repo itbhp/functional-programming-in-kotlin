@@ -12,24 +12,23 @@ import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 
 class ArrowStateMonadTest {
-    @Test
-    fun `state monad comprehension`() {
-      val ns2: State<RNG, List<Int>> = StateApi.fx {
-        val x: Int = int.bind()
-        val y: Int = int.bind()
-        val xs: List<Int> = ints(x).bind()
-        xs.map { it % y }
-      }
-
-        val listInt = ns2.run(FixedRNG(2)).b
-
-        expectThat(listInt.size).isEqualTo(2)
+  @Test
+  fun `state monad comprehension`() {
+    val ns2: State<RNG, List<Int>> = StateApi.fx {
+      val x: Int = int.bind()
+      val y: Int = int.bind()
+      val xs: List<Int> = ints(x).bind()
+      xs.map { it % y }
     }
 
-    @Test
-    fun `modify state test`() {
-        val (newState, _) = modify { s: String -> "($s)" }.run("1")
-        expectThat(newState).isEqualTo("(1)")
-    }
+    val listInt = ns2.run(FixedRNG(2)).b
+
+    expectThat(listInt.size).isEqualTo(2)
+  }
+
+  @Test
+  fun `modify state test`() {
+    val (newState, _) = modify { s: String -> "($s)" }.run("1")
+    expectThat(newState).isEqualTo("(1)")
+  }
 }
-

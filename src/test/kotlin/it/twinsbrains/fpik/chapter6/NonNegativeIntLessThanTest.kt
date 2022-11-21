@@ -6,13 +6,13 @@ import it.twinsbrains.fpik.chapter6.RandExamples.nonNegativeIntLessThan
 import it.twinsbrains.fpik.chapter6.LinearCongruentialGenerator as SimpleRNG
 
 class NonNegativeIntLessThanTest : StringSpec() {
-    init {
-        "all r should be >= 0 and <n"{
-            forAll<Long> { seed ->
-                val n = 100
-                val (num, _) = nonNegativeIntLessThan(n).myRun(SimpleRNG(seed))
-                num in 0 until n
-            }
-        }
+  init {
+    "all r should be >= 0 and <n" {
+      forAll<Long> { seed ->
+        val n = 100
+        val (num, _) = nonNegativeIntLessThan(n).myRun(SimpleRNG(seed))
+        num in 0 until n
+      }
     }
+  }
 }

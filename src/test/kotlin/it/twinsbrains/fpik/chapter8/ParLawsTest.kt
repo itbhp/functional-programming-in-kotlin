@@ -17,7 +17,6 @@ class ParLawsTest {
       unit(it)
     }
 
-
   @Test
   fun mappingLaw() {
     val p = forAllPar(pint) { n: Par<Int> ->
@@ -33,6 +32,4 @@ class ParLawsTest {
     }
     expectThat(run(p)).isA<Passed>()
   }
-
-
 }

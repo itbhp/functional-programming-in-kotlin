@@ -5,7 +5,14 @@ import it.twinsbrains.fpik.chapter6.LinearCongruentialGenerator
 import it.twinsbrains.fpik.chapter6.RNG
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
-import strikt.assertions.*
+import strikt.assertions.all
+import strikt.assertions.filter
+import strikt.assertions.hasSize
+import strikt.assertions.isA
+import strikt.assertions.isEqualTo
+import strikt.assertions.isGreaterThanOrEqualTo
+import strikt.assertions.isIn
+import strikt.assertions.isLessThan
 
 class GenTest {
   @Test

@@ -29,9 +29,11 @@ object Pars {
   fun <A> unit(a: A): Par<A> = { _: ExecutorService -> UnitFuture(a) }
 
   fun <A> fork(a: () -> Par<A>): Par<A> = { es: ExecutorService ->
-    es.submit(Callable {
-      a()(es).get()
-    })
+    es.submit(
+      Callable {
+        a()(es).get()
+      }
+    )
   }
 
   fun <A> delay(pa: () -> Par<A>): Par<A> =
@@ -75,9 +77,14 @@ object Pars {
   ): Par<List<A>> =
     when {
       ps.isEmpty() -> unit(Nil)
-      ps.size == 1 -> if (f(ps.head)) {
-        unit(listOf(ps.head))
-      } else unit(emptyList())
+      ps.size == 1 -> {
+        if (f(ps.head)) {
+          unit(listOf(ps.head))
+        } else {
+          unit(emptyList())
+        }
+      }
+
       else -> {
         val (l, r) = ps.splitAt(ps.size / 2)
         map2(parFilter(l, f), parFilter(r, f)) { la, lb -> la + lb }
@@ -105,13 +112,10 @@ object Pars {
   fun <A, B> flatMap(pa: Par<A>, choices: (A) -> Par<B>): Par<B> =
     join(map(pa, choices))
 
-
-  fun <A> join(a: Par<Par<A>>): Par<A> =
-//    flatMap(a, ::identity)
-    { es: ExecutorService ->
-      val vA: Par<A> = run(es, a).get()
-      run(es, vA)
-    }
+  fun <A> join(a: Par<Par<A>>): Par<A> = { es: ExecutorService ->
+    val vA: Par<A> = run(es, a).get()
+    run(es, vA)
+  }
 }
 
 val <T> List<T>.head: T
@@ -123,7 +127,6 @@ val Nil = listOf<Nothing>()
 
 fun <T> List<T>.splitAt(i: Int) =
   this.subList(0, i) to this.subList(i, this.size)
-
 
 data class UnitFuture<A>(
   val a: A
@@ -167,12 +170,11 @@ data class TimedMap2Future<A, B, C>(
   }
 }
 
-
 object ParExamples {
   fun sum(ints: List<Int>): Par<Int> =
-    if (ints.size <= 1)
+    if (ints.size <= 1) {
       unit(ints.firstOption().getOrElse { 0 })
-    else {
+    } else {
       val (l, r) = ints.splitAt(ints.size / 2)
       map2(fork { sum(l) }, fork { sum(r) }) { lx: Int, rx: Int -> lx + rx }
     }

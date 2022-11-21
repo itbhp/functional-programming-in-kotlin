@@ -6,19 +6,19 @@ import it.twinsbrains.fpik.chapter6.Randoms.double
 import it.twinsbrains.fpik.chapter6.LinearCongruentialGenerator as SimpleRNG
 
 class RandomsDoublesTest : StringSpec() {
-    init {
-        "doubles should be in [0,1)"{
-            forAll<Long> { seed ->
-                val (num, _) = double(SimpleRNG(seed))
-                num >= 0 && num < 1
-            }
-        }
-
-        "doubles as Rand should also be in [0,1)"{
-            forAll<Long> { seed ->
-                val (num, _) = RandExamples.doubleR.myRun(SimpleRNG(seed))
-                num >= 0 && num < 1
-            }
-        }
+  init {
+    "doubles should be in [0,1)" {
+      forAll<Long> { seed ->
+        val (num, _) = double(SimpleRNG(seed))
+        num >= 0 && num < 1
+      }
     }
+
+    "doubles as Rand should also be in [0,1)" {
+      forAll<Long> { seed ->
+        val (num, _) = RandExamples.doubleR.myRun(SimpleRNG(seed))
+        num >= 0 && num < 1
+      }
+    }
+  }
 }

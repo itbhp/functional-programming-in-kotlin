@@ -34,17 +34,10 @@ sealed class Stream<out A> {
     fun <A> Stream<A>.hasSubsequence(s: Stream<A>): Boolean =
       this.tails().exists { it.startsWith(s) }
 
-    fun <A> Stream<A>.tails(): Stream<Stream<A>>
-//     = when (this) {
-//        is Empty -> Empty
-//        is Cons -> cons({ this }, { this.tail().tails() })
-//      }
-    {
-      return unfold(this) { state ->
-        when (state) {
-          is Empty -> none()
-          is Cons -> some(state to state.tail())
-        }
+    fun <A> Stream<A>.tails(): Stream<Stream<A>> = unfold(this) { state ->
+      when (state) {
+        is Empty -> none()
+        is Cons -> some(state to state.tail())
       }
     }
 
@@ -107,13 +100,14 @@ sealed class Stream<out A> {
     }
 
     fun <A> Stream<A>.drop(n: Int): Stream<A> =
-      if (n <= 0)
+      if (n <= 0) {
         this
-      else
+      } else {
         when (this) {
           is Empty -> Empty
           is Cons -> this.tail().drop(n - 1)
         }
+      }
 
     fun <A> Stream<A>.toList(): List<A> {
       tailrec fun loop(stream: Stream<A>, acc: List<A>): List<A> {
@@ -137,9 +131,14 @@ sealed class Stream<out A> {
     fun <A> empty(): Stream<A> = Empty
 
     fun <A> of(vararg xs: A): Stream<A> =
-      if (xs.isEmpty()) empty()
-      else cons({ xs[0] },
-        { of(*xs.sliceArray(1 until xs.size)) })
+      if (xs.isEmpty()) {
+        empty()
+      } else {
+        cons(
+          { xs[0] },
+          { of(*xs.sliceArray(1 until xs.size)) }
+        )
+      }
   }
 }
 
@@ -169,7 +168,6 @@ object InfiniteStreams {
     return unfold(State(0, 1)) { (value, previousValue) -> some(value to State(previousValue, value + previousValue)) }
   }
 
-
   fun <A, B> Stream<A>.zipAll(
     that: Stream<B>
   ): Stream<Pair<Option<A>, Option<B>>> {
@@ -182,14 +180,17 @@ object InfiniteStreams {
               val res = some(curA.head()) to some(curB.head())
               some(res to ZipState(curA.tail(), curB.tail()))
             }
+
             is Empty -> some((some(curA.head()) to none<B>()) to ZipState(curA.tail(), curB))
           }
         }
+
         is Empty -> {
           when (curB) {
             is Cons -> {
               some((none<A>() to some(curB.head())) to ZipState(curA, curB.tail()))
             }
+
             is Empty -> none()
           }
         }
@@ -210,9 +211,11 @@ object InfiniteStreams {
               val res = f(curA.head(), curB.head())
               some(res to State(curA.tail(), curB.tail()))
             }
+
             is Empty -> none()
           }
         }
+
         is Empty -> none()
       }
     }

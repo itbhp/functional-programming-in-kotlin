@@ -14,7 +14,6 @@ fun <A : Any> optionMonoid(): Monoid<Optional<A>> = object : Monoid<Optional<A>>
 
   override val nil: Optional<A>
     get() = Optional.empty()
-
 }
 
 fun <A> dual(m: Monoid<A>): Monoid<A> = object : Monoid<A> {
@@ -24,6 +23,4 @@ fun <A> dual(m: Monoid<A>): Monoid<A> = object : Monoid<A> {
 
   override val nil: A
     get() = m.nil
-
 }
-

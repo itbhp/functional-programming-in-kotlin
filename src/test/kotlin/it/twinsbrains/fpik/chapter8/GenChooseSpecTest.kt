@@ -8,7 +8,7 @@ import kotlin.math.abs
 
 class GenChooseSpecTest : StringSpec() {
   init {
-    "all Gen.choose should be greater or equal than start and less that stopExclusive"{
+    "all Gen.choose should be greater or equal than start and less that stopExclusive" {
       forAll<Pair<Int, Int>> {
         val sorted = listOf(abs(it.first), abs(it.second)).sorted()
         val start = sorted[0]

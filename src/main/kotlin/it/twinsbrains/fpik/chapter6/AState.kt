@@ -13,7 +13,6 @@ interface StateMonad<S> : Monad<AStatePartialOf<S>> {
   override fun <A> unit(a: A): AStateOf<S, A>
 }
 
-
 data class AState<S, out A>(val myRun: (S) -> Pair<A, S>) : AStateOf<S, A> {
 
   companion object {
@@ -47,5 +46,4 @@ data class AState<S, out A>(val myRun: (S) -> Pair<A, S>) : AStateOf<S, A> {
     fun <A> sequence(fs: List<Rand<A>>): Rand<List<A>> =
       fs.fold(unit(listOf())) { acc, r -> map2(acc, r) { l, a -> l + a } }
   }
-
 }

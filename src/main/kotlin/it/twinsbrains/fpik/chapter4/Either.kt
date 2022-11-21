@@ -39,8 +39,7 @@ sealed class Either<out E, out A> {
       List.foldRight(
         xa,
         right(List.empty())
-      )
-      { a, optListB -> map2(f(a), optListB) { b, l -> Cons(b, l) } }
+      ) { a, optListB -> map2(f(a), optListB) { b, l -> Cons(b, l) } }
   }
 }
 

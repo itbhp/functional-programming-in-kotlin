@@ -25,13 +25,11 @@ fun <A> Option<A>.filter(p: (A) -> Boolean) = this.filterOrElse({ p(it) }, {})
 abstract class ParsersImpl : Parsers<ParseError> {
   override fun string(s: String): Parser<String> =
     { state: State ->
-      when (val idx =
-        firstNonMatchingIndex(state.input, s, state.offset)) {
+      when (val idx = firstNonMatchingIndex(state.input, s, state.offset)) {
         is None -> Success(s, s.length)
         is Some ->
           Failure(
             state.advanceBy(idx.t).toError("'$s'")
-//            ,idx.t != 0
           )
       }
     }
@@ -43,12 +41,17 @@ abstract class ParsersImpl : Parsers<ParseError> {
   ): Option<Int> {
     var i = 0
     while (i < s1.length && i < s2.length) {
-      if (s1[i + offset] != s2[i])
+      if (s1[i + offset] != s2[i]) {
         return some(i)
-      else i += 1
+      } else {
+        i += 1
+      }
     }
-    return if (s1.length - offset >= s2.length) none()
-    else some(s1.length - offset)
+    return if (s1.length - offset >= s2.length) {
+      none()
+    } else {
+      some(s1.length - offset)
+    }
   }
 
   private fun State.advanceBy(i: Int): State =
@@ -58,6 +61,7 @@ abstract class ParsersImpl : Parsers<ParseError> {
     when (val prefix = state.input.findPrefixOf(r.toRegex())) {
       is Some ->
         Success(prefix.t.value, prefix.t.value.length)
+
       is None ->
         Failure(state.toError("regex ${r.toRegex()}"))
     }
@@ -73,6 +77,7 @@ abstract class ParsersImpl : Parsers<ParseError> {
       when (val result = p(state)) {
         is Success ->
           Success(state.slice(result.consumed), result.consumed)
+
         is Failure -> result
       }
     }

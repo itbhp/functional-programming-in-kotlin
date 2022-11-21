@@ -1,9 +1,15 @@
 package it.twinsbrains.fpik.chapter8
 
+import arrow.core.Id
 import arrow.core.Tuple2
+import arrow.core.extensions.id.functor.functor
 import arrow.core.getOrElse
 import arrow.core.toOption
-import arrow.mtl.*
+import arrow.mtl.State
+import arrow.mtl.StateApi
+import arrow.mtl.flatMap
+import arrow.mtl.run
+import arrow.mtl.stateSequential
 import it.twinsbrains.fpik.chapter6.RNG
 import it.twinsbrains.fpik.chapter6.Randoms.double
 import it.twinsbrains.fpik.chapter6.Randoms.nonNegativeInt
@@ -41,7 +47,7 @@ data class Gen<A>(val sample: State<RNG, A>) {
 
   fun unsized(): SGen<A> = SGen { this }
 
-  fun <B> map(f: (A) -> B): Gen<B> = Gen(sample.map(f))
+  fun <B> map(f: (A) -> B): Gen<B> = Gen(sample.map(Id.functor(), f))
 
   fun <B> flatMap(f: (A) -> Gen<B>): Gen<B> = Gen(sample.flatMap { valA -> f(valA).sample })
 
@@ -75,7 +81,7 @@ data class Gen<A>(val sample: State<RNG, A>) {
 
     fun choose(start: Int, stopExclusive: Int): Gen<Int> {
       val s = State { rng: RNG -> nonNegativeInt(rng).flip() }
-        .map { i ->
+        .map(Id.functor()) { i ->
           val r = stopExclusive - start
           (i % r) + start
         }
@@ -84,10 +90,12 @@ data class Gen<A>(val sample: State<RNG, A>) {
 
     fun <A> unit(a: A): Gen<A> = Gen(StateApi.just(a))
 
-    fun boolean(): Gen<Boolean> = Gen(State { rng ->
-      val (i, nRng) = rng.nextInt()
-      Tuple2(nRng, i < 0)
-    })
+    fun boolean(): Gen<Boolean> = Gen(
+      State { rng ->
+        val (i, nRng) = rng.nextInt()
+        Tuple2(nRng, i < 0)
+      }
+    )
 
     fun <A> listOfN(n: Int, ga: Gen<A>): Gen<List<A>> =
       Gen((1..n).map { ga.sample }.stateSequential())
@@ -95,7 +103,6 @@ data class Gen<A>(val sample: State<RNG, A>) {
 }
 
 private fun <A, B> Pair<A, B>.flip(): Tuple2<B, A> = Tuple2(this.second, this.first)
-
 
 sealed class Result {
   abstract fun isFalsified(): Boolean
@@ -128,8 +135,11 @@ data class Prop(val check: (MaxSize, TestCases, RNG) -> Result) {
 
     fun check(p: () -> Boolean): Prop =
       Prop { _, _, _ ->
-        if (p()) Proved
-        else Falsified("()", 0)
+        if (p()) {
+          Proved
+        } else {
+          Falsified("()", 0)
+        }
       }
 
     fun run(
@@ -145,9 +155,11 @@ data class Prop(val check: (MaxSize, TestCases, RNG) -> Result) {
               "passed tests: ${it.failure}"
           )
         }
+
         is Passed -> result.also {
           println("OK, passed $testCases tests.")
         }
+
         is Proved -> result.also { println("OK, proved property.") }
       }
   }
@@ -177,9 +189,8 @@ object Checkers {
     Gen.choose(1, 4).map {
       Executors.newFixedThreadPool(it)
     } to .75,
-    Gen.unit(
-      Executors.newCachedThreadPool()
-    ) to .25)
+    Gen.unit(Executors.newCachedThreadPool()) to .25
+  )
 
   fun <A> forAllPar(ga: Gen<A>, f: (A) -> Par<Boolean>): Prop =
     forAll(ges combine ga) { (es, a) ->
@@ -208,8 +219,11 @@ object Checkers {
     Prop { _: MaxSize, n: TestCases, rng: RNG ->
       randomSequence(ga, rng).mapIndexed { i, a ->
         try {
-          if (f(a)) Passed
-          else Falsified(a.toString(), i)
+          if (f(a)) {
+            Passed
+          } else {
+            Falsified(a.toString(), i)
+          }
         } catch (e: Exception) {
           Falsified(buildMessage(a, e), i)
         }
@@ -235,5 +249,5 @@ object Checkers {
     |generated and exception: ${e.message}
     |stacktrace:
     |${e.stackTrace.joinToString("\n")}
-""".trimMargin()
+    """.trimIndent().trimMargin()
 }
