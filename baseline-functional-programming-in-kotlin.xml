@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+    <ManuallySuppressedIssues></ManuallySuppressedIssues>
+    <CurrentIssues>
+        <ID>MagicNumber:PropertyBaseTestModule.kt$Checkers$.25</ID>
+        <ID>MagicNumber:PropertyBaseTestModule.kt$Checkers$.75</ID>
+        <ID>MagicNumber:PropertyBaseTestModule.kt$Checkers$4</ID>
+        <ID>MagicNumber:Rand.kt$RandExamples$3</ID>
+        <ID>MagicNumber:RandomGenerator.kt$LinearCongruentialGenerator$0x5DEECE66DL</ID>
+        <ID>MagicNumber:RandomGenerator.kt$LinearCongruentialGenerator$0xBL</ID>
+        <ID>MagicNumber:RandomGenerator.kt$LinearCongruentialGenerator$0xFFFFFFFFFFFFL</ID>
+        <ID>MagicNumber:RandomGenerator.kt$LinearCongruentialGenerator$16</ID>
+        <ID>MemberNameEqualsClassName:Fibonacci.kt$Fibonacci$fun fibonacci(n: Int): Int</ID>
+        <ID>NewLineAtEndOfFile:AState.kt$it.twinsbrains.fpik.chapter6.AState.kt</ID>
+        <ID>NewLineAtEndOfFile:ArrowStateMonad.kt$it.twinsbrains.fpik.chapter6.ArrowStateMonad.kt</ID>
+        <ID>NewLineAtEndOfFile:ArrowStateMonadTest.kt$it.twinsbrains.fpik.chapter6.ArrowStateMonadTest.kt</ID>
+        <ID>
+            NewLineAtEndOfFile:AssertionsForOurFunctionalLibrary.kt$it.twinsbrains.fpik.AssertionsForOurFunctionalLibrary.kt
+        </ID>
+        <ID>NewLineAtEndOfFile:CandyMachine.kt$it.twinsbrains.fpik.chapter6.CandyMachine.kt</ID>
+        <ID>NewLineAtEndOfFile:CandyMachineTest.kt$it.twinsbrains.fpik.chapter6.CandyMachineTest.kt</ID>
+        <ID>NewLineAtEndOfFile:Currying.kt$it.twinsbrains.fpik.chapter2.Currying.kt</ID>
+        <ID>NewLineAtEndOfFile:CurryingTest.kt$it.twinsbrains.fpik.chapter2.CurryingTest.kt</ID>
+        <ID>NewLineAtEndOfFile:Either.kt$it.twinsbrains.fpik.chapter4.Either.kt</ID>
+        <ID>NewLineAtEndOfFile:EitherTest.kt$it.twinsbrains.fpik.chapter4.EitherTest.kt</ID>
+        <ID>NewLineAtEndOfFile:Fibonacci.kt$it.twinsbrains.fpik.chapter2.Fibonacci.kt</ID>
+        <ID>NewLineAtEndOfFile:FibonacciTest.kt$it.twinsbrains.fpik.chapter2.FibonacciTest.kt</ID>
+        <ID>NewLineAtEndOfFile:FixedRNG.kt$it.twinsbrains.fpik.chapter6.FixedRNG.kt</ID>
+        <ID>NewLineAtEndOfFile:ForAllTest.kt$it.twinsbrains.fpik.chapter8.ForAllTest.kt</ID>
+        <ID>NewLineAtEndOfFile:Functor.kt$it.twinsbrains.fpik.chapter11.Functor.kt</ID>
+        <ID>NewLineAtEndOfFile:GenChooseSpecTest.kt$it.twinsbrains.fpik.chapter8.GenChooseSpecTest.kt</ID>
+        <ID>NewLineAtEndOfFile:GenTest.kt$it.twinsbrains.fpik.chapter8.GenTest.kt</ID>
+        <ID>NewLineAtEndOfFile:InfiniteStreamsTest.kt$it.twinsbrains.fpik.chapter5.InfiniteStreamsTest.kt</ID>
+        <ID>NewLineAtEndOfFile:IntDoublesTest.kt$it.twinsbrains.fpik.chapter6.IntDoublesTest.kt</ID>
+        <ID>NewLineAtEndOfFile:IntsTest.kt$it.twinsbrains.fpik.chapter6.IntsTest.kt</ID>
+        <ID>
+            NewLineAtEndOfFile:LinearCongruentialGeneratorTest.kt$it.twinsbrains.fpik.chapter6.LinearCongruentialGeneratorTest.kt
+        </ID>
+        <ID>NewLineAtEndOfFile:List.kt$it.twinsbrains.fpik.chapter3.List.kt</ID>
+        <ID>NewLineAtEndOfFile:ListSumKotlinTestSpecTest.kt$it.twinsbrains.fpik.chapter8.ListSumKotlinTestSpecTest.kt
+        </ID>
+        <ID>NewLineAtEndOfFile:ListTest.kt$it.twinsbrains.fpik.chapter3.ListTest.kt</ID>
+        <ID>NewLineAtEndOfFile:Monad.kt$it.twinsbrains.fpik.chapter11.Monad.kt</ID>
+        <ID>NewLineAtEndOfFile:Monoid.kt$it.twinsbrains.fpik.chapter10.Monoid.kt</ID>
+        <ID>
+            NewLineAtEndOfFile:NonNegativeIntLessThanTest.kt$it.twinsbrains.fpik.chapter6.NonNegativeIntLessThanTest.kt
+        </ID>
+        <ID>NewLineAtEndOfFile:NonNegativeIntsTest.kt$it.twinsbrains.fpik.chapter6.NonNegativeIntsTest.kt</ID>
+        <ID>NewLineAtEndOfFile:Option.kt$it.twinsbrains.fpik.chapter4.Option.kt</ID>
+        <ID>NewLineAtEndOfFile:OptionTest.kt$it.twinsbrains.fpik.chapter4.OptionTest.kt</ID>
+        <ID>NewLineAtEndOfFile:Par.kt$it.twinsbrains.fpik.chapter7.Par.kt</ID>
+        <ID>NewLineAtEndOfFile:ParExamplesTest.kt$it.twinsbrains.fpik.chapter7.ParExamplesTest.kt</ID>
+        <ID>NewLineAtEndOfFile:ParLawsTest.kt$it.twinsbrains.fpik.chapter8.ParLawsTest.kt</ID>
+        <ID>NewLineAtEndOfFile:Parsers.kt$it.twinsbrains.fpik.chapter9.Parsers.kt</ID>
+        <ID>NewLineAtEndOfFile:ParsersImpl.kt$it.twinsbrains.fpik.chapter9.ParsersImpl.kt</ID>
+        <ID>NewLineAtEndOfFile:PropertyBaseTestModule.kt$it.twinsbrains.fpik.chapter8.PropertyBaseTestModule.kt</ID>
+        <ID>NewLineAtEndOfFile:Rand.kt$it.twinsbrains.fpik.chapter6.Rand.kt</ID>
+        <ID>NewLineAtEndOfFile:RandomGenerator.kt$it.twinsbrains.fpik.chapter6.RandomGenerator.kt</ID>
+        <ID>NewLineAtEndOfFile:RandomsDoublesTest.kt$it.twinsbrains.fpik.chapter6.RandomsDoublesTest.kt</ID>
+        <ID>NewLineAtEndOfFile:SingleProvedTest.kt$it.twinsbrains.fpik.chapter8.SingleProvedTest.kt</ID>
+        <ID>NewLineAtEndOfFile:SizedGenTest.kt$it.twinsbrains.fpik.chapter8.SizedGenTest.kt</ID>
+        <ID>NewLineAtEndOfFile:Stream.kt$it.twinsbrains.fpik.chapter5.Stream.kt</ID>
+        <ID>NewLineAtEndOfFile:StreamTest.kt$it.twinsbrains.fpik.chapter5.StreamTest.kt</ID>
+        <ID>NewLineAtEndOfFile:Tree.kt$it.twinsbrains.fpik.chapter3.Tree.kt</ID>
+        <ID>NewLineAtEndOfFile:TreeTest.kt$it.twinsbrains.fpik.chapter3.TreeTest.kt</ID>
+        <ID>SpreadOperator:List.kt$List.Companion$(*tail)</ID>
+        <ID>SpreadOperator:Stream.kt$Stream.Companion$(*xs.sliceArray(1 until xs.size))</ID>
+        <ID>SwallowedException:Option.kt$Option.Companion$e: Throwable</ID>
+        <ID>TooGenericExceptionCaught:Either.kt$Either.Companion$e: Exception</ID>
+        <ID>TooGenericExceptionCaught:Option.kt$Option.Companion$e: Throwable</ID>
+        <ID>TooGenericExceptionCaught:PropertyBaseTestModule.kt$Checkers$e: Exception</ID>
+        <ID>TooGenericExceptionThrown:OptionTest.kt$OptionTest$throw Exception()</ID>
+        <ID>TooManyFunctions:List.kt$List$Companion</ID>
+        <ID>TooManyFunctions:Par.kt$Pars$Pars</ID>
+        <ID>TooManyFunctions:Parsers.kt$JsonParser : Parsers</ID>
+        <ID>TooManyFunctions:Parsers.kt$Parsers&lt;PE&gt;</ID>
+        <ID>TooManyFunctions:Stream.kt$Stream$Companion</ID>
+        <ID>UnusedPrivateMember:Parsers.kt$e: ParseError</ID>
+    </CurrentIssues>
+</SmellBaseline>

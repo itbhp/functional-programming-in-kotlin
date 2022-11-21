@@ -13,18 +13,21 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+        <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
+        <ktlint.version>0.47.1</ktlint.version>
+        <detekt-cli.version>1.22.0-RC3</detekt-cli.version>
+        <detekt-maven-plugin.version>1.21.0.1</detekt-maven-plugin.version>
+        <java.version>17</java.version>
         <kotlin.version>1.7.21</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-        <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
+        <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
         <junit-jupiter-api.version>5.9.0</junit-jupiter-api.version>
         <strikt.version>0.34.1</strikt.version>
         <kotest.version>5.5.4</kotest.version>
         <junit-platform.version>1.9.0</junit-platform.version>
         <arrow.version>0.11.0</arrow.version>
-        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-        <ktlint.version>0.47.1</ktlint.version>
-        <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
     </properties>
 
     <dependencies>
@@ -205,8 +208,24 @@
                         <artifactId>ktlint</artifactId>
                         <version>${ktlint.version}</version>
                     </dependency>
-                    <!-- additional 3rd party ruleset(s) can be specified here -->
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>com.github.ozsie</groupId>
+                <artifactId>detekt-maven-plugin</artifactId>
+                <version>${detekt-maven-plugin.version}</version>
+                <configuration>
+                    <baseline>baseline-functional-programming-in-kotlin.xml</baseline>
+                    <jvmTarget>${java.version}</jvmTarget>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
