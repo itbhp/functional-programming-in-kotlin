@@ -60,7 +60,7 @@ sealed class List<out A> {
     fun <A, B> foldRight(xs: List<A>, z: B, f: (A, B) -> B): B =
       foldLeft(xs, { it }, { acc: (B) -> B, e: A -> { b -> acc(f(e, b)) } })(z)
 
-    fun <A> length(xs: List<A>): Int = foldRight(xs, 0, { _, acc -> acc + 1 })
+    fun <A> length(xs: List<A>): Int = foldRight(xs, 0) { _, acc -> acc + 1 }
 
     private tailrec fun <A, B> foldLeft(xs: List<A>, z: B, f: (B, A) -> B): B =
       when (xs) {
