@@ -216,6 +216,7 @@
                 <version>${detekt-maven-plugin.version}</version>
                 <configuration>
                     <baseline>baseline-functional-programming-in-kotlin.xml</baseline>
+                    <config>detekt.yml</config>
                     <jvmTarget>${java.version}</jvmTarget>
                 </configuration>
                 <executions>
