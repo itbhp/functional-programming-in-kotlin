@@ -67,7 +67,7 @@ class StreamTest {
       4
     }
 
-    val aStream = cons(anInt, { cons({ 2 }, { empty() }) })
+    val aStream = cons(anInt) { cons({ 2 }, { empty() }) }
     aStream.headOption()
     aStream.headOption()
 
