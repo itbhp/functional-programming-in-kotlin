@@ -19,9 +19,10 @@ interface Applicative<F> : Functor<F> {
     fb: Kind<F, B>,
     f: (A, B) -> C
   ): Kind<F, C> {
-    val fbc = map(fa) { a ->
+    val fCurried: (A) -> (B) -> C = { a: A ->
       { b: B -> f(a, b) }
     }
+    val fbc: Kind<F, (B) -> C> = apply(unit(fCurried), fa)
     return apply(fbc, fb)
   }
 
@@ -44,5 +45,4 @@ interface Applicative<F> : Functor<F> {
     ma: Kind<F, A>,
     mb: Kind<F, B>
   ): Kind<F, Pair<A, B>> = map2(ma, mb) { a, b -> a to b }
-}
 }
