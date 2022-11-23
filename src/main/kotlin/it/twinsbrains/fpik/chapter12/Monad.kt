@@ -6,8 +6,7 @@ interface Monad<F> : Applicative<F> {
   fun <A, B> flatMap(fa: Kind<F, A>, f: (A) -> Kind<F, B>): Kind<F, B> =
     join(map(fa, f))
 
-  fun <A> join(ffa: Kind<F, Kind<F, A>>): Kind<F, A> =
-    flatMap(ffa) { fa -> fa }
+  fun <A> join(ffa: Kind<F, Kind<F, A>>): Kind<F, A> // = flatMap(ffa) { fa -> fa }
 
   fun <A, B, C> compose(
     f: (A) -> Kind<F, B>,
