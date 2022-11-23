@@ -4,13 +4,18 @@ import arrow.Kind
 import it.twinsbrains.fpik.chapter11.Functor
 
 interface Applicative<F> : Functor<F> {
+  fun <A> unit(a: A): Kind<F, A>
+
+  fun <A, B> apply(
+    fab: Kind<F, (A) -> B>,
+    fa: Kind<F, A>
+  ): Kind<F, B> = map2(fa, fab) { a: A, f: (A) -> B -> f(a) }
+
   fun <A, B, C> map2(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
     f: (A, B) -> C
   ): Kind<F, C>
-
-  fun <A> unit(a: A): Kind<F, A>
 
   fun <A, B> traverse(
     la: List<A>,
