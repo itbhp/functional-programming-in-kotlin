@@ -11,6 +11,9 @@ interface Applicative<F> : Functor<F> {
     fa: Kind<F, A>
   ): Kind<F, B> = map2(fa, fab) { a: A, f: (A) -> B -> f(a) }
 
+  override fun <A, B> map(fa: Kind<F, A>, f: (A) -> B): Kind<F, B> =
+    apply(unit(f), fa)
+
   fun <A, B, C> map2(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
