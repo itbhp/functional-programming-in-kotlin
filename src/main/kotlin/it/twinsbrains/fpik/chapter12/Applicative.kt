@@ -25,6 +25,18 @@ interface Applicative<F> : Functor<F> {
     return apply(fbc, fb)
   }
 
+  fun <A, B, C, D> map3(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    f: (A, B, C) -> D
+  ): Kind<F, D> {
+    val fCurried: (A) -> (B) -> (C) -> D = curry(f)
+    val fbcd: Kind<F, (B) -> (C) -> D> = apply(unit(fCurried), fa)
+    val fcd: Kind<F, (C) -> D> = apply(fbcd, fb)
+    return apply(fcd, fc)
+  }
+
   fun <A, B> traverse(
     la: List<A>,
     f: (A) -> Kind<F, B>
