@@ -23,12 +23,25 @@ interface Monad<F> : Functor<F> {
     flatMap(f(a)) { b -> g(b) }
   }
 
+  fun <A> sequence(lfa: List<Kind<F, A>>): Kind<F, List<A>> =
+    traverse(lfa) { fa -> fa }
+
+  fun <A, B> traverse(
+    la: List<A>,
+    f: (A) -> Kind<F, B>
+  ): Kind<F, List<B>> =
+    la.foldRight(
+      unit(listOf())
+    ) { a: A, acc: Kind<F, List<B>> ->
+      map2(f(a), acc) { b: B, lb: List<B> -> listOf(b) + lb }
+    }
+
   fun <A> replicateM(n: Int, fa: Kind<F, A>): List<Kind<F, A>> =
     List(n) { fa }
 
   fun <A> filterM(ls: List<A>, f: (A) -> Kind<F, Boolean>): Kind<F, List<A>> =
     when {
-      ls.isEmpty() -> unit(listOf<A>())
+      ls.isEmpty() -> unit(listOf())
       else -> flatMap(f(ls[0])) { toKeep ->
         if (toKeep) {
           map(filterM(ls.subList(1, ls.size), f)) { t -> listOf(ls[0]) + t }
