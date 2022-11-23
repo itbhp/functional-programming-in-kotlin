@@ -9,7 +9,7 @@ interface Applicative<F> : Functor<F> {
   fun <A, B> apply(
     fab: Kind<F, (A) -> B>,
     fa: Kind<F, A>
-  ): Kind<F, B> = map2(fa, fab) { a: A, f: (A) -> B -> f(a) }
+  ): Kind<F, B> // = map2(fa, fab) { a: A, f: (A) -> B -> f(a) }
 
   override fun <A, B> map(fa: Kind<F, A>, f: (A) -> B): Kind<F, B> =
     apply(unit(f), fa)
@@ -18,7 +18,12 @@ interface Applicative<F> : Functor<F> {
     fa: Kind<F, A>,
     fb: Kind<F, B>,
     f: (A, B) -> C
-  ): Kind<F, C>
+  ): Kind<F, C> {
+    val fbc = map(fa) { a ->
+      { b: B -> f(a, b) }
+    }
+    return apply(fbc, fb)
+  }
 
   fun <A, B> traverse(
     la: List<A>,
@@ -39,4 +44,5 @@ interface Applicative<F> : Functor<F> {
     ma: Kind<F, A>,
     mb: Kind<F, B>
   ): Kind<F, Pair<A, B>> = map2(ma, mb) { a, b -> a to b }
+}
 }
