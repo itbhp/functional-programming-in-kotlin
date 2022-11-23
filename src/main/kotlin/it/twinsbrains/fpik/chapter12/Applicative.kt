@@ -2,6 +2,7 @@ package it.twinsbrains.fpik.chapter12
 
 import arrow.Kind
 import it.twinsbrains.fpik.chapter11.Functor
+import it.twinsbrains.fpik.chapter2.Currying.curry
 
 interface Applicative<F> : Functor<F> {
   fun <A> unit(a: A): Kind<F, A>
@@ -19,9 +20,7 @@ interface Applicative<F> : Functor<F> {
     fb: Kind<F, B>,
     f: (A, B) -> C
   ): Kind<F, C> {
-    val fCurried: (A) -> (B) -> C = { a: A ->
-      { b: B -> f(a, b) }
-    }
+    val fCurried: (A) -> (B) -> C = curry(f)
     val fbc: Kind<F, (B) -> C> = apply(unit(fCurried), fa)
     return apply(fbc, fb)
   }
