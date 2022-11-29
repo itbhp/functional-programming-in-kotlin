@@ -14,7 +14,6 @@ import it.twinsbrains.fpik.chapter3.ForList
 import it.twinsbrains.fpik.chapter3.List
 import it.twinsbrains.fpik.chapter3.fix
 
-
 val idApplicative: Applicative<ForId> = object : Applicative<ForId> {
   override fun <A> unit(a: A): IdOf<A> = Id(a)
 
