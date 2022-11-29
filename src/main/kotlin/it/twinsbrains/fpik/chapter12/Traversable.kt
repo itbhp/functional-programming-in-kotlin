@@ -1,17 +1,38 @@
 package it.twinsbrains.fpik.chapter12
 
 import arrow.Kind
+import arrow.core.ForId
 import arrow.core.ForOption
+import arrow.core.Id
+import arrow.core.IdOf
 import arrow.core.fix
 import arrow.core.none
 import arrow.core.some
+import arrow.core.value
 import it.twinsbrains.fpik.chapter11.Functor
 import it.twinsbrains.fpik.chapter3.ForList
 import it.twinsbrains.fpik.chapter3.List
 import it.twinsbrains.fpik.chapter3.fix
 
+
+val idApplicative: Applicative<ForId> = object : Applicative<ForId> {
+  override fun <A> unit(a: A): IdOf<A> = Id(a)
+
+  override fun <A, B> apply(fab: Kind<ForId, (A) -> B>, fa: Kind<ForId, A>): Kind<ForId, B> {
+    val f = fab.value()
+    val a = fa.value()
+    return Id(f(a))
+  }
+}
+
 @Suppress("FunctionParameterNaming")
 interface Traversable<F> : Functor<F> {
+
+  override fun <A, B> map(
+    fa: Kind<F, A>,
+    f: (A) -> B
+  ): Kind<F, B> = traverse(fa, idApplicative) { a: A -> Id(f(a)) }.value()
+
   fun <G, A, B> traverse(
     fa: Kind<F, A>,
     AG: Applicative<G>,
