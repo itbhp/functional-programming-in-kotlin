@@ -6,6 +6,9 @@ import arrow.core.fix
 import arrow.core.none
 import arrow.core.some
 import it.twinsbrains.fpik.chapter11.Functor
+import it.twinsbrains.fpik.chapter3.ForList
+import it.twinsbrains.fpik.chapter3.List
+import it.twinsbrains.fpik.chapter3.fix
 
 @Suppress("FunctionParameterNaming")
 interface Traversable<F> : Functor<F> {
@@ -43,6 +46,14 @@ object TraversableExamples {
       )
   }
 
-  //  fun <A> listTraversable(): Traversable<ForList> = TODO()
+  fun <A> listTraversable(): Traversable<ForList> = object : Traversable<ForList> {
+    override fun <A, B> map(fa: Kind<ForList, A>, f: (A) -> B): Kind<ForList, B> = List.map(fa.fix(), f)
+
+    override fun <G, A> sequence(fga: Kind<ForList, Kind<G, A>>, AG: Applicative<G>): Kind<G, Kind<ForList, A>> =
+      List.foldRight(fga.fix(), AG.unit(List.empty())) { ge: Kind<G, A>, acc: Kind<G, List<A>> ->
+        AG.map2(ge, acc) { e: A, list: List<A> -> List.cons(e, list) }
+      }
+  }
+
   fun <A> treeTraversable(): Traversable<ForTree> = TODO()
 }

@@ -1,7 +1,16 @@
 package it.twinsbrains.fpik.chapter3
 
-sealed class List<out A> {
+import arrow.Kind
+
+class ForList
+typealias ListOf<A> = Kind<ForList, A>
+
+fun <A> ListOf<A>.fix(): List<A> = this as List<A>
+
+sealed class List<out A> : ListOf<A> {
   companion object {
+
+    fun <A> cons(a: A, tail: List<A>): List<A> = Cons(a, tail)
 
     fun <A> empty(): List<A> = Nil
 
@@ -74,7 +83,7 @@ sealed class List<out A> {
     fun addOne(xs: List<Int>): List<Int> =
       map(xs) { e -> e + 1 }
 
-    private fun <A, B> map(xs: List<A>, f: (A) -> B): List<B> =
+    fun <A, B> map(xs: List<A>, f: (A) -> B): List<B> =
       foldRight(xs, empty()) { e, l -> Cons(f(e), l) }
 
     fun <A> filter(xs: List<A>, f: (A) -> Boolean): List<A> =
