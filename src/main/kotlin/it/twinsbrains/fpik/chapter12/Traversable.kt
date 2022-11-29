@@ -1,6 +1,10 @@
 package it.twinsbrains.fpik.chapter12
 
 import arrow.Kind
+import arrow.core.ForOption
+import arrow.core.fix
+import arrow.core.none
+import arrow.core.some
 import it.twinsbrains.fpik.chapter11.Functor
 
 @Suppress("FunctionParameterNaming")
@@ -18,18 +22,27 @@ interface Traversable<F> : Functor<F> {
   ): Kind<G, Kind<F, A>> // = traverse(fga, AG) { it }
 }
 
-// class ForTree
-// typealias TreeOf<A> = Kind<ForTree, A>
-//
-// object TraversableExamples {
-//  data class Tree<out A>(val head: A, val tail: List<Tree<A>>) : TreeOf<A> {
-//    companion object
-//  }
-//
-//  fun <A> TreeOf<A>.fix(): Tree<A> = this as Tree<A>
-//  fun <A> optionTraversable(): Traversable<ForOption> = object : Traversable<ForOption>{
-//
-//  }
-//  fun <A> listTraversable(): Traversable<ForList> = TODO()
-//  fun <A> treeTraversable(): Traversable<ForTree> = TODO()
-// }
+class ForTree
+typealias TreeOf<A> = Kind<ForTree, A>
+
+object TraversableExamples {
+  data class Tree<out A>(val head: A, val tail: List<Tree<A>>) : TreeOf<A> {
+    companion object
+  }
+
+  fun <A> TreeOf<A>.fix(): Tree<A> = this as Tree<A>
+  fun <A> optionTraversable(): Traversable<ForOption> = object : Traversable<ForOption> {
+    override fun <A, B> map(fa: Kind<ForOption, A>, f: (A) -> B): Kind<ForOption, B> = fa.fix().map(f)
+
+    override fun <G, A> sequence(fga: Kind<ForOption, Kind<G, A>>, AG: Applicative<G>): Kind<G, Kind<ForOption, A>> =
+      fga.fix().fold(
+        { AG.unit(none()) },
+        { ga: Kind<G, A> ->
+          AG.map2(ga, AG.unit(Unit)) { a: A, _ -> a.some() }
+        }
+      )
+  }
+
+  //  fun <A> listTraversable(): Traversable<ForList> = TODO()
+  fun <A> treeTraversable(): Traversable<ForTree> = TODO()
+}
