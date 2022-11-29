@@ -2,7 +2,6 @@ package it.twinsbrains.fpik.chapter12
 
 import arrow.Kind
 import it.twinsbrains.fpik.chapter11.Functor
-import it.twinsbrains.fpik.chapter11.Reader
 import it.twinsbrains.fpik.chapter2.Currying.curry
 
 interface Applicative<F> : Functor<F> {
