@@ -85,3 +85,34 @@ fun <F, G> product(
     override fun <A> unit(a: A): ProductOf<F, G, A> =
       Product(Pair(AF.unit(a), AG.unit(a)))
   }
+
+class ForComposite
+typealias CompositePartialOf<F, G> = Kind<Kind<ForComposite, F>, G>
+typealias CompositeOf<F, G, A> = Kind<CompositePartialOf<F, G>, A>
+
+data class Composite<F, G, A>(val value: Kind<F, Kind<G, A>>) : CompositeOf<F, G, A>
+
+fun <F, G, A> CompositeOf<F, G, A>.fix(): Composite<F, G, A> = this as Composite<F, G, A>
+
+fun <F, G> compose(
+  AF: Applicative<F>,
+  AG: Applicative<G>
+): Applicative<CompositePartialOf<F, G>> = object : Applicative<CompositePartialOf<F, G>> {
+  override fun <A> unit(a: A): Kind<CompositePartialOf<F, G>, A> =
+    Composite(AF.unit(AG.unit((a))))
+
+  override fun <A, B> apply(
+    fab: CompositeOf<F, G, (A) -> B>,
+    fa: CompositeOf<F, G, A>
+  ): CompositeOf<F, G, B> {
+    val f: Kind<F, Kind<G, (A) -> B>> = fab.fix().value
+    val a: Kind<F, Kind<G, A>> = fa.fix().value
+    val result = AF.map2(f, a) { gf, ga ->
+      AG.map2(gf, ga) { funcAB: (A) -> B, aValue: A ->
+        funcAB(aValue)
+      }
+    }
+    return Composite(result)
+  }
+
+}
