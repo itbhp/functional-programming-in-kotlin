@@ -2,6 +2,7 @@ package it.twinsbrains.fpik.chapter12
 
 import arrow.Kind
 import it.twinsbrains.fpik.chapter11.Functor
+import it.twinsbrains.fpik.chapter11.Reader
 import it.twinsbrains.fpik.chapter2.Currying.curry
 
 interface Applicative<F> : Functor<F> {
@@ -57,3 +58,31 @@ interface Applicative<F> : Functor<F> {
     mb: Kind<F, B>
   ): Kind<F, Pair<A, B>> = map2(ma, mb) { a, b -> a to b }
 }
+
+
+class ForProduct
+typealias ProductPartialOf<F, G> = Kind<Kind<ForProduct, F>, G>
+typealias ProductOf<F, G, A> = Kind<ProductPartialOf<F, G>, A>
+
+data class Product<F, G, A>(val value: Pair<Kind<F, A>, Kind<G, A>>) : ProductOf<F, G, A>
+
+fun <F, G, A> ProductOf<F, G, A>.fix(): Product<F, G, A> = this as Product<F, G, A>
+
+fun <F, G> product(
+  AF: Applicative<F>,
+  AG: Applicative<G>
+): Applicative<ProductPartialOf<F, G>> =
+  object : Applicative<ProductPartialOf<F, G>> {
+
+    override fun <A, B> apply(
+      fgab: ProductOf<F, G, (A) -> B>,
+      fga: ProductOf<F, G, A>
+    ): ProductOf<F, G, B> {
+      val (fab, gab) = fgab.fix().value
+      val (fa, ga) = fga.fix().value
+      return Product(Pair(AF.apply(fab, fa), AG.apply(gab, ga)))
+    }
+
+    override fun <A> unit(a: A): ProductOf<F, G, A> =
+      Product(Pair(AF.unit(a), AG.unit(a)))
+  }
