@@ -1,6 +1,7 @@
 package it.twinsbrains.fpik.chapter12
 
 import arrow.Kind
+import arrow.core.extensions.set.foldable.foldRight
 import it.twinsbrains.fpik.chapter11.Functor
 import it.twinsbrains.fpik.chapter2.Currying.curry
 
@@ -48,6 +49,15 @@ interface Applicative<F> : Functor<F> {
     }
 
   fun <A> sequence(lfa: List<Kind<F, A>>): Kind<F, List<A>> = traverse(lfa) { it }
+
+  fun <K, V> sequence(
+    mkv: Map<K, Kind<F, V>>
+  ): Kind<F, Map<K, V>> =
+    mkv.entries.fold(unit(mapOf())) { acc: Kind<F, Map<K, V>>, entry: Map.Entry<K, Kind<F, V>> ->
+      map2(acc, entry.value) { accMap, value ->
+        accMap + (entry.key to value)
+      }
+    }
 
   fun <A> replicateM(n: Int, ma: Kind<F, A>): Kind<F, List<A>> =
     sequence(List(n) { ma })
