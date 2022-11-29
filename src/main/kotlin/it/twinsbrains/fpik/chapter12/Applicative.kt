@@ -4,6 +4,7 @@ import arrow.Kind
 import it.twinsbrains.fpik.chapter11.Functor
 import it.twinsbrains.fpik.chapter2.Currying.curry
 
+@Suppress("FunctionParameterNaming")
 interface Applicative<F> : Functor<F> {
   fun <A> unit(a: A): Kind<F, A>
 
@@ -67,7 +68,6 @@ interface Applicative<F> : Functor<F> {
   ): Kind<F, Pair<A, B>> = map2(ma, mb) { a, b -> a to b }
 }
 
-
 class ForProduct
 typealias ProductPartialOf<F, G> = Kind<Kind<ForProduct, F>, G>
 typealias ProductOf<F, G, A> = Kind<ProductPartialOf<F, G>, A>
@@ -76,6 +76,7 @@ data class Product<F, G, A>(val value: Pair<Kind<F, A>, Kind<G, A>>) : ProductOf
 
 fun <F, G, A> ProductOf<F, G, A>.fix(): Product<F, G, A> = this as Product<F, G, A>
 
+@Suppress("FunctionParameterNaming")
 fun <F, G> product(
   AF: Applicative<F>,
   AG: Applicative<G>
@@ -103,6 +104,7 @@ data class Composite<F, G, A>(val value: Kind<F, Kind<G, A>>) : CompositeOf<F, G
 
 fun <F, G, A> CompositeOf<F, G, A>.fix(): Composite<F, G, A> = this as Composite<F, G, A>
 
+@Suppress("FunctionParameterNaming")
 fun <F, G> compose(
   AF: Applicative<F>,
   AG: Applicative<G>
@@ -123,5 +125,4 @@ fun <F, G> compose(
     }
     return Composite(result)
   }
-
 }

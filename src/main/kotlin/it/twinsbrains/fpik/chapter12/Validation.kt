@@ -41,12 +41,16 @@ fun <E> validation(): Applicative<ValidationPartialOf<E>> = object : Applicative
   }
 }
 
+@Suppress("TooGenericExceptionCaught", "SwallowedException", "FunctionParameterNaming")
 object Examples {
   data class WebForm(val f1: String, val f2: Date, val f3: String)
 
   fun validName(name: String): Validation<String, String> =
-    if (name != "") Success(name)
-    else Failure("Name cannot be empty")
+    if (name != "") {
+      Success(name)
+    } else {
+      Failure("Name cannot be empty")
+    }
 
   fun validDateOfBirth(dob: String): Validation<String, Date> =
     try {
@@ -56,8 +60,11 @@ object Examples {
     }
 
   fun validPhone(phone: String): Validation<String, String> =
-    if (phone.matches("[0-9]{10}".toRegex())) Success(phone)
-    else Failure("Phone number must be 10 digits")
+    if (phone.matches("[0-9]{10}".toRegex())) {
+      Success(phone)
+    } else {
+      Failure("Phone number must be 10 digits")
+    }
 
   private val F = validation<String>()
 
@@ -73,6 +80,4 @@ object Examples {
     ) { n, d, p -> WebForm(n, d, p) }
     return result.fix()
   }
-
-
 }
