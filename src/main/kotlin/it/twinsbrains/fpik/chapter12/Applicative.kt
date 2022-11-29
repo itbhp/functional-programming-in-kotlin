@@ -1,7 +1,6 @@
 package it.twinsbrains.fpik.chapter12
 
 import arrow.Kind
-import arrow.core.extensions.set.foldable.foldRight
 import it.twinsbrains.fpik.chapter11.Functor
 import it.twinsbrains.fpik.chapter2.Currying.curry
 
