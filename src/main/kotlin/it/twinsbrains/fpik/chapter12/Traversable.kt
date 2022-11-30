@@ -18,8 +18,8 @@ val idApplicative: Applicative<ForId> = object : Applicative<ForId> {
   override fun <A> unit(a: A): IdOf<A> = Id(a)
 
   override fun <A, B> apply(fab: Kind<ForId, (A) -> B>, fa: Kind<ForId, A>): Kind<ForId, B> {
-    val f = fab.value()
-    val a = fa.value()
+    val f: (A) -> B = fab.value()
+    val a: A = fa.value()
     return Id(f(a))
   }
 }
